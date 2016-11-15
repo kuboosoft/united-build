@@ -7,4 +7,4 @@ script:
 - docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/data davidva/united-build /bin/sh build.sh -g UnitedRPMs/kodi -s kodi.spec -t fedora-25-x86_64
 
 notifications:
-  email: false
+  email: davidva@tutanota.com
