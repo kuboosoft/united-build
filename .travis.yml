@@ -4,7 +4,7 @@ services:
   - docker
 
 script:
-- docker run --cap-add=SYS_ADMIN -v $(pwd):/data davidva/united-build /bin/sh /data/build.sh -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64
+/data/build.sh -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64
 
 notifications:
   email: false
