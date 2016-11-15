@@ -4,7 +4,7 @@ services:
   - docker
 
 script:
-- docker run -v $(pwd):/data davidva/united-build:latest /data/build.sh -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64
+- docker run -v $(pwd):/data davidva/united-build:latest /data/build.sh -g UnitedRPMs/kodi -s kodi.spec -t fedora-25-x86_64
 
 notifications:
   email: false
