@@ -3,6 +3,10 @@
 services:
 - docker
 
+language: ruby
+rvm:
+- 2.2
+
 build:
   pre_ci_boot:
     image_name: davidva/united-build
