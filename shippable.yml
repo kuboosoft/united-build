@@ -1,6 +1,11 @@
 # Build Environment
 
-language: node_js
+language: python
+
+python:
+  - 2.7
+
+install: true
 
 build:
   pre_ci_boot:
