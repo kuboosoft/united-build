@@ -1,11 +1,6 @@
 # Build Environment
 
-services:
-- docker
-
-language: ruby
-rvm:
-- 2.2
+language: node_js
 
 build:
   pre_ci_boot:
