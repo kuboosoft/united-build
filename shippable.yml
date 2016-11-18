@@ -9,7 +9,7 @@ install: true
 
 build:
   pre_ci_boot:
-    image_name: davidva/united-build
+    image_name: davidva/unitedrpms
     image_tag: latest
     pull: false
     env: FOO=bar
