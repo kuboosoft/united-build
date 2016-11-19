@@ -247,7 +247,7 @@ make_directory_task
 
 chown -R 1000:1000 $directory
 
-su --group=mock makerpm
+# su --group=mock makerpm
 
 # MASIVE TASK
 if [ "$massive" = true ]; then
