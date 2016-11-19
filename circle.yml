@@ -2,6 +2,12 @@ machine:
   services:
     - docker
 
-# the build scripts
-commands:
-- docker run --privileged=true -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-rawhide-x86_64
+python:
+    version: 2.7.3
+
+test:
+  override:
+    - docker run --privileged=true -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-rawhide-x86_64:
+        parallel: true
+        timeout: 3600
+
