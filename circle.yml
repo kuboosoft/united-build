@@ -8,7 +8,9 @@ dependencies:
 
 test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh su makerpm && urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64:
+    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh 
+    - su makerpm 
+    - urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64:
         parallel: true
         timeout: 3600
         
