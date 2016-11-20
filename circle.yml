@@ -2,11 +2,15 @@ machine:
   services:
     - docker
 
+dependencies:
+  override:
+    - docker info
+    - docker build --rm=false -t davidva/unitedrpms .
+
 test:
   override:
-- sudo docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64:
-        parallel: true
-        timeout: 3600
-
+- docker run --cap-add=SYS_ADMIN -i -t davidva/unitedrpms /bin/bash
+- /urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-rawhide-x86_64
+        
 #
 
