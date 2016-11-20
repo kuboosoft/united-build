@@ -5,7 +5,6 @@ machine:
 dependencies:
   pre:
     - docker pull davidva/unitedrpms || true
-    - docker build -t davidva/unitedrpms .
     - docker run --cap-add=SYS_ADMIN -i -t davidva/unitedrpms /bin/bash
 
 test:
