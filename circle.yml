@@ -9,8 +9,8 @@ dependencies:
 
 test:
   override:
-- docker run --cap-add=SYS_ADMIN -i -t davidva/unitedrpms /bin/bash
-- /urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-rawhide-x86_64
+- docker run -i -t davidva/unitedrpms /bin/bash
+- urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-rawhide-x86_64
         
 #
 
