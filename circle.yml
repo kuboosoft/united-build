@@ -4,10 +4,6 @@ machine:
 
 dependencies:
   pre:
-    - wget -c https://get.docker.com/builds/Linux/x86_64/docker-1.11.0.tgz
-    - tar -xvzf docker-1.11.0.tgz
-    - sudo mv docker/* /usr/bin/
-    - sudo dockerd &
     - docker pull davidva/unitedrpms || true
 
   override:
