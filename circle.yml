@@ -5,6 +5,7 @@ machine:
 dependencies:
   pre:
     - docker pull davidva/unitedrpms || true
+    - su makerpm
 
 test:
   override:
