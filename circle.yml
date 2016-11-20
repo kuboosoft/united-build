@@ -4,13 +4,11 @@ machine:
 
 dependencies:
   pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.12.3
     - docker pull davidva/unitedrpms || true
 
-test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh 
-    - su makerpm 
-    - urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64:
+    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/home/root/build davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64:
         parallel: true
         timeout: 3600
         
