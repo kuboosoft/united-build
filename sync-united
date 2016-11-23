@@ -1,0 +1,130 @@
+#!/bin/sh
+#
+# +-----------------------------------------------------------------------------------+
+# | Copyright (C) 2016 David Vasquez                                                  |
+# | Permission is hereby granted, free of charge, to any person obtaining a copy of   |	
+# | this software and associated documentation files (the "Software"), to deal in the | 
+# | Software without restriction, including without limitation the rights to use,     |
+# | copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the   | 
+# | Software, and to permit persons to whom the Software is furnished to do so,       |
+# | subject to the following conditions:                                              |
+#
+# | The above copyright notice and this permission notice shall be included in all    | 
+# | copies or substantial portions of the Software.                                   |
+#                                                       
+# | THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR        |
+# | IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS  |
+# | FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR    |
+# | COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN |
+# | AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION   |
+# | WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                   |                                                 
+# +-----------------------------------------------------------------------------------+
+# | This code is designed, written and maintained by David Vasquez    		      |
+# | Any questions, comments or advice on this code                                    |
+# | should be addressed to:                                                           |
+# | davidva@tutanota.com                                                              |
+# +-----------------------------------------------------------------------------------+
+
+task=26
+user=kuboosoft
+raiz=$HOME/f$task
+motherpath=$HOME/$task
+
+
+sf_back() {
+sshpass -f $HOME/.chirubito rsync -avP --backup "$user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/" $motherpath/
+}
+
+clean_old() {
+echo -e "\e[31mDelete old versions...\e[0m"
+rm -v $(dnf repomanage --keep=2 --old $motherpath/x86_64/)
+rm -v $(dnf repomanage --keep=2 --old $motherpath/x86_64/debug/)
+rm -v $(dnf repomanage --keep=2 --old $motherpath/srpm/)
+}
+
+make_repo() {
+createrepo . 
+repoview . 
+}
+
+sign_repo() {
+echo -e "\e[31mSign repodata...\e[0m"
+/usr/bin/gpg2 --local-user "The UnitedRPMs Project" --yes --detach-sign --armor repodata/repomd.xml
+popd
+}
+
+sign_rpm() {
+rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
+repoview .
+}
+
+
+sfsync() {
+echo -e "\e[31mSync with Sf...\e[0m"
+pushd $motherpath
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/repoview/ 
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ $user@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
+
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/debug/repoview/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ $user@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview/
+
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/srpm/repoview/ 
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ $user@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
+
+sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --delete  . $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/
+popd
+}
+
+mdow() {
+megacopy --local $raiz --remote /Root/unitedrpms/updates/$task/ --download
+}
+
+work_directory() {
+mkdir -p $motherpath
+mkdir -p $raiz
+mkdir -p $motherpath/srpm/
+mkdir -p $motherpath/x86_64/debug/
+}
+
+
+m_mv() {
+pushd $raiz
+mv -f *src.rpm $motherpath/srpm/
+mv -f *debuginfo*.rpm $motherpath/x86_64/debug/
+mv -f *.rpm $motherpath/x86_64/
+popd
+}
+
+job() {
+pushd $motherpath/x86_64/
+clean_old
+sign_rpm
+make_repo
+sign_repo
+popd
+
+pushd $motherpath/x86_64/debug/ 
+clean_old
+sign_rpm
+make_repo
+sign_repo
+popd
+
+pushd $motherpath/srpm/
+clean_old
+sign_rpm 
+make_repo
+sign_repo
+popd
+}
+
+#-----------------------
+
+work_directory
+sf_back
+mdow
+m_mv
+job
+# sfsync
+
+
