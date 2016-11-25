@@ -17,7 +17,7 @@ build:
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh downloadurpms && urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh dowloadurpms && urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
 
 notifications:
 email: davidva@tutanota.com
