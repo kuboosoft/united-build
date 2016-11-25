@@ -1,6 +1,10 @@
 # united-build
 
-This is the first test to compile using mock and a popular container, usually this project is in a primary phase.
+[![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg?style=flat-square)](https://travis-ci.org/kuboosoft/united-build)
+[![Shippable](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg?style=flat-square)](https://app.shippable.com/projects/582ce4db2bbf381000df99f3)
+[![CircleCI](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg?style=flat-square)](https://circleci.com/gh/kuboosoft/united-build)
+
+This is the first test to compile using mock and and popular containers, usually this project is in a primary phase.
 
 
 ## ** Usage **
@@ -56,7 +60,7 @@ This is the first test to compile using mock and a popular container, usually th
     mock config example "-t fedora-26-x86_64"
 ```
 
-## How to build a rpms with united-build? **
+## How to build a rpm with united-build? **
 
 
 ```
