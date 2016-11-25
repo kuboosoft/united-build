@@ -35,7 +35,7 @@ Usage
 ```
 
 ```
-  n SNAPSHOT
+  -n SNAPSHOT
    Generate the source file with a special script example ffmpeg-snapshot.sh "
    urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -n ffmpeg-snapshot.sh "
 ```
@@ -56,4 +56,40 @@ Usage
     mock config example "-t fedora-26-x86_64"
 ```
 
+How to build a rpms with united-build?
+
+
+```
+clone united-build:
+
+git clone....
+```
+
+```
+Create a commit:
+
+git add . && git commit -m 'commit message'
+```
+
+```
+Grab latest tags  
+
+git pull --tags or $ git fetch --tags
+```
+
+```
+Create your own release tag: 
+
+git tag -a vlc -m 'vlc 3.x.x for Fedora ...'
+```
+
+```
+Push your changes: 
+
+git push --tags origin master
+```
+
+```
+Check your binaries in https://github.com/united-build/releases
+```
 

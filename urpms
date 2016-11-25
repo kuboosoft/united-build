@@ -18,7 +18,7 @@
 # | FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR    |
 # | COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN |
 # | AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION   |
-# | WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                   |                                                 |
+# | WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                   |                                                 
 # +-----------------------------------------------------------------------------------+
 # | This code is designed, written and maintained by David Vasquez    		      |
 # | Any questions, comments or advice on this code                                    |
@@ -27,6 +27,7 @@
 # +-----------------------------------------------------------------------------------+
 
 directory=$HOME/build
+repodirectory=/root/enjoy
 
 usage() {
   echo ""
@@ -156,7 +157,7 @@ make_directory_task() {
 echo -e "\e[32mCreating job directories...\e[0m"
   mkdir -p ${directory}/rpmbuild/{RPMS,BUILD,SOURCES,SRPMS,GIT}
   mkdir -p ${directory}/MOCK
-  mkdir -p ${directory}/enjoy
+  mkdir -p ${repodirectory}/enjoy
 }
 
 git_task() {
@@ -183,8 +184,8 @@ echo -e "\e[32mMaking rpm for $name...\e[0m"
 local_repo() {
 echo -e "\e[32mMaking local repository...\e[0m"
 pushd ${directory}/MOCK
-cp -f *.fc*.*rpm ${directory}/enjoy
-pushd ${directory}/enjoy
+cp -f *.fc*.*rpm ${repodirectory}/
+pushd ${repodirectory}/
 sign_rpm
 createrepo .
 popd
@@ -195,7 +196,7 @@ enjoy_repo() {
 echo '
 [enjoy]
 name=enjoy
-baseurl=file:///home/makerpm/enjoy
+baseurl=file:///root/enjoy
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
