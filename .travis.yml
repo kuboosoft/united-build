@@ -4,7 +4,7 @@ services:
 - docker
 script:
 - travis_wait 40 docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/root/build/MOCK
-  davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-25-x86_64
+  davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
 notifications:
   email: davidva@tutanota.com
   slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
@@ -13,7 +13,7 @@ deploy:
   api_key:
     secure: dIOQBMroOCUpu25ECL1jkULJrfxHIjQGkgYvPqismebXtTOIAQrmTeFuT234RYaMrg3/qKIJ+ovF+NDwsnwDu085LJSDIFWxvfZESi4/PZFjkW/ZqZxGjFwBuRvxzokRyNysIbTMYqs3L8AYuRuwjT7ZumMCB/VYKG34HF8dKDW/dsXIyk1M2vhYpjCnCN78LxA0MStUPkn2XoE3leoSTYpJhvCpdAvEvbRo2x9u9wLaF83CmCl4zB/qy5zO5xDe+Spj/PzJ2ODHm5n6s1uBp10NDAQiyrt+9pfAd2XSaQ6sVSrQ4a4m2+VcoB6AtgbRCQSB+2qhyPeCSzQmzhV8U2S9Q4pkVHwlZ3Wm34ATqff8rYtLVqzDlFtIAF2+E1YsxR/eFmZdBWq2msf+jtPSd3X/Llke1x3Yv4vKRG7OSm8sDl9PB2cNZeMW5PJup8kXehyQHZZQO+QiIU6o740o7c5s7O7MYimTMdPAsiH1HXhCN0lMmZ8m9ar6ZTZ9+wnaGuIaNh55mRmfjCIrAusOaxHlooMWMW1wY3X4u6m1bUca6OIkykfZoqahX+MB7r8UmkpHU9DWHoJHuZFH4a9ULSj9G4XaiwngO6sJuo41nYQzAhv4/HhXWYvOLn0pMt2ausdhBekxjH0KX5nzRtUAr1K3OQ/iw+ZQ/epmYt/wvi0=
   file: $(pwd)/*.rpm
-  file: $(pwd)/*log"
+  skip_cleanup: true
+  overwrite: true
   on:
     repo: kuboosoft/united-build
-    tags: true

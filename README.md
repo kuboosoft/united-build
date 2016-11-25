@@ -2,7 +2,7 @@
 
 [![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg?style=flat-square)](https://travis-ci.org/kuboosoft/united-build)
 [![Shippable](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg?style=flat-square)](https://app.shippable.com/projects/582ce4db2bbf381000df99f3)
-[![CircleCI](https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser.svg?style=flat-square)](https://circleci.com/gh/kuboosoft/united-build)
+[![CircleCI](https://circleci.com/gh/kuboosoft/united-build.svg?style=svg)](https://circleci.com/gh/kuboosoft/united-build)
 
 This is the first test to compile using mock and and popular containers, usually this project is in a primary phase.
 
