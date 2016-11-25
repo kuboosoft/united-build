@@ -11,13 +11,27 @@ build:
   pre_ci_boot:
     image_name: davidva/unitedrpms
     image_tag: latest
-    pull: false
+    pull: true
     env: FOO=bar
     options: "-e HOME=/root"
 
-# the build scripts
+cache:
+  bundler: true
+  directories:
+    - $HOME/docker
+
+before_cache:
+  # Save tagged docker images
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh dowloadurpms
+- mkdir -p $HOME/docker && docker images -a --filter='dangling=false' --format '{{.Repository}}:{{.Tag}} {{.ID}}'
+    | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
+before_install:
+  # Load cached docker images
+  - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
+
+# the build script
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh dowloadurpms && urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
 
 notifications:
 email: davidva@tutanota.com
