@@ -20,18 +20,12 @@ build:
  script:
 - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
 
-integrations:
-    notifications:
-        - integrationName: email
-          type: email
-          recipients:
-            - davidva@tutanota.com
-          on_success: always
-          on_failure: always
 
 resources:
-  - name: vlc                          #required
-    type: 3.0.0-15.20161121git2ffa685                               #required
+  - name: vlc                          
+    type: 3.0.0-15.20161121git2ffa685                               
     seed: 
-      versionName: "0.0.1"                      #required
+      versionName: "0.0.1"     
+
+#                 
 
