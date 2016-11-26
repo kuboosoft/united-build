@@ -28,7 +28,7 @@
 
 directory=$HOME/build
 repodirectory=/root/enjoy
-chrootmock=/var/lib/mock/${TARJET}
+chrootmock=/var/lib/mock/${TARJET}/result
 
 usage() {
   echo ""
