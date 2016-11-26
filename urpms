@@ -28,6 +28,7 @@
 
 directory=$HOME/build
 repodirectory=/root/enjoy
+chrootmock=/var/lib/mock/${TARJET}
 
 usage() {
   echo ""
@@ -156,7 +157,6 @@ rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
 make_directory_task() {
 echo -e "\e[32mCreating job directories...\e[0m"
   mkdir -p ${directory}/rpmbuild/{RPMS,BUILD,SOURCES,SRPMS,GIT}
-  mkdir -p ${directory}/MOCK
   mkdir -p ${repodirectory}/enjoy
 }
 
@@ -177,14 +177,14 @@ fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for $name...\e[0m"
-  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/$name-*.src.rpm --resultdir=${directory}/MOCK
-  /usr/bin/mock -r ${TARJET} $PWD/SRPMS/$name-*.src.rpm --no-clean --no-cleanup-after --resultdir=${directory}/MOCK
+  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/$name-*.src.rpm 
+  /usr/bin/mock -r ${TARJET} $PWD/SRPMS/$name-*.src.rpm --no-clean --no-cleanup-after 
   popd
 }
 
 local_repo() {
 echo -e "\e[32mMaking local repository...\e[0m"
-pushd ${directory}/MOCK
+pushd ${chrootmock}/
 cp -f *.fc*.*rpm ${repodirectory}/
 pushd ${repodirectory}/
 sign_rpm
@@ -212,7 +212,7 @@ mv -f /tmp/new_repo.cfg ${TARJET}.cfg
 
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
-pushd ${directory}/MOCK
+pushd ${repodirectory}/
 ls *.rpm | tee output-result.txt
 sign_rpm
 
@@ -277,8 +277,8 @@ pushd $liner
 if [ $(ls | grep -c .spec) -gt 0 ]; then
   spectool -g *.spec
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
-  /usr/bin/mock -r $TARJET --no-clean--installdeps $PWD/SRPMS/*.src.rpm --resultdir=${directory}/MOCK
-  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm --resultdir=${directory}/MOCK
+  /usr/bin/mock -r $TARJET --no-clean--installdeps $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm 
 local_repo
 else
 echo "the repository $liner do not include a spec file"
@@ -293,8 +293,8 @@ echo -e "\e[36mDONE...\e[0m"
 elif [ -n "$SRPM" ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ $SRPM
-  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/*.src.rpm --resultdir=${directory}/MOCK
-  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm --resultdir=${directory}/MOCK
+  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm 
   local_repo
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
