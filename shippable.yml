@@ -24,16 +24,6 @@ build:
 #script:
 #- docker run --privileged=true -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
 
-integrations:
-  ## Our Docker Hub Integration in Shippable
-  hub:
-    - integrationName: "DockerHub"
-      type: docker
-      agent_only: true
-      branches:
-        only:
-          - master
-
 notifications:
 email: davidva@tutanota.com
 # slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
