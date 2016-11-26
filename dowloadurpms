@@ -1,2 +1,0 @@
-#!/bin/bash
-wget -c -P / https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms

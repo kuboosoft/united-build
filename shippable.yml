@@ -15,18 +15,9 @@ build:
     env: FOO=bar
     options: "-e HOME=/root"
 
-before_cache:
-    - mkdir -p $HOME/build/MOCK
-
-cache:
-  bundler: true
-  directories:
-    - $HOME/build/MOCK
-
 # the build script
 script:
-- wget -c -P $HOME/build/MOCK https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $HOME/build/MOCK:/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd)/build/MOCK:/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
 
 notifications:
 email: davidva@tutanota.com
