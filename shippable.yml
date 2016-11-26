@@ -15,9 +15,24 @@ build:
     env: FOO=bar
     options: "-e HOME=/root"
 
+# commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing for CI.
+  ci:
+    # Here you'd place anything you want to test. For PHP apps, maybe Phpunit?
+    - urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
+
 # the build scripts
-script:
-- docker run --privileged=true -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+#script:
+#- docker run --privileged=true -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
+
+integrations:
+  ## Our Docker Hub Integration in Shippable
+  hub:
+    - integrationName: "DockerHub"
+      type: docker
+      agent_only: true
+      branches:
+        only:
+          - master
 
 notifications:
 email: davidva@tutanota.com
