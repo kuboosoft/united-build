@@ -6,6 +6,8 @@ python:
   - 2.7
 
 install: true
+ - shippable_retry apt-get -y install wget
+ - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh dowloadurpms
 
 build:
   pre_ci_boot:
@@ -26,8 +28,6 @@ before_cache:
     | xargs -n 2 -t sh -c 'test -e $HOME/docker/$1.tar.gz || docker save $0 | gzip -2 > $HOME/docker/$1.tar.gz'
 before_install:
   # Load cached docker images
-  - shippable_retry apt-get -y install wget
-  - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh dowloadurpms
   - if [[ -d $HOME/docker ]]; then ls $HOME/docker/*.tar.gz | xargs -I {file} sh -c "zcat {file} | docker load"; fi
 
 # the build script
