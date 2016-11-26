@@ -15,12 +15,26 @@ build:
     env: FOO=bar
     options: "-e HOME=/root"
 
-# the build script
-script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd)/build/MOCK:/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+ci:
+- mkdir -p $HOME/build/MOCK
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $HOME/build/MOCK:/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
 
-notifications:
-email: davidva@tutanota.com
-# slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
-#
+# the build script
+# script:
+#- docker run --privileged=true --cap-add=SYS_ADMIN -v $HOME/build/MOCK:/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-24-x86_64
+
+integrations:
+    notifications:
+        - integrationName: email
+          type: email
+          recipients:
+            - davidva@tutanota.com
+          on_success: always
+          on_failure: always
+
+resources:
+  - name: chromium                          #required
+    type: 54.0.2840.90                               #required
+    seed: 
+      versionName: "0.0.1"                      #required
 
