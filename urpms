@@ -294,7 +294,7 @@ check_depends
 enjoy_repo
 
 # Mock is quite slow. In fact the whole VM/docker was quite slow, then the new changes reduces the time.
-performance_mock
+# performance_mock
 
 # Here we will make our job directories
 make_directory_task
