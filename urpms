@@ -26,9 +26,10 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-directory=$HOME/build
+directory=/root/build
 repodirectory=/root/enjoy
-chrootmock=/var/lib/mock/${TARJET}/result
+MOCK_DEF_PATH=${directory}/mock
+
 
 usage() {
   echo ""
@@ -150,6 +151,10 @@ name_build() {
 name=$( echo $specfile | awk -F '.' '{print $1}' )
 }
 
+path_chroot() {
+chrootmock=${directory}/mock/${TARJET}/result
+}
+
 sign_rpm() {
 rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
 }
@@ -158,6 +163,9 @@ make_directory_task() {
 echo -e "\e[32mCreating job directories...\e[0m"
   mkdir -p ${directory}/rpmbuild/{RPMS,BUILD,SOURCES,SRPMS,GIT}
   mkdir -p ${repodirectory}/enjoy
+  mkdir -p ${MOCK_DEF_PATH}
+  mkdir -p ${MOCK_DEF_PATH}/cache
+  mkdir -p ~/.config/
 }
 
 git_task() {
@@ -177,12 +185,12 @@ fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for $name...\e[0m"
-  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/$name-*.src.rpm 
-  /usr/bin/mock -r ${TARJET} $PWD/SRPMS/$name-*.src.rpm --no-clean --no-cleanup-after 
+  /usr/bin/mock -r ${TARJET} $PWD/SRPMS/$name-*.src.rpm --no-cleanup-after 
   popd
 }
 
 local_repo() {
+path_chroot
 echo -e "\e[32mMaking local repository...\e[0m"
 pushd ${chrootmock}/
 cp -f *.fc*.*rpm ${repodirectory}/
@@ -237,20 +245,64 @@ done <"$Ou"
 popd
 }
 
+rules_directory() {
+chown -R 1000:1000 $directory
+chown -R 1000:1000 $repodirectory
+# chown -R 1000:1000 $MOCK_DEF_PATH
+chmod g+rws $MOCK_DEF_PATH
+chmod g+rws ${MOCK_DEF_PATH}/cache
+}
+
+
+performance_mock() {
+echo 'config_opts['basedir'] = '/home/makerpm/mock/'
+config_opts['cache_topdir'] = '/home/makerpm/mock/cache'
+config_opts['use_container_host_hostname'] = True
+config_opts['docker_unshare_warning'] = False
+config_opts['nosync_force'] = True
+config_opts['plugin_conf']['tmpfs_enable'] = True
+config_opts['plugin_conf']['tmpfs_opts'] = {}
+config_opts['plugin_conf']['tmpfs_opts']['required_ram_mb'] = 1024
+config_opts['plugin_conf']['tmpfs_opts']['max_fs_size'] = '50g'
+config_opts['plugin_conf']['tmpfs_opts']['mode'] = '0755'
+config_opts['plugin_conf']['tmpfs_opts']['keep_mounted'] = False
+' > perf.txt
+
+f1="$(<perf.txt)"
+awk -vf1="$f1" '/package_manager/{print;print f1;next}1' /etc/mock/${TARJET}.cfg | tee /tmp/new_perf.cfg
+pushd /etc/mock/
+mv -f /tmp/new_perf.cfg ${TARJET}.cfg
+ popd
+}
+
+check_depends() {
+if [ ! -f /usr/lib64/nosync/nosync.so ]; then
+dnf -y install nosync 
+fi
+}
+
+#  BEGIN THE PROGRAM
+
 readargs "$@"
 
 checkargs
 
+# We need some programs
+check_depends
+
 # Here we will make our local repository
 enjoy_repo
+
+# Mock is quite slow. In fact the whole VM/docker was quite slow, then the new changes reduces the time.
+performance_mock
 
 # Here we will make our job directories
 make_directory_task
 
-chown -R 1000:1000 $directory
+# Rules for our directories; I changed the default path in mock, then I need rules...
+rules_directory
 
-# su --group=mock makerpm
-
+# HERE BEGIN THE BUILD PROCESS #
 # MASIVE TASK
 if [ "$massive" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
@@ -277,8 +329,7 @@ pushd $liner
 if [ $(ls | grep -c .spec) -gt 0 ]; then
   spectool -g *.spec
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
-  /usr/bin/mock -r $TARJET --no-clean--installdeps $PWD/SRPMS/*.src.rpm 
-  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARJET --no-cleanup-after $PWD/SRPMS/*.src.rpm 
 local_repo
 else
 echo "the repository $liner do not include a spec file"
@@ -293,8 +344,7 @@ echo -e "\e[36mDONE...\e[0m"
 elif [ -n "$SRPM" ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ $SRPM
-  /usr/bin/mock -r $TARJET --no-clean --installdeps $PWD/SRPMS/*.src.rpm 
-  /usr/bin/mock -r $TARJET --no-clean --no-cleanup-after $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARJET --no-cleanup-after $PWD/SRPMS/*.src.rpm 
   local_repo
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
