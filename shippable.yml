@@ -13,7 +13,7 @@ build:
     image_tag: latest
     pull: true
     env: FOO=bar
-    options: "-e HOME=/root"
+    options: "-e HOME=/root" "--cap-add=SYS_ADMIN" "--privileged=true"
 
 # commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing for CI.
   ci:
