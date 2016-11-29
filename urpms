@@ -162,7 +162,7 @@ rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
 make_directory_task() {
 echo -e "\e[32mCreating job directories...\e[0m"
   mkdir -p ${directory}/rpmbuild/{RPMS,BUILD,SOURCES,SRPMS,GIT}
-  mkdir -p ${repodirectory}/enjoy
+  mkdir -p ${repodirectory}
   mkdir -p ${MOCK_DEF_PATH}
   mkdir -p ${MOCK_DEF_PATH}/cache
   mkdir -p ~/.config/
@@ -192,7 +192,7 @@ echo -e "\e[32mMaking rpm for $name...\e[0m"
 local_repo() {
 path_chroot
 echo -e "\e[32mMaking local repository...\e[0m"
-pushd ${chrootmock}/
+pushd $MOCK_DEF_PATH/
 cp -f *.fc*.*rpm ${repodirectory}/
 pushd ${repodirectory}/
 sign_rpm
