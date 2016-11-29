@@ -20,7 +20,7 @@ build:
     # Here you'd place anything you want to test. 
 #    - rm -f /urpms
 #    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
-    - /urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-25-x86_64
+#    - /urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-25-x86_64
 
 # the build scripts
 script:
