@@ -15,7 +15,7 @@ build:
     env: FOO=bar
     options: "-e HOME=/root" 
 
-# commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing for CI.
+# commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing #for CI.
 #  ci:
     # Here you'd place anything you want to test. 
 #    - rm -f /urpms
@@ -24,7 +24,7 @@ build:
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unitedrpms /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/build/MOCK davidva/unibuild /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-24-x86_64
 
 notifications:
 email: davidva@tutanota.com
