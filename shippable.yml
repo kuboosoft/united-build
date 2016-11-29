@@ -18,8 +18,8 @@ build:
 # commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing for CI.
   ci:
     # Here you'd place anything you want to test. 
-    - rm -f /urpms
-    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
+#    - rm -f /urpms
+#    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
     - /urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-25-x86_64
 
 # the build scripts
