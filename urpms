@@ -288,7 +288,7 @@ readargs "$@"
 checkargs
 
 # We need some programs
-check_depends
+# check_depends
 
 # Here we will make our local repository
 enjoy_repo
