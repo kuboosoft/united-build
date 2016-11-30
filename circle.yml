@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/vlc -s vlc.spec -t fedora-25-x86_64:
+    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/x264 -s x264.spec -t fedora-25-x86_64:
         parallel: true
         timeout: 3600
         
