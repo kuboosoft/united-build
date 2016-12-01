@@ -38,7 +38,7 @@ usage() {
   echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64"
   echo ""
   echo -e '\e[33m  -m massive\e[0m'
-  echo "    Make a massive rebuild rpm"
+  echo "    Make a massive rebuild rpm, the task is slow"
   echo "Usage: $0 -o UnitedRPMs -m true -t fedora-25-x86_64"
   echo ""
   echo -e '\e[33m  -r SRPM\e[0m'
@@ -48,6 +48,10 @@ usage() {
   echo -e '\e[33m  -n SNAPSHOT\e[0m'
   echo "    Generate the source file with a special script example ffmpeg-snapshot.sh "
   echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -n ffmpeg-snapshot.sh "
+  echo ""
+  echo -e '\e[33m  -r NO_MOCK\e[0m'
+  echo "    Generate a rpm without mock, this task is not 100% reliable, but it works in some cases"
+  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -r true -d 'dist .fc25' "
   echo "--------------------------------------"
   echo "  -s SPECfile"
   echo '    The name of the RPM SPEC file, example "-s ffmpeg.spec" '
@@ -55,6 +59,8 @@ usage() {
   echo "    The name of the organization GIT, only in massive task."
   echo "  -t TARJET"
   echo '    mock config example "-t fedora-26-x86_64" '
+  echo "  -d DIST"
+  echo "    Distribution number, only works with NO_MOCK; example: -r true -d 'dist .fc25' "
   exit 1
 }
 
@@ -105,6 +111,17 @@ readargs() {
           usage
         fi
       ;;
+      -d)
+        if [ "$2" ] ; then
+          DIST="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       -m)
         if [ "$2" ] ; then
           massive="$2"
@@ -127,6 +144,17 @@ readargs() {
           usage
         fi
       ;;
+      -r)
+        if [ "$2" ] ; then
+          NO_MOCK="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       *)
         echo "Unknown option or argument $1."
         echo
@@ -140,7 +168,9 @@ readargs() {
 
 
 checkargs() {
- if [ -z "${TARJET}" ] ; then
+ if [ -z "${TARJET}" ] && [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+    echo 'Using rpmbuild mode'
+ elif [ -z "${TARJET}" ] && [ -z ${NO_MOCK} ] ; then
     echo -e '\e[31mMissing tarjet, example your need add "-t fedora-25-x86_64"\e[0m'
     usage
     exit
@@ -185,15 +215,26 @@ fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for $name...\e[0m"
+if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+  dnf -y update
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$name-*.src.rpm
+else
   /usr/bin/mock -r ${TARJET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
+fi
   popd
 }
 
 local_repo() {
 path_chroot
+name_build
 echo -e "\e[32mMaking local repository...\e[0m"
+if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+pushd ${directory}/rpmbuild/GIT/$name/
+cp -f *.fc*.*rpm ${repodirectory}/
+else
 pushd $MOCK_DEF_PATH/
 cp -f *.fc*.*rpm ${repodirectory}/
+fi
 pushd ${repodirectory}/
 sign_rpm
 createrepo .
@@ -329,10 +370,16 @@ pushd $liner
 if [ $(ls | grep -c .spec) -gt 0 ]; then
   spectool -g *.spec
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
+if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+  dnf -y update
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
+  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
+else
   /usr/bin/mock -r $TARJET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+fi
 local_repo
 else
-echo "the repository $liner do not include a spec file"
+echo "the repository $liner does not include a spec file"
 fi
 popd  
 done <"$file"
