@@ -173,6 +173,8 @@ checkargs() {
  elif [ -z "${TARJET}" ] && [ -z ${NO_MOCK} ] ; then
     echo -e '\e[31mMissing tarjet, example your need add "-t fedora-25-x86_64"\e[0m'
     usage
+else
+    usage
     exit
   fi
 }
@@ -217,6 +219,8 @@ fi
 echo -e "\e[32mMaking rpm for $name...\e[0m"
 if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
   dnf -y update
+  dnf -y install @development-tools
+  dnf -y builddep ${specfile}
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$name-*.src.rpm
 else
   /usr/bin/mock -r ${TARJET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
@@ -372,6 +376,8 @@ if [ $(ls | grep -c .spec) -gt 0 ]; then
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
 if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
   dnf -y update
+  dnf -y install @development-tools
+  dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
 else
