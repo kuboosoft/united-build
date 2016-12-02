@@ -168,11 +168,12 @@ readargs() {
 
 
 checkargs() {
- if [ -z "${TARJET}" ] && [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+ if [ -z "${TARJET}" ] && [ ${NO_MOCK} = true ]; then
     echo 'Using rpmbuild mode'
  elif [ -z "${TARJET}" ] && [ -z ${NO_MOCK} ] ; then
     echo -e '\e[31mMissing tarjet, example your need add "-t fedora-25-x86_64"\e[0m'
     usage
+exit
 else
     usage
     exit
@@ -247,6 +248,16 @@ popd
 }
 
 enjoy_repo() {
+
+if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+echo '[enjoy]
+name=enjoy
+baseurl=file:///root/enjoy
+enabled=1
+skip_if_unavailable=1
+gpgcheck=0
+' > /etc/yum.repos.d/enjoy.repo
+else
 echo '
 [enjoy]
 name=enjoy
@@ -261,6 +272,7 @@ awk -vf1="$f1" '/# repos/{print;print f1;next}1' /etc/mock/${TARJET}.cfg | tee /
 pushd /etc/mock/
 mv -f /tmp/new_repo.cfg ${TARJET}.cfg
  popd
+fi
 }
 
 upload_rpm() {
