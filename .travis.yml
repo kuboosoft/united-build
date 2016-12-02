@@ -7,5 +7,5 @@ script:
   davidva/unibuild /bin/sh urpms -g UnitedRPMs/x264 -s x264.spec -t fedora-24-x86_64
 notifications:
   email: davidva@tutanota.com
-  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
+#  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
 

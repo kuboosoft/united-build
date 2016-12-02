@@ -222,6 +222,7 @@ if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
   dnf -y install @development-tools
   dnf -y builddep ${specfile}
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$name-*.src.rpm
+  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
 fi
@@ -408,7 +409,12 @@ echo -e "\e[36mDONE...\e[0m"
 elif [ -n "$SRPM" ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ $SRPM
+if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
+  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
+else
   /usr/bin/mock -r $TARGET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+fi
   local_repo
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
