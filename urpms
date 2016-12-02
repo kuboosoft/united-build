@@ -57,7 +57,7 @@ usage() {
   echo '    The name of the RPM SPEC file, example "-s ffmpeg.spec" '
   echo "  -o organization"
   echo "    The name of the organization GIT, only in massive task."
-  echo "  -t TARJET"
+  echo "  -t TARGET"
   echo '    mock config example "-t fedora-26-x86_64" '
   echo "  -d DIST"
   echo "    Distribution number, only works with NO_MOCK; example: -r true -d 'dist .fc25' "
@@ -80,7 +80,7 @@ readargs() {
       ;;
       -t)
         if [ "$2" ] ; then
-          TARJET="$2"
+          TARGET="$2"
           shift ; shift
         else
           echo "Missing a value for $1."
@@ -168,15 +168,14 @@ readargs() {
 
 
 checkargs() {
- if [ -z "${TARJET}" ] && [ ${NO_MOCK} = true ]; then
+ if [ -z "${TARGET}" ] && [ ${NO_MOCK} = true ]; then
     echo 'Using rpmbuild mode'
- elif [ -z "${TARJET}" ] && [ -z ${NO_MOCK} ] ; then
-    echo -e '\e[31mMissing tarjet, example your need add "-t fedora-25-x86_64"\e[0m'
+ elif [ -z "${TARGET}" ] && [ -z ${NO_MOCK} ] ; then
+    echo -e '\e[31mMissing target, example your need add "-t fedora-25-x86_64"\e[0m'
     usage
 exit
 else
-    usage
-    exit
+    echo 'Great! exist target for mock'
   fi
 }
 
@@ -185,7 +184,7 @@ name=$( echo $specfile | awk -F '.' '{print $1}' )
 }
 
 path_chroot() {
-chrootmock=${directory}/mock/${TARJET}/result
+chrootmock=${directory}/mock/${TARGET}/result
 }
 
 sign_rpm() {
@@ -224,7 +223,7 @@ if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
   dnf -y builddep ${specfile}
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$name-*.src.rpm
 else
-  /usr/bin/mock -r ${TARJET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
 fi
   popd
 }
@@ -268,9 +267,9 @@ gpgcheck=0
 ' > changdata.txt 
 
 f1="$(<changdata.txt)"
-awk -vf1="$f1" '/# repos/{print;print f1;next}1' /etc/mock/${TARJET}.cfg | tee /tmp/new_repo.cfg
+awk -vf1="$f1" '/# repos/{print;print f1;next}1' /etc/mock/${TARGET}.cfg | tee /tmp/new_repo.cfg
 pushd /etc/mock/
-mv -f /tmp/new_repo.cfg ${TARJET}.cfg
+mv -f /tmp/new_repo.cfg ${TARGET}.cfg
  popd
 fi
 }
@@ -326,9 +325,9 @@ config_opts['plugin_conf']['tmpfs_opts']['keep_mounted'] = False
 ' > perf.txt
 
 f1="$(<perf.txt)"
-awk -vf1="$f1" '/package_manager/{print;print f1;next}1' /etc/mock/${TARJET}.cfg | tee /tmp/new_perf.cfg
+awk -vf1="$f1" '/package_manager/{print;print f1;next}1' /etc/mock/${TARGET}.cfg | tee /tmp/new_perf.cfg
 pushd /etc/mock/
-mv -f /tmp/new_perf.cfg ${TARJET}.cfg
+mv -f /tmp/new_perf.cfg ${TARGET}.cfg
  popd
 }
 
@@ -393,7 +392,7 @@ if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
 else
-  /usr/bin/mock -r $TARJET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARGET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
 fi
 local_repo
 else
@@ -409,7 +408,7 @@ echo -e "\e[36mDONE...\e[0m"
 elif [ -n "$SRPM" ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ $SRPM
-  /usr/bin/mock -r $TARJET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r $TARGET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
   local_repo
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
