@@ -14,7 +14,7 @@ test:
         parallel: true
         timeout: 9600
 
-#TEST
+# 2 hours of builds with circle ci, great!
         
 
 
