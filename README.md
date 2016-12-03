@@ -4,7 +4,7 @@
 [![Shippable](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg?style=flat-square)](https://app.shippable.com/projects/582ce4db2bbf381000df99f3)
 [![CircleCI](https://circleci.com/gh/kuboosoft/united-build.svg?style=svg)](https://circleci.com/gh/kuboosoft/united-build)
 
-This is the first test to compile using mock and and popular containers, usually this project is in a primary phase.
+This is the first test to compile using mock and populars containers, usually this project is in a primary phase.
 
 
 ## ** Usage **
