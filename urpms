@@ -217,7 +217,7 @@ fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for $name...\e[0m"
-if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y builddep ${specfile}
