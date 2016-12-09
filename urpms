@@ -233,7 +233,7 @@ local_repo() {
 path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
-if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
+if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
 pushd ${directory}/rpmbuild/GIT/$name/
 cp -f *.fc*.*rpm ${repodirectory}/
 else
