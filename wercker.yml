@@ -12,15 +12,13 @@ box: python
     # - mongo
     # http://devcenter.wercker.com/docs/services/mongodb.html
 services:
-- davidva/unibuild
+- davidva/unibuild:latest
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center
 # http://devcenter.wercker.com/docs/pipelines/index.html
 build:
-
   steps:
     - script:
         name: urpms build
         code: |
 /urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
-
