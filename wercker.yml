@@ -2,7 +2,7 @@
 # Docker Hub https://registry.hub.docker.com/_/debian/
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-box: debian
+box: davidva/unibuild
 # You can also use services such as databases. Read more on our dev center:
 # http://devcenter.wercker.com/docs/services/index.html
 # services:
@@ -23,5 +23,5 @@ build:
     - script:
         name: urpms build
         code: |
-sudo docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
+/urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
 
