@@ -61,4 +61,14 @@ This is the first test to compile using mock and populars containers, usually th
     mock config example "-t fedora-26-x86_64"
 ```
 
+"--------------------------------------"
+
+```
+  -b BUILD
+
+   Build whithout mock
+
+   urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -b true -d 'dist .fc25'
+
+```
 

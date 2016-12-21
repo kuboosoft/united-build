@@ -8,6 +8,7 @@ build:
       username: $USERNAME
       password: $PASSWORD
       tag: latest
+    no-response-timeout: 30
     steps:
       - script:
         name: echo
