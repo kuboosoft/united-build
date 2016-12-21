@@ -2,7 +2,7 @@
 # Docker Hub https://registry.hub.docker.com/_/debian/
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-
+box: python
 # You can also use services such as databases. Read more on our dev center:
 # http://devcenter.wercker.com/docs/services/index.html
 # services:
@@ -11,12 +11,12 @@
 
     # - mongo
     # http://devcenter.wercker.com/docs/services/mongodb.html
-
+services:
+- davidva/unibuild
 # This is the build pipeline. Pipelines are the core of wercker
 # Read more about pipelines on our dev center
 # http://devcenter.wercker.com/docs/pipelines/index.html
 build:
-box: davidva/unibuild
 
   steps:
     - script:
