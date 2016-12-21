@@ -23,5 +23,5 @@ build:
     - script:
         name: urpms build
         code: |
-sudo docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh urpms -g -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
+sudo docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64
 
