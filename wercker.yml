@@ -8,9 +8,9 @@ build:
       username: $USERNAME
       password: $PASSWORD
       tag: latest
-command-timeout: 30
     steps:
       - script:
+        command-timeout: 30
         name: echo
         code: | 
           /urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25'
