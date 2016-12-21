@@ -11,4 +11,7 @@ build:
     steps:
       - script:
         name: echo
-code: /urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25'
+        code: | 
+          sudo docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25'
+
+
