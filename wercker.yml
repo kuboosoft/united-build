@@ -2,7 +2,7 @@
 # Docker Hub https://registry.hub.docker.com/_/debian/
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-box: davidva/unibuild
+box: python:2.7
  script:
         name: Build script
-code: ./urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25'
+code: docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25'
