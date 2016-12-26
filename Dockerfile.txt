@@ -2,7 +2,7 @@ FROM davidva/usync
 
 MAINTAINER David Va <davidva@tutanota.com>
 
-RUN dnf -y update && dnf clean all && rm -rf united-build && git clone https://github.com/kuboosoft/united-build.git && cd united-build
+RUN rm -rf united-build && git clone https://github.com/kuboosoft/united-build.git && cd united-build
 && chmod a+x sync-united && ./sync-united
 
 
