@@ -1,0 +1,8 @@
+FROM davidva/usync
+
+MAINTAINER David Va <davidva@tutanota.com>
+
+RUN dnf -y update && dnf clean all
+
+
+
