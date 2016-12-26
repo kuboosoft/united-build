@@ -3,6 +3,10 @@ FROM davidva/usync
 MAINTAINER David Va <davidva@tutanota.com>
 
 RUN dnf -y update && dnf clean all
+RUN rm -rf united-build
+RUN git clone https://github.com/kuboosoft/united-build.git 
+RUN cd united-build
+RUN chmod a+x sync-united && ./sync-united
 
 
 
