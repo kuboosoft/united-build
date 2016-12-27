@@ -75,7 +75,9 @@ sshpass -f $HOME/.chirubito rsync -av --delete srpm/repodata/ ${user}@frs.source
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/${task}/x86_64/repodata/
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
 
-sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --ignore-existing *.rpm ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
+sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
+sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --ignore-existing srpm/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/
+
 popd
 }
 
