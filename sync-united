@@ -59,7 +59,7 @@ repoview .
 
 sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
-pushd $motherpath
+pushd $motherpath/$task
 clean_trash
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/repoview/ 
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ $user@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
