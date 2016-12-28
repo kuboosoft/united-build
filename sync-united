@@ -30,6 +30,39 @@ user=kuboosoft
 raiz=$HOME/f$task
 motherpath=$HOME/$task
 
+united_repo() {
+echo '[unitedrpms]
+name=unitedrpms
+mirrorlist=https://raw.githubusercontent.com/UnitedRPMs/unitedrpms.github.io/master/mirrorlist_F$releasever_x86_64.txt
+enabled=1
+metadata_expire=1d
+skip_if_unavailable=1
+gpgkey=file:///etc/pki/rpm-gpg/URPMS-GPG-PUBLICKEY-Fedora-24
+gpgcheck=0
+repo_gpgcheck=0
+
+[unitedrpms-source]
+name=unitedrpms - Source
+mirrorlist=https://raw.githubusercontent.com/UnitedRPMs/unitedrpms.github.io/master/mirrorlist_F$releasever_source.txt
+enabled=0
+metadata_expire=1d
+skip_if_unavailable=1
+gpgkey=file:///etc/pki/rpm-gpg/URPMS-GPG-PUBLICKEY-Fedora-24
+gpgcheck=0
+repo_gpgcheck=0
+
+[unitedrpms-debuginfo]
+name=unitedrpms - Debuginfo
+mirrorlist=https://raw.githubusercontent.com/UnitedRPMs/unitedrpms.github.io/master/mirrorlist_F$releasever_debug.txt
+enabled=0
+metadata_expire=1d
+skip_if_unavailable=1
+gpgkey=file:///etc/pki/rpm-gpg/URPMS-GPG-PUBLICKEY-Fedora-24
+gpgcheck=0
+repo_gpgcheck=0
+' > /etc/yum.repos.d/unitedrpms.repo
+}
+
 
 sf_back() {
 sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" $motherpath/
@@ -62,7 +95,7 @@ repoview .
 sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
 pushd $motherpath
-find $PWD/ -name '*~' -exec rm -f  {} $motherpath/ \;
+find $PWD/ -name '*~' -exec rm -rf  {} $motherpath/ \;
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repoview/ 
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
 
@@ -127,6 +160,7 @@ popd
 
 #-----------------------
 
+united_repo
 work_directory
 sf_back
 mdow
