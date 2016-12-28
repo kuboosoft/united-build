@@ -36,9 +36,9 @@ sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/ho
 
 clean_old() {
 echo -e "\e[31mDelete old versions...\e[0m"
-rm -v $(dnf repomanage --keep=2 --old $motherpath/x86_64/)
-rm -v $(dnf repomanage --keep=2 --old $motherpath/x86_64/debug/)
-rm -v $(dnf repomanage --keep=2 --old $motherpath/srpm/)
+rm -f $(dnf repomanage --keep=2 --old $motherpath/x86_64/)
+rm -f $(dnf repomanage --keep=2 --old $motherpath/x86_64/debug/)
+rm -f $(dnf repomanage --keep=2 --old $motherpath/srpm/)
 }
 
 make_repo() {
@@ -49,7 +49,6 @@ repoview .
 sign_repo() {
 echo -e "\e[31mSign repodata...\e[0m"
 /usr/bin/gpg2 --local-user "The UnitedRPMs Project" --yes --detach-sign --armor repodata/repomd.xml
-popd
 }
 
 sign_rpm() {
@@ -75,8 +74,8 @@ sshpass -f $HOME/.chirubito rsync -av --delete srpm/repodata/ $user@frs.sourcefo
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ $user@frs.sourceforge.net:/home/project-web/unitedrpms/$task/x86_64/repodata/
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/debug/repodata/
 
-sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --ignore-existing x86_64/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/
-sshpass -f $HOME/.chirubito rsync -av --exclude .git/ --ignore-existing srpm/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/srpm/
+sshpass -f $HOME/.chirubito rsync -av --ignore-existing x86_64/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/x86_64/
+sshpass -f $HOME/.chirubito rsync -av --ignore-existing srpm/ $user@frs.sourceforge.net:/home/frs/project/unitedrpms/$task/srpm/
 
 popd
 }
@@ -88,8 +87,10 @@ megacopy --local $raiz --remote /Root/unitedrpms/updates/${task}/ --download
 work_directory() {
 mkdir -p $motherpath
 mkdir -p $raiz
-mkdir -p $motherpath/srpm/
+mkdir -p $motherpath/srpm/repoview/
+mkdir -p $motherpath/srpm/repodata/
 mkdir -p $motherpath/x86_64/debug/
+mkdir -p $motherpath/x86_64/repodata/
 }
 
 
