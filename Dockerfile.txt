@@ -6,8 +6,8 @@ RUN dnf -y install rpm-sign \
 && rm -rf united-build \ 
 && git clone https://github.com/kuboosoft/united-build.git \
 && cd united-build \
-&& chmod a+x sync-united 
-RUN ./sync-united 
+&& chmod a+x sync-united \
+&& ./sync-united 
 
 VOLUME ["/var/lib/mock"]
 
