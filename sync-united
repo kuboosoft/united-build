@@ -25,7 +25,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-task=repository
+task=27
 user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
@@ -75,7 +75,7 @@ sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ ${user}@frs.sour
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
 
 # sshpass -f $HOME/.chirubito rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
-sshpass -f $HOME/.chirubito rsync -av --ignore-existing . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
+sshpass -f $HOME/.chirubito rsync -av --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
 popd
 }
