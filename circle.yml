@@ -10,7 +10,10 @@ dependencies:
 
 test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25':
+#    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -r true -d 'dist .fc25':
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/$HOME davidva/usync /bin/sh git clone https://github.com/kuboosoft/united-build.git && cd united-build \
+&& chmod a+x sync-united \
+&& ./sync-united:
         parallel: true
         timeout: 9600
 
