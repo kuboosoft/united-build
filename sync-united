@@ -42,6 +42,7 @@ rm -f $(dnf repomanage --keep=2 --old ${motherpath}/srpm/)
 }
 
 make_repo() {
+rm -rf repodata/
 createrepo . 
 repoview . 
 }
