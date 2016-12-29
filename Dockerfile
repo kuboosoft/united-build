@@ -1,4 +1,4 @@
-FROM davidva/usync
+FROM davidva/unibuild
 
 MAINTAINER David Va <davidva@tutanota.com>
 
