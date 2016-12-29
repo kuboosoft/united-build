@@ -10,7 +10,7 @@ RUN rm -rf united-build \
 
 VOLUME ["/var/lib/mock"]
 
-USER root
+USER builder
 CMD ["/bin/bash"]
 
 
