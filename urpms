@@ -26,8 +26,8 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-directory=/root/build
-repodirectory=/root/enjoy
+directory=$HOME/build
+repodirectory=$HOME/enjoy
 MOCK_DEF_PATH=${directory}/mock
 
 
