@@ -25,7 +25,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-task=26
+task=repository
 user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
@@ -81,6 +81,7 @@ popd
 }
 
 mdow() {
+echo -e "\e[31mDownloading updates...\e[0m"
 megacopy --local ${raiz} --remote /Root/unitedrpms/updates/${task}/ --download
 }
 
@@ -144,10 +145,10 @@ echo 'Completed sync with Mega'
 }
 
 checkfiles() {
-if [ "$(ls -A $raiz)" ]; then
-echo "Great $raiz is not Empty"
+if [ "$(ls -A ${raiz})" ]; then
+echo "Great ${raiz} is not Empty"
 else
-echo "$raiz is Empty"
+echo "${raiz} is Empty"
 mupl
 exit
 fi
