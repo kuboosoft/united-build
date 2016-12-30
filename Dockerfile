@@ -9,8 +9,7 @@ RUN rm -rf united-build \
 && ./urpms -g UnitedRPMs/chromium-freeworld -s chromium.spec -t fedora-25-x86_64 
 
 VOLUME ["/var/lib/mock"]
-REQUEST CAP SYS_ADMIN
-USER makerpm
+USER root
 CMD ["/bin/bash"]
 
 
