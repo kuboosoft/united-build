@@ -81,7 +81,7 @@ popd
 }
 
 mdow() {
-megacopy --local $raiz --remote /Root/unitedrpms/updates/${task}/ --download
+megacopy --local ${raiz} --remote /Root/unitedrpms/updates/${task}/ --download
 }
 
 work_directory() {
@@ -133,12 +133,14 @@ popd
 }
 
 mupl() {
+echo -e "\e[31mSync with Mega...\e[0m"
 if [ -f ${motherpath}/x86_64/repodata/repomd.xml]; then
 megarm /Root/unitedrpms/${task}/x86_64/repodata
 megarm /Root/unitedrpms/${task}/x86_64/debug/repodata
 megarm /Root/unitedrpms/${task}/srpm/repodata
 fi
-megacopy --local $motherpath --remote /Root/unitedrpms/${task}/ 
+megacopy --local ${motherpath} --remote /Root/unitedrpms/${task}/ 
+echo 'Completed sync with Mega'
 }
 
 checkfiles() {
@@ -162,5 +164,5 @@ m_mv
 job
 sfsync
 mupl
-
+echo 'DONE'
 
