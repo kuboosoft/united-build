@@ -25,7 +25,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-task=repository
+task=26
 user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
