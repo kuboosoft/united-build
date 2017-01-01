@@ -203,29 +203,29 @@ echo -e "\e[32mCreating job directories...\e[0m"
 git_task() {
 echo -e "\e[32mCloning repository $url_git...\e[0m"
 name_build
-git clone https://github.com/$url_git.git ${directory}/rpmbuild/GIT/$name
+git clone https://github.com/$url_git.git ${directory}/rpmbuild/GIT/${name}
 }
 
 buildrpm() {
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
-  pushd ${directory}/rpmbuild/GIT/$name/
+  pushd ${directory}/rpmbuild/GIT/${name}/
 if [ -n "$SNAPSHOT" ]; then
   chmod a+x $SNAPSHOT
   ./$SNAPSHOT
 fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
-echo -e "\e[32mMaking rpm for $name...\e[0m"
+echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 # if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
 if [ "${NO_MOCK}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y builddep ${specfile}
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$name-*.src.rpm
-  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
+  find $PWD/ -name '*.rpm' -exec cp  {} ${MOCK_DEF_PATH}/ \;
 else
-  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/$name-*.src.rpm  
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
   popd
 }
@@ -236,10 +236,10 @@ name_build
 echo -e "\e[32mMaking local repository...\e[0m"
 # if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
 if [ "${NO_MOCK}" = true ]; then
-pushd ${directory}/rpmbuild/GIT/$name/
+pushd ${directory}/rpmbuild/GIT/${name}/
 cp -f *.fc*.*rpm ${repodirectory}/
 else
-pushd $MOCK_DEF_PATH/
+pushd ${MOCK_DEF_PATH}/
 cp -f *.fc*.*rpm ${repodirectory}/
 fi
 pushd ${repodirectory}/
@@ -307,8 +307,8 @@ popd
 rules_directory() {
 chown -R 1000:1000 $directory
 chown -R 1000:1000 $repodirectory
-# chown -R 1000:1000 $MOCK_DEF_PATH
-chmod g+rws $MOCK_DEF_PATH
+# chown -R 1000:1000 ${MOCK_DEF_PATH}
+chmod g+rws ${MOCK_DEF_PATH}
 chmod g+rws ${MOCK_DEF_PATH}/cache
 }
 
@@ -394,9 +394,9 @@ if [ "${NO_MOCK}" = true ]; then
   dnf -y install @development-tools
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
-  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
+  find $PWD/ -name '*.rpm' -exec cp  {} ${MOCK_DEF_PATH}/ \;
 else
-  /usr/bin/mock -r $TARGET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
 local_repo
 else
@@ -415,9 +415,9 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ]; then
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
-  find $PWD/ -name '*.rpm' -exec cp  {} $MOCK_DEF_PATH/ \;
+  find $PWD/ -name '*.rpm' -exec cp  {} ${MOCK_DEF_PATH}/ \;
 else
-  /usr/bin/mock -r $TARGET --no-cleanup-after --resultdir=$MOCK_DEF_PATH $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
   upload_rpm
