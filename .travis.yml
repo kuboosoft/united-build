@@ -1,5 +1,9 @@
 united-build: 
 language: python
+cache:
+bundler: true
+  directories:
+    - /var/cache/mock/
 services:
 - docker
 script:
