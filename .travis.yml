@@ -1,4 +1,5 @@
 united-build: 
+language: python
 sudo: required
 services:
 - docker
