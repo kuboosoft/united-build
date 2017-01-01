@@ -1,12 +1,18 @@
 united-build: 
-language: python
+sudo: required
 services:
 - docker
+before_install:
+- docker pull davidva/unibuild
+- travis_wait 40 docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh -c "/urpms -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64"
+# docker ps -a
+# docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
 cache:
   directories:
     - /var/cache/mock/
 script:
-- travis_wait 40 docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64
+#- travis_wait 40 docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/kodi -s kodi.spec -t fedora-24-x86_64
+echo 'DONE BUILD'
 notifications:
   email: davidva@tutanota.com
 #  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
