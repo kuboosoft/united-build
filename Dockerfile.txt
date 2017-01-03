@@ -6,7 +6,9 @@ RUN rm -rf united-build \
 && git clone https://github.com/kuboosoft/united-build.git \
 && cd united-build \
 && chmod a+x sync-united \
-&& ./sync-united 
+&& ./sync-united -s repository \
+&& ./sync-united -s 25 \
+&& ./sync-united -s 26 
 
 VOLUME ["/var/lib/mock"]
 

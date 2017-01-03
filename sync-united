@@ -25,10 +25,40 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-task=25
-user=kuboosoft
-raiz=$HOME/f${task}
-motherpath=$HOME/${task}
+
+usage() {
+  echo ""
+  echo -e '\e[33m  -s sync\e[0m'
+  echo "    synchronizes the cloud"
+  echo "Usage: $0 -s 25"
+  echo ""
+  exit 1
+}
+
+readargs() {
+  while [ "$#" -gt 0 ] ; do
+    case "$1" in
+       -s)
+        if [ "$2" ] ; then
+          task="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
+      *)
+        echo "Unknown option or argument $1."
+        echo
+        shift
+        usage
+      exit
+      ;;
+    esac
+  done
+}
 
 sf_back() {
 sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
@@ -157,6 +187,20 @@ fi
 #-----------------------
 
 #  BEGIN THE PROGRAM
+readargs "$@"
+
+if [ ${task} = repository ] || [ ${task} = 25 ] || [ ${task} = 26 ]; then
+echo -e "\e[32msync limited to F24-F26...\e[0m"
+else
+echo 'ERROR'
+echo -e "\e[32mSorry, check if exists the current release...\e[0m"
+exit
+fi
+
+user=kuboosoft
+raiz=$HOME/f${task}
+motherpath=$HOME/${task}
+
 work_directory
 sf_back
 mdow
