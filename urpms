@@ -29,7 +29,7 @@
 directory=$HOME/build
 repodirectory=$HOME/enjoy
 MOCK_DEF_PATH=${directory}/mock
-
+date=$(date +%Y%m%d_%H-%M-%S)
 
 usage() {
   echo ""
@@ -283,10 +283,17 @@ pushd ${repodirectory}/
 ls *.rpm | tee output-result.txt
 sign_rpm
 
+cp -f build.log ${date}_build.log
+cp -f root.log ${date}_root.log
+cp -f state.log ${date}_state.log
+megaput ${date}_build.log --path /Root/logs/
+megaput ${date}_root.log --path /Root/logs/
+megaput ${date}_state.log --path /Root/logs/
+
 Ou=output-result.txt
 while IFS= read -r result; do
 if [ $(ls $result | grep -c fc24) -gt 0 ]; then
-megaput $result --path /Root/unitedrpms/updates/24/
+megaput $result --path /Root/unitedrpms/updates/repository/
 elif [ $(ls $result | grep -c fc25) -gt 0 ]; then
 megaput $result --path /Root/unitedrpms/updates/25/
 elif [ $(ls $result | grep -c fc26) -gt 0 ]; then
@@ -301,12 +308,13 @@ elif [ $(ls $result | grep -c fc30) -gt 0 ]; then
 megaput $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
+echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
 }
 
 rules_directory() {
-chown -R 1000:1000 $directory
-chown -R 1000:1000 $repodirectory
+chown -R 1000:1000 ${directory}
+chown -R 1000:1000 ${repodirectory}
 # chown -R 1000:1000 ${MOCK_DEF_PATH}
 chmod g+rws ${MOCK_DEF_PATH}
 chmod g+rws ${MOCK_DEF_PATH}/cache
