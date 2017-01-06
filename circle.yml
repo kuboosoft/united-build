@@ -3,14 +3,14 @@ machine:
     version: 2.7.3
   services:
     - docker
-
+privileged: true
 dependencies:
   pre:
     - sudo docker pull davidva/unibuild || true
 
 test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/kodi -s kodi.spec -r true -d 'dist .fc25':
+    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/kodi -s kodi.spec -t fedora-25-x86_64:
         parallel: true
         timeout: 9600
 

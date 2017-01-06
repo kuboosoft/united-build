@@ -400,6 +400,7 @@ if [ $(ls | grep -c .spec) -gt 0 ]; then
 if [ "${NO_MOCK}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
+  dnf -y install ccache gcc-c++
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find $PWD/ -name '*.rpm' -exec cp  {} ${MOCK_DEF_PATH}/ \;
