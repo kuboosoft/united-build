@@ -3,7 +3,7 @@ machine:
     version: 2.7.3
   services:
     - docker
-privileged: true
+
 dependencies:
   pre:
     - sudo docker pull davidva/unibuild || true
