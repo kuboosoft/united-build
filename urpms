@@ -283,9 +283,9 @@ pushd ${repodirectory}/
 ls *.rpm | tee output-result.txt
 sign_rpm
 
-cp -f build.log ${date}_build.log
-cp -f root.log ${date}_root.log
-cp -f state.log ${date}_state.log
+cp -f ${MOCK_DEF_PATH}/build.log ${date}_build.log
+cp -f ${MOCK_DEF_PATH}/root.log ${date}_root.log
+cp -f ${MOCK_DEF_PATH}/state.log ${date}_state.log
 megaput ${date}_build.log --path /Root/logs/
 megaput ${date}_root.log --path /Root/logs/
 megaput ${date}_state.log --path /Root/logs/
@@ -400,7 +400,6 @@ if [ $(ls | grep -c .spec) -gt 0 ]; then
 if [ "${NO_MOCK}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
-  dnf -y install ccache gcc-c++
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find $PWD/ -name '*.rpm' -exec cp  {} ${MOCK_DEF_PATH}/ \;
