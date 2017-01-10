@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # +-----------------------------------------------------------------------------------+
-# | Copyright (C) 2016 David Vasquez                                                  |
+# | Copyright (C) 2017 David Vasquez                                                  |
 # | MIT license                                                                       |
 # | Permission is hereby granted, free of charge, to any person obtaining a copy of   |	
 # | this software and associated documentation files (the "Software"), to deal in the | 
@@ -29,7 +29,7 @@
 directory=$HOME/build
 repodirectory=$HOME/enjoy
 MOCK_DEF_PATH=${directory}/mock
-date=$(date +%Y%m%d_%H-%M-%S)
+date=$(date +%Y%m%d_%H:%M:%S)
 
 usage() {
   echo ""
@@ -201,9 +201,9 @@ echo -e "\e[32mCreating job directories...\e[0m"
 }
 
 git_task() {
-echo -e "\e[32mCloning repository $url_git...\e[0m"
+echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
-git clone https://github.com/$url_git.git ${directory}/rpmbuild/GIT/${name}
+git clone https://github.com/${url_git}.git ${directory}/rpmbuild/GIT/${name}
 }
 
 buildrpm() {
@@ -310,6 +310,8 @@ fi
 done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
+
+cat ${MOCK_DEF_PATH}/build.log
 }
 
 rules_directory() {
@@ -374,10 +376,10 @@ rules_directory
 if [ "$massive" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
 rm -f ${directory}/${organization}.txt
-curl -s https://api.github.com/orgs/UnitedRPMs/repos?per_page=200 | grep html_url | grep "UnitedRPMs/" | awk -F '"html_url": "' '{print $2}' | awk -F '",' '{print $1}' | sed 's/$/.git/' | tee ${directory}/${organization}.txt
+curl -s https://api.github.com/orgs/${organization}/repos?per_page=200 | grep html_url | grep "${organization}/" | awk -F '"html_url": "' '{print $2}' | awk -F '",' '{print $1}' | sed 's/$/.git/' | tee ${directory}/${organization}.txt
 
 # clone all git repositories
-echo -e "\e[32mCloning all repositories $url_git...\e[0m"
+echo -e "\e[32mCloning all repositories ${url_git}...\e[0m"
 pushd ${directory}/rpmbuild/GIT/
 file=${directory}/${organization}.txt
 while IFS= read -r line; do
@@ -415,6 +417,7 @@ done <"$file"
 popd  
 local_repo
 upload_rpm
+upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # REMOTE Task only if you need rebuild a src.rpm from remote url
 elif [ -n "$SRPM" ]; then
@@ -429,6 +432,7 @@ else
 fi
   local_repo
   upload_rpm
+  upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # END REMOTE URL
 else
@@ -436,6 +440,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 local_repo
+upload_rpm
 upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 fi
