@@ -13,6 +13,6 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/kodi -s kodi.spec -r true -d 'dist .fc25'
+          /urpms -g UnitedRPMs/opera -s opera.spec -r true -d 'dist .fc25'
 
 
