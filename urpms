@@ -221,6 +221,7 @@ echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 if [ "${NO_MOCK}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
+  dnf -y install gcc gcc-c++
   dnf -y builddep ${specfile}
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
