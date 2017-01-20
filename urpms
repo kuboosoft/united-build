@@ -315,7 +315,7 @@ done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
 
-if [ -n "${TARGET}" ]
+if [ -n "${TARGET}" ]; then
 cat ${MOCK_DEF_PATH}/build.log
 fi
 }
