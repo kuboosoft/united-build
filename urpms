@@ -285,12 +285,14 @@ pushd ${repodirectory}/
 ls *.rpm | tee output-result.txt
 sign_rpm
 
+if [ -n "${TARGET}" ]; then
 cp -f ${MOCK_DEF_PATH}/build.log ${date}_build.log
 cp -f ${MOCK_DEF_PATH}/root.log ${date}_root.log
 cp -f ${MOCK_DEF_PATH}/state.log ${date}_state.log
 megaput ${date}_build.log --path /Root/logs/
 megaput ${date}_root.log --path /Root/logs/
 megaput ${date}_state.log --path /Root/logs/
+fi
 
 Ou=output-result.txt
 while IFS= read -r result; do
@@ -313,7 +315,9 @@ done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
 
+if [ -n "${TARGET}" ]
 cat ${MOCK_DEF_PATH}/build.log
+fi
 }
 
 rules_directory() {
@@ -374,7 +378,7 @@ make_directory_task
 rules_directory
 
 # HERE BEGIN THE BUILD PROCESS #
-# MASIVE TASK
+# MASSIVE TASK
 if [ "${massive}" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
 rm -f ${directory}/${organization}.txt
@@ -397,13 +401,15 @@ file=repositories.txt
 while IFS= read -r liner; do
         # display $liner or do something with $liner
 pushd $liner
+# Start checking if exist a spec file
 if [ $(ls | grep -c .spec) -gt 0 ]; then
   spectool -g *.spec
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
 #  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ]; then
+if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
+  dnf -y install gcc gcc-c++
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
@@ -411,23 +417,30 @@ if [ "${NO_MOCK}" = true ]; then
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
+#
 local_repo
 else
 echo "the repository $liner does not include a spec file"
 fi
+# End check spec file
 popd  
 done <"$file"
 popd  
 local_repo
 upload_rpm
-upload_rpm
 echo -e "\e[36mDONE...\e[0m"
-# REMOTE Task only if you need rebuild a src.rpm from remote url
-elif [ -n "${SRPM}" ]; then
+# END MASSIVE TASK
+
+# START REMOTE Task only if you need rebuild a src.rpm from remote url
+elif [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ ${SRPM}
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ]; then
+if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
+  dnf -y update
+  dnf -y install @development-tools
+  dnf -y install gcc gcc-c++
+  dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
   find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
@@ -436,15 +449,21 @@ else
 fi
   local_repo
   upload_rpm
-  upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # END REMOTE URL
-else
+
+# START DEFAULT TASK WITHOUT MASSIVE
+elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; then
 echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 local_repo
 upload_rpm
+echo -e "\e[32mChecking for rpms in the Cloud ...\e[0m"
 upload_rpm
 echo -e "\e[36mDONE...\e[0m"
+else
+usage
+exit
 fi
+#  END ALL
