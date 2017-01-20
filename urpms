@@ -282,7 +282,8 @@ fi
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd ${repodirectory}/
-ls *.rpm | tee output-result.txt
+fdupes -d $PWD
+ls *.rpm > output-result.txt
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
