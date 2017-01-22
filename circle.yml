@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/nautilus-dropbox -s nautilus-dropbox.spec -r true -d 'dist .fc25':
+    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/vidcutter -s vidcutter.spec -r true -d 'dist .fc25':
         parallel: true
         timeout: 9600
 
