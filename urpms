@@ -170,12 +170,12 @@ readargs() {
 checkargs() {
  if [ -z "${TARGET}" ] && [ "${NO_MOCK}" = true ]; then
     echo 'Using rpmbuild mode'
+ elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+    echo 'Using mock mode'
  elif [ -z "${TARGET}" ] && [ -z "${NO_MOCK}" ] ; then
     echo -e '\e[31mMissing target, example your need add "-t fedora-25-x86_64"\e[0m'
     usage
 exit
-else
-    echo 'Great! exist target for mock'
   fi
 }
 
@@ -218,15 +218,14 @@ fi
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 # if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
-if [ "${NO_MOCK}" = true ]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y install gcc gcc-c++
   dnf -y builddep ${specfile}
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
-  find . -type f -name "${name}-*.src.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
-else
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
   popd
@@ -236,24 +235,18 @@ local_repo() {
 path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
-# if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
-if [ "${NO_MOCK}" = true ]; then
 pushd ${MOCK_DEF_PATH}/
 cp -f *.fc*.*rpm ${repodirectory}/
-else
-pushd ${MOCK_DEF_PATH}/
-cp -f *.fc*.*rpm ${repodirectory}/
-fi
+ popd
 pushd ${repodirectory}/
 sign_rpm
 createrepo .
 popd
- popd
 }
 
 enjoy_repo() {
 #if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 echo '[enjoy]
 name=enjoy
 baseurl=file:///root/enjoy
@@ -261,7 +254,13 @@ enabled=1
 skip_if_unavailable=1
 gpgcheck=0
 ' > /etc/yum.repos.d/enjoy.repo
-else
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+if [ ! -f /etc/mock/${TARGET}.cfg ]; then
+echo 'The build config mock does not exist'
+echo 'Check your configuration or update your mock package'
+usage
+exit
+fi
 echo '
 [enjoy]
 name=enjoy
