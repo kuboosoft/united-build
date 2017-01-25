@@ -330,7 +330,10 @@ echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
-if [ -n "${TARGET}" ] && [ $zlog -gt 800 ]; then
+b=800
+if [ -n "${TARGET}" ] && [ $zlog \> $b ]; then
+echo 'This log is too long to be displayed'
+else
 cat ${MOCK_DEF_PATH}/build.log
 fi
 }
