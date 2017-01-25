@@ -128,6 +128,7 @@ mkdir -p ${motherpath}/x86_64/repodata/
 
 m_mv() {
 pushd $raiz
+fdupes -d $PWD
 mv -f *src.rpm ${motherpath}/srpm/
 mv -f *debuginfo*.rpm ${motherpath}/x86_64/debug/
 mv -f *.rpm ${motherpath}/x86_64/
@@ -209,6 +210,9 @@ user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
+if [ ! -f /usr/bin/fdupes ] ; then
+dnf -y install fdupes
+fi
 work_directory
 sf_back
 mdow

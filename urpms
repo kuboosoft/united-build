@@ -111,6 +111,17 @@ readargs() {
           usage
         fi
       ;;
+      -b)
+        if [ "$2" ] ; then
+          massive_spec="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       -d)
         if [ "$2" ] ; then
           DIST="$2"
@@ -214,6 +225,9 @@ if [ -n "${SNAPSHOT}" ]; then
   chmod a+x ${SNAPSHOT}
   ./${SNAPSHOT}
 fi
+if [ "${massive_spec}" = true ]; then
+  Inrelease 
+fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
@@ -315,7 +329,8 @@ done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
 popd
 
-if [ -n "${TARGET}" ]; then
+zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
+if [ -n "${TARGET}" ] && [ $zlog -gt 800 ]; then
 cat ${MOCK_DEF_PATH}/build.log
 fi
 }
@@ -356,6 +371,55 @@ dnf -y install nosync
 fi
 }
 
+massrebuild() {
+if [ -f importantbump ]; then
+file=importantbump
+while IFS= read -r line; do
+        # display $line or do something with $line
+/urpms -g UnitedRPMs/$line -s $line.spec -t ${TARGET} -b true
+done <"$file"
+fi
+}
+
+massdependency() {
+if [ ${name} = x264 ]; then
+repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+massrebuild
+elif [ ${name} = ffmpeg ]; then
+repoquery --whatrequires ffmpeg-libs --source | grep -v ffmpeg | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+massrebuild
+elif [ ${name} = libquicktime ]; then
+repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+massrebuild
+else
+echo 'No massive dependencies found or added to list'
+fi
+}
+
+Inrelease() {
+SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
+rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
+increrele=$(($rele+1))
+sed -i "${SRE}s/${rele}/${increrele}/" ${specfile}
+
+dt=$(export LC_ALL=C && date "+%a %b %d %Y")
+
+version=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
+release=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1| sed s/\.fc.//)
+
+echo "
+* $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> $version-$release  
+- Mass Rebuild" > changdata.txt
+
+f1="$(<changdata.txt)"
+
+awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.spec
+
+mv -f ${name}2.spec ${specfile}
+
+}
+
+
 #  BEGIN THE PROGRAM
 
 readargs "$@"
@@ -378,7 +442,7 @@ make_directory_task
 rules_directory
 
 # HERE BEGIN THE BUILD PROCESS #
-# MASSIVE TASK
+# MASSIVE TASK ORGANIZATION
 if [ "${massive}" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
 rm -f ${directory}/${organization}.txt
@@ -427,9 +491,10 @@ popd
 done <"$file"
 popd  
 local_repo
+massdependency
 upload_rpm
 echo -e "\e[36mDONE...\e[0m"
-# END MASSIVE TASK
+# END MASSIVE TASK ORGANIZATION
 
 # START REMOTE Task only if you need rebuild a src.rpm from remote url
 elif [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
@@ -448,6 +513,7 @@ else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
+massdependency
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # END REMOTE URL
@@ -458,6 +524,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 local_repo
+massdependency
 upload_rpm
 echo -e "\e[32mChecking for rpms in the Cloud ...\e[0m"
 upload_rpm
