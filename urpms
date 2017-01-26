@@ -295,7 +295,6 @@ fi
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd ${repodirectory}/
-fdupes -d $PWD
 ls *.rpm | sort -u > output-result.txt
 sign_rpm
 
@@ -331,7 +330,7 @@ popd
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
 b=800
-if [ -n "${TARGET}" ] && [ $zlog \> $b ]; then
+if [ -n "${TARGET}" ] && [ $zlog \> $b ] || [ "${massive_spec}" = true ]; then
 echo 'This log is too long to be displayed'
 elif [ -n "${TARGET}" ] && [ "$b" -gt "$zlog" ]; then
 cat ${MOCK_DEF_PATH}/build.log
@@ -386,6 +385,7 @@ fi
 }
 
 massdependency() {
+name_build
 if [ ${name} = x264 ]; then
 repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
@@ -404,6 +404,7 @@ fi
 }
 
 Inrelease() {
+name_build
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
 rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
 increrele=$(($rele+1))
@@ -411,12 +412,14 @@ sed -i "${SRE}s/${rele}/${increrele}/" ${specfile}
 
 dt=$(export LC_ALL=C && date "+%a %b %d %Y")
 
-version=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
-release=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1| sed s/\.fc.//)
+spver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
+specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1 | sed s/\.fc.//)
 
 echo "
-* $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> $version-$release  
-- Mass Rebuild" > changdata.txt
+* $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> ${spver}-${specrl}  
+- Mass Rebuild
+
+" > changdata.txt
 
 f1="$(<changdata.txt)"
 
