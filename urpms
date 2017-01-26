@@ -296,7 +296,7 @@ upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd ${repodirectory}/
 fdupes -d $PWD
-ls *.rpm > output-result.txt
+ls *.rpm | sort -u > output-result.txt
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
@@ -333,7 +333,7 @@ zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
 b=800
 if [ -n "${TARGET}" ] && [ $zlog \> $b ]; then
 echo 'This log is too long to be displayed'
-else
+elif [ -n "${TARGET}" ] && [ "$b" -gt "$zlog" ]; then
 cat ${MOCK_DEF_PATH}/build.log
 fi
 }
@@ -381,12 +381,16 @@ while IFS= read -r line; do
         # display $line or do something with $line
 /urpms -g UnitedRPMs/$line -s $line.spec -t ${TARGET} -b true
 done <"$file"
+local_repo
 fi
 }
 
 massdependency() {
 if [ ${name} = x264 ]; then
 repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+massrebuild
+elif [ ${name} = x265 ]; then
+repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
 elif [ ${name} = ffmpeg ]; then
 repoquery --whatrequires ffmpeg-libs --source | grep -v ffmpeg | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
