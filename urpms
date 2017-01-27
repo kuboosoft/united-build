@@ -190,6 +190,13 @@ exit
   fi
 }
 
+SRPMcheck() {
+if [ ! -f $PWD/SRPMS/${name}-*.src.rpm ]; then
+echo 'Hey check your urls of sources and patches'
+exit
+fi
+}
+
 name_build() {
 name=$( echo ${specfile} | awk -F '.' '{print $1}' )
 }
@@ -233,6 +240,7 @@ fi
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 # if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+SRPMcheck
   dnf -y update
   dnf -y install @development-tools
   dnf -y install gcc gcc-c++
@@ -240,6 +248,7 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+SRPMcheck
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
   popd
@@ -413,7 +422,7 @@ sed -i "${SRE}s/${rele}/${increrele}/" ${specfile}
 dt=$(export LC_ALL=C && date "+%a %b %d %Y")
 
 spver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
-specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1 | sed s/\.fc.//)
+specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1)
 
 echo "
 * $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> ${spver}-${specrl}  
