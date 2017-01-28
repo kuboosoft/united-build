@@ -193,7 +193,7 @@ exit
 SRPMcheck() {
 if [ ! -f $PWD/SRPMS/${name}-*.src.rpm ]; then
 echo 'Hey check your urls of sources and patches'
-exit
+exit 1
 fi
 }
 
