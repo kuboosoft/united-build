@@ -407,6 +407,17 @@ massrebuild
 elif [ ${name} = libquicktime ]; then
 repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
+elif [ ${name} = gstreamer1 ]; then
+echo 'gstreamer1-plugins-base' > importantbump
+massrebuild
+elif [ ${name} = gstreamer1-plugins-base ]; then
+echo 'gstreamer1-plugins-good
+gstreamer1-libav
+gstreamer1-plugins-bad
+gstreamer1-plugins-bad-nonfree
+gstreamer1-plugins-bad-freeworld
+gstreamer1-plugins-ugly' > importantbump
+massrebuild
 else
 echo 'No massive dependencies found or added to list'
 fi
@@ -414,6 +425,7 @@ fi
 
 Inrelease() {
 name_build
+
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
 rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
 increrele=$(($rele+1))
