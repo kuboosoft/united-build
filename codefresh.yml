@@ -4,6 +4,6 @@ step_name:
   working_directory: ${{step_id}}
   commands: 
     - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -t fedora-25-x86_64
-  fail_fast: false
+
   
   
