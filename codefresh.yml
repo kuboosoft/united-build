@@ -1,5 +1,7 @@
 # codefresh CI flowֿ - edited'
 version: "1.0"
+  services:
+    - docker
 steps:
     unit-tests:
       image: davidva/unibuild:latest
