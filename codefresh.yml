@@ -1,12 +1,9 @@
-step_name:
-  description: Builds chromium
-  image: davidva/unibuild
-  working_directory: ${{step_id}}
-composition:
-    version: '2'
-  commands: 
-    - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -t fedora-25-x86_64
-entry_point:
-    - sh
-  
-  
+# codefresh CI flowֿ - edited'
+version: "1.0"
+steps:
+    unit-tests:
+      image: davidva/unibuild:latest
+      fail-fast: false
+      working-directory : ${{initial-clone}}
+      commands:
+        - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -t fedora-25-x86_64
