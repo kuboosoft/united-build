@@ -1,7 +1,8 @@
 # codefresh CI flowֿ - edited'
 version: "1.0"
   services:
-    - docker
+      db:
+        image: postgres
 steps:
     unit-tests:
       image: davidva/unibuild:latest
