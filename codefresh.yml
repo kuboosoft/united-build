@@ -1,12 +1,11 @@
-# codefresh CI flowֿ - edited'
-version: "1.0"
-  services:
-      db:
-        image: postgres
+version: '1.0'
+
 steps:
-    unit-tests:
-      image: davidva/unibuild:latest
-      fail-fast: false
-      working-directory : ${{initial-clone}}
-      commands:
-        - docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -t fedora-25-x86_64
+
+  build-prj:
+    type: build
+    description: UC - build step
+    image-name: davidva/unibuild
+    dockerfile: Dockerfile
+    tag: ${{CF_BRANCH}}
+    privileged: true

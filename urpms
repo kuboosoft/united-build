@@ -100,6 +100,17 @@ readargs() {
           usage
         fi
       ;;
+      -p)
+        if [ "$2" ] ; then
+          TOKENG="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       -g)
         if [ "$2" ] ; then
           url_git="$2"
@@ -234,6 +245,7 @@ if [ -n "${SNAPSHOT}" ]; then
 fi
 if [ "${massive_spec}" = true ]; then
   Inrelease 
+#  Pushaugit
 fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
@@ -426,6 +438,16 @@ fi
 Inrelease() {
 name_build
 
+#------------
+# Current version 
+dnf -y download --source ${name}
+rpack=$(rpm -qip ${name}*src.rpm | grep 'Version' | awk '{print $3}')
+curver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
+if [ ${rpack} -ge ${curver} ]; then
+echo "You need update ${name}"
+exit 1
+fi
+#------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
 rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
 increrele=$(($rele+1))
@@ -438,7 +460,7 @@ specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1)
 
 echo "
 * $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> ${spver}-${specrl}  
-- Mass Rebuild
+- Automatic Mass Rebuild
 
 " > changdata.txt
 
@@ -448,6 +470,25 @@ awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.s
 
 mv -f ${name}2.spec ${specfile}
 
+}
+
+
+Pushaugit() {
+# CREDENTIALS
+rm -rf BUILD \
+BUILDROOT \
+RPMS \
+SPECS \
+SRPMS 
+wget -c -P $HOME https://www.foo.com/.git-credentials.gpg
+if [ -f ~/.git-credentials.gpg ]; then
+gpg --passphrase ${TOKENG} -d ~/.git-credentials.gpg
+git add .
+git commit -m "Automatic Mass Rebuild"
+git push origin master
+rm -f ~/.git-credentials
+rm -f ~/.git-credentials.gpg
+fi
 }
 
 
