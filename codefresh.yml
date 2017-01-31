@@ -8,4 +8,4 @@ steps:
     image-name: davidva/unibuild
     dockerfile: Dockerfile
     tag: ${{CF_BRANCH}}
-    privileged: true
+#    privileged: true
