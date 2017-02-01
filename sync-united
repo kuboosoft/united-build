@@ -172,9 +172,9 @@ popd
 mupl() {
 
 # LIST PACKAGES IN LOCAL
-ls *.rpm ${motherpath}/x86_64/ | grep -ve repodata -e repoview | sort -u > output-result-rpms.txt
-ls *.rpm ${motherpath}/x86_64/debug/ | grep -ve repodata -e repoview | sort -u > output-result-debugs.txt
-ls *.rpm ${motherpath}/srpm/ | grep -ve repodata -e repoview | sort -u > output-result-srpms.txt
+ls *.rpm ${motherpath}/x86_64/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-rpms.txt
+ls *.rpm ${motherpath}/x86_64/debug/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-debugs.txt
+ls *.rpm ${motherpath}/srpm/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-srpms.txt
 
 # LIST PACKAGES IN CLOUD
 # RPMS
@@ -202,9 +202,10 @@ fi
 
 
 # RPMS
-Ou=output-result-rpms.txt
+Ou=$HOME/output-result-rpms.txt
 while IFS= read -r result; do
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist${task} | grep -c $result) -lt 1 ]; then
+pushd ${motherpath}/x86_64/
+if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalistrepository | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/repository/x86_64/
 elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalistmegalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/25/x86_64/
@@ -213,34 +214,39 @@ megaput $result --path /Root/unitedrpms/26/x86_64/
 elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalistmegalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/27/x86_64/
 fi
+popd
 done <"$Ou"
 
 # DEBUG
-Oa=output-result-debugs.txt
+Oa=$HOME/output-result-debugs.txt
 while IFS= read -r resultb; do
-if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
+pushd ${motherpath}/x86_64/debug/
+if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ $(cat megalistrepository_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/repository/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ $(cat megalist25_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/25/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ $(cat megalist26_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/26/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ $(cat megalist27_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/27/x86_64/debug/
 fi
+popd
 done <"$Oa"
 
 # SRPM
-Oe=output-result-srpms.txt
+Oe=$HOME/output-result-srpms.txt
 while IFS= read -r resultc; do
-if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
+pushd ${motherpath}/srpm/
+if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ $(cat megalistrepository_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/repository/srpm/
-elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ $(cat megalist25_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/25/srpm/
-elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ $(cat megalist26_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/26/srpm/
-elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ $(cat megalist27_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/27/srpm/
 fi
+popd
 done <"$Oe"
 
 # REPODATA AND REPOVIEW
@@ -258,8 +264,7 @@ if [ "$(ls -A ${raiz})" ]; then
 echo "Great ${raiz} is not Empty"
 else
 echo "${raiz} is Empty"
-mupl
-exit
+exit 0
 fi
 }
 
