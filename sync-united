@@ -61,6 +61,10 @@ readargs() {
   done
 }
 
+user=kuboosoft
+raiz=$HOME/f${task}
+motherpath=$HOME/${task}
+
 sf_back() {
 sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
 }
@@ -174,22 +178,13 @@ ls *.rpm ${motherpath}/srpm/ | grep -ve repodata -e repoview | sort -u > output-
 
 # LIST PACKAGES IN CLOUD
 # RPMS
-megals --names /Root/unitedrpms/repository/x86_64/ | grep -ve repodata -e repoview > megalist24
-megals --names /Root/unitedrpms/25/x86_64/ | grep -ve repodata -e repoview > megalist25
-megals --names /Root/unitedrpms/26/x86_64/ | grep -ve repodata -e repoview > megalist26
-megals --names /Root/unitedrpms/27/x86_64/ | grep -ve repodata -e repoview > megalist27
+megals --names /Root/unitedrpms/${task}/x86_64/ | grep -ve repodata -e repoview > megalist${task}
 
 # DEBUG
-megals --names /Root/unitedrpms/repository/x86_64/debug/ | grep -ve repodata -e repoview > megalist24_debug
-megals --names /Root/unitedrpms/25/x86_64/debug/ | grep -ve repodata -e repoview > megalist25_debug
-megals --names /Root/unitedrpms/26/x86_64/debug/ | grep -ve repodata -e repoview > megalist26_debug
-megals --names /Root/unitedrpms/27/x86_64/debug/ | grep -ve repodata -e repoview > megalist27_debug
+megals --names /Root/unitedrpms/${task}/x86_64/debug/ | grep -ve repodata -e repoview > megalist${task}_debug
 
 # SRPM
-megals --names /Root/unitedrpms/repository/srpm/ | grep -ve repodata -e repoview > megalist24_srpm
-megals --names /Root/unitedrpms/25/srpm/ | grep -ve repodata -e repoview > megalist25_srpm
-megals --names /Root/unitedrpms/26/srpm/ | grep -ve repodata -e repoview > megalist26_srpm
-megals --names /Root/unitedrpms/27/srpm/ | grep -ve repodata -e repoview > megalist27_srpm
+megals --names /Root/unitedrpms/${task}/srpm/ | grep -ve repodata -e repoview > megalist${task}_srpm
 #
 
 echo -e "\e[31mSync with Mega...\e[0m"
@@ -209,13 +204,13 @@ fi
 # RPMS
 Ou=output-result-rpms.txt
 while IFS= read -r result; do
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
+if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/repository/x86_64/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalistmegalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/25/x86_64/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalistmegalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/26/x86_64/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalistmegalist${task} | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/27/x86_64/
 fi
 done <"$Ou"
@@ -223,13 +218,13 @@ done <"$Ou"
 # DEBUG
 Oa=output-result-debugs.txt
 while IFS= read -r resultb; do
-if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ $(cat megalist24_debug | grep -c $result) -lt 1 ]; then
+if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/repository/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ $(cat megalist25_debug | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/25/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ $(cat megalist26_debug | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/26/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ $(cat megalist27_debug | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ $(cat megalist${task}_debug | grep -c $resultb) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/27/x86_64/debug/
 fi
 done <"$Oa"
@@ -237,13 +232,13 @@ done <"$Oa"
 # SRPM
 Oe=output-result-srpms.txt
 while IFS= read -r resultc; do
-if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ $(cat megalist24_srpm | grep -c $result) -lt 1 ]; then
+if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/repository/srpm/
-elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ $(cat megalist25_srpm | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/25/srpm/
-elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ $(cat megalist26_srpm | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/26/srpm/
-elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ $(cat megalist27_srpm | grep -c $result) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ $(cat megalist${task}_srpm | grep -c $resultc) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/27/srpm/
 fi
 done <"$Oe"
@@ -281,9 +276,6 @@ echo -e "\e[32mSorry, check if exists the current release...\e[0m"
 exit
 fi
 
-user=kuboosoft
-raiz=$HOME/f${task}
-motherpath=$HOME/${task}
 
 if [ ! -f /usr/bin/fdupes ] ; then
 dnf -y install fdupes
