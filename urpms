@@ -202,8 +202,24 @@ exit
 }
 
 SRPMcheck() {
-if [ ! -f $PWD/SRPMS/${name}-*.src.rpm ]; then
-echo 'Hey check your urls of sources and patches'
+name_build
+counting=$( ls -1 ${directory}/rpmbuild/GIT/${name}/SRPMS/ | grep "${name}-*.src.rpm" | wc -l )
+if [ "${counting}" -ge 2 ]; then
+find $PWD/SRPMS/ -name "${name}-*.src.rpm" -mmin -2 -exec rm -f {} ';'
+exit 1
+fi
+
+ass=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
+if [ "$ass" != "0" ]; then
+echo "${name} is already built"
+exit 0
+fi
+
+bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name}-*.src.rpm 2> /dev/null | wc -l)
+if [ "$bsource" != "0" ]; then
+   echo "Exists src.rpm of ${name}, great"
+else
+echo "Hey the src.rpm of ${name} does not exist; check your urls in sources and patches"
 exit 1
 fi
 }
@@ -233,11 +249,16 @@ git_task() {
 echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
 git clone https://github.com/${url_git}.git ${directory}/rpmbuild/GIT/${name}
+if [ ! -f ${directory}/rpmbuild/GIT/${name}/${specfile} ]; then
+echo 'Hey check if your git repository exists!'
+exit 1
+fi
 }
 
 buildrpm() {
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
+
   pushd ${directory}/rpmbuild/GIT/${name}/
 if [ -n "${SNAPSHOT}" ]; then
   chmod a+x ${SNAPSHOT}
@@ -281,7 +302,7 @@ popd
 
 enjoy_repo() {
 #if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
 echo '[enjoy]
 name=enjoy
 baseurl=file:///root/enjoy
@@ -289,12 +310,12 @@ enabled=1
 skip_if_unavailable=1
 gpgcheck=0
 ' > /etc/yum.repos.d/enjoy.repo
-elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
 if [ ! -f /etc/mock/${TARGET}.cfg ]; then
 echo 'The build config mock does not exist'
 echo 'Check your configuration or update your mock package'
 usage
-exit
+exit 1
 fi
 echo '
 [enjoy]
@@ -328,21 +349,29 @@ megaput ${date}_root.log --path /Root/logs/
 megaput ${date}_state.log --path /Root/logs/
 fi
 
+megals --names /Root/unitedrpms/updates/repository/ > megalist24
+megals --names /Root/unitedrpms/updates/25/ > megalist25
+megals --names /Root/unitedrpms/updates/26/ > megalist26
+megals --names /Root/unitedrpms/updates/27/ > megalist27
+megals --names /Root/unitedrpms/updates/28/ > megalist28
+megals --names /Root/unitedrpms/updates/29/ > megalist29
+megals --names /Root/unitedrpms/updates/30/ > megalist30
+
 Ou=output-result.txt
 while IFS= read -r result; do
-if [ $(ls $result | grep -c fc24) -gt 0 ]; then
+if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/repository/
-elif [ $(ls $result | grep -c fc25) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/25/
-elif [ $(ls $result | grep -c fc26) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/26/
-elif [ $(ls $result | grep -c fc27) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/27/
-elif [ $(ls $result | grep -c fc28) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc28) -gt 0 ] && [ $(cat megalist28 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/28/
-elif [ $(ls $result | grep -c fc29) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc29) -gt 0 ] && [ $(cat megalist29 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/29/
-elif [ $(ls $result | grep -c fc30) -gt 0 ]; then
+elif [ $(ls $result | grep -c fc30) -gt 0 ] && [ $(cat megalist30 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
@@ -425,7 +454,6 @@ massrebuild
 elif [ ${name} = gstreamer1-plugins-base ]; then
 echo 'gstreamer1-plugins-good
 gstreamer1-libav
-gstreamer1-plugins-bad
 gstreamer1-plugins-bad-nonfree
 gstreamer1-plugins-bad-freeworld
 gstreamer1-plugins-ugly' > importantbump
@@ -443,9 +471,11 @@ name_build
 dnf -y download --source ${name}
 rpack=$(rpm -qip ${name}*src.rpm | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
-if [ ${rpack} -ge ${curver} ]; then
+if [ ${rpack} -gt ${curver} ]; then
 echo "You need update ${name}"
 exit 1
+elif [ ${rpack} -eq ${curver} ]; then
+echo 'Same version, then enabled the automatic release'
 fi
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
@@ -456,7 +486,7 @@ sed -i "${SRE}s/${rele}/${increrele}/" ${specfile}
 dt=$(export LC_ALL=C && date "+%a %b %d %Y")
 
 spver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
-specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1)
+specrl=$(rpm -q --qf "%{release}\n" --specfile ${specfile} | head -1 | awk -F '.fc' '{print $1}')
 
 echo "
 * $dt Unitedrpms Project <unitedrpms AT protonmail DOT com> ${spver}-${specrl}  
@@ -475,6 +505,16 @@ mv -f ${name}2.spec ${specfile}
 
 Pushaugit() {
 # CREDENTIALS
+name_build
+pushd ${directory}/rpmbuild/GIT/${name}/
+find . -name "${name}*.deb" -exec rm -r {} \; 
+find . -name "${name}*.tar.gz" -exec rm -r {} \; 
+find . -name "${name}*.tar.xz" -exec rm -r {} \; 
+find . -name "${name}*.tar" -exec rm -r {} \; 
+find . -name "${name}*.zip" -exec rm -r {} \; 
+find . -name "${name}*.rar" -exec rm -r {} \; 
+find . -name "${name}*.rpm" -exec rm -r {} \;
+
 rm -rf BUILD \
 BUILDROOT \
 RPMS \
@@ -489,6 +529,7 @@ git push origin master
 rm -f ~/.git-credentials
 rm -f ~/.git-credentials.gpg
 fi
+popd
 }
 
 
@@ -538,20 +579,20 @@ while IFS= read -r liner; do
         # display $liner or do something with $liner
 pushd $liner
 # Start checking if exist a spec file
-if [ $(ls | grep -c .spec) -gt 0 ]; then
-  spectool -g *.spec
-  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
+if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
+  spectool -g $liner.spec
+  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs $liner.spec
 #  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y install gcc gcc-c++
   dnf -y builddep *.spec
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm
   find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
   find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
 else
-  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/$liner-*.src.rpm 
 fi
 #
 local_repo
