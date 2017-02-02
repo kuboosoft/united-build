@@ -186,6 +186,8 @@ megals --names /Root/unitedrpms/${task}/srpm/ | grep -ve repodata -e repoview > 
 
 echo -e "\e[31mSync with Mega...\e[0m"
 if [ -f ${motherpath}/x86_64/repodata/repomd.xml ]; then
+
+# DELETE OLD REPODATA AND REPOVIEW IN MG
 megarm /Root/unitedrpms/${task}/x86_64/repodata
 megarm /Root/unitedrpms/${task}/x86_64/debug/repodata
 megarm /Root/unitedrpms/${task}/srpm/repodata
@@ -197,18 +199,18 @@ megarm /Root/unitedrpms/${task}/x86_64/debug/repoview
 megarm /Root/unitedrpms/${task}/srpm/repoview
 fi
 
-
+# NOW THE REAL SYNC WITH MG
 # RPMS
 Ou=$HOME/output-result-rpms.txt
 while IFS= read -r result; do
 pushd ${motherpath}/x86_64/
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat /tmp/megalistrepository | grep -c $result) -lt 1 ]; then
+if [ $(ls $result | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository ] && [ $(cat /tmp/megalistrepository | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/repository/x86_64/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat /tmp/megalist25 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25 ] && [ $(cat /tmp/megalist25 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/25/x86_64/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat /tmp/megalist26 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26 ] && [ $(cat /tmp/megalist26 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/26/x86_64/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat /tmp/megalist27 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27 ] &&  [ $(cat /tmp/megalist27 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/27/x86_64/
 fi
 done <"$Ou"
@@ -218,13 +220,13 @@ popd
 Oa=$HOME/output-result-debugs.txt
 pushd ${motherpath}/x86_64/debug/
 while IFS= read -r resultb; do
-if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ $(cat /tmp/megalistrepository_debug | grep -c $resultb) -lt 1 ]; then
+if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository_debug ] && [ $(cat /tmp/megalistrepository_debug | grep -c $resultb ) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/repository/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ $(cat /tmp/megalist25_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25_debug ] && [ $(cat /tmp/megalist25_debug | grep -c $resultb ) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/25/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ $(cat /tmp/megalist26_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26_debug ] && [ $(cat /tmp/megalist26_debug | grep -c $resultb ) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/26/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ $(cat /tmp/megalist27_debug | grep -c $resultb) -lt 1 ]; then
+elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27_debug ] && [ $(cat /tmp/megalist27_debug | grep -c $resultb ) -lt 1 ]; then
 megaput $resultb --path /Root/unitedrpms/27/x86_64/debug/
 fi
 done <"$Oa"
@@ -235,25 +237,33 @@ popd
 Oe=$HOME/output-result-srpms.txt
 pushd ${motherpath}/srpm/
 while IFS= read -r resultc; do
-if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ $( cat megalistrepository_SR | grep -c $resultc) -lt 1 ]; then
+if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository_SR ] && [ $( cat /tmp/megalistrepository_SR | grep -c $resultc ) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/repository/srpm/
-elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ $( cat /tmp/megalist25_SR | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25_SR ] && [ $( cat /tmp/megalist25_SR | grep -c $resultc ) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/25/srpm/
-elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ $( cat /tmp/megalist26_SR | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26_SR ] && [ $( cat /tmp/megalist26_SR | grep -c $resultc ) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/26/srpm/
-elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ $( cat /tmp/megalist27_SR | grep -c $resultc) -lt 1 ]; then
+elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27_SR ] && [ $( cat /tmp/megalist27_SR | grep -c $resultc ) -lt 1 ]; then
 megaput $resultc --path /Root/unitedrpms/27/srpm/
 fi
 done <"$Oe"
 popd
 
-# REPODATA AND REPOVIEW
+# SYNC REPODATA AND REPOVIEW
+megamkdir /Root/unitedrpms/${task}/x86_64/debug/repodata
+megamkdir /Root/unitedrpms/${task}/x86_64/debug/repoview
+megamkdir /Root/unitedrpms/${task}/x86_64/repodata
+megamkdir /Root/unitedrpms/${task}/x86_64/repoview
+megamkdir /Root/unitedrpms/${task}/srpm/repodata
+megamkdir /Root/unitedrpms/${task}/srpm/repoview
+
 megacopy --local ${motherpath}/x86_64/debug/repodata --remote /Root/unitedrpms/${task}/x86_64/debug/repodata
 megacopy --local ${motherpath}/x86_64/debug/repoview --remote /Root/unitedrpms/${task}/x86_64/debug/repoview 
 megacopy --local ${motherpath}/x86_64/repodata --remote /Root/unitedrpms/${task}/x86_64/repodata
 megacopy --local ${motherpath}/x86_64/repoview --remote /Root/unitedrpms/${task}/x86_64/repoview
 megacopy --local ${motherpath}/srpm/repodata --remote /Root/unitedrpms/${task}/srpm/repodata
 megacopy --local ${motherpath}/srpm/repoview --remote /Root/unitedrpms/${task}/srpm/repoview
+rm -f /tmp/megalist*
 echo 'Completed sync with Mega'
 }
 
