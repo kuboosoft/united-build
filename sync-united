@@ -61,9 +61,6 @@ readargs() {
   done
 }
 
-user=kuboosoft
-raiz=$HOME/f${task}
-motherpath=$HOME/${task}
 
 sf_back() {
 sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
@@ -117,12 +114,12 @@ popd
 
 mdow() {
 echo -e "\e[31mDownloading updates...\e[0m"
-megacopy --local ${raiz} --remote /Root/unitedrpms/updates/${task}/ --download
+megacopy --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
 }
 
 work_directory() {
 mkdir -p ${motherpath}
-mkdir -p ${raiz}
+mkdir -p "${raiz}"
 mkdir -p ${motherpath}/srpm/repoview/
 mkdir -p ${motherpath}/srpm/repodata/
 mkdir -p ${motherpath}/x86_64/debug/
@@ -131,7 +128,7 @@ mkdir -p ${motherpath}/x86_64/repodata/
 
 
 m_mv() {
-pushd ${raiz}
+pushd "${raiz}"
 fdupes -d $PWD
 mv -f *src.rpm ${motherpath}/srpm/
 mv -f *debuginfo*.rpm ${motherpath}/x86_64/debug/
@@ -207,11 +204,11 @@ while IFS= read -r result; do
 pushd ${motherpath}/x86_64/
 if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat /tmp/megalistrepository | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/repository/x86_64/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat /tmp/megalistmegalist25 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat /tmp/megalist25 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/25/x86_64/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat /tmp/megalistmegalist26 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat /tmp/megalist26 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/26/x86_64/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat /tmp/megalistmegalist27 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat /tmp/megalist27 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/27/x86_64/
 fi
 done <"$Ou"
@@ -273,6 +270,10 @@ fi
 
 #  BEGIN THE PROGRAM
 readargs "$@"
+
+user=kuboosoft
+raiz=$HOME/f${task}
+motherpath=$HOME/${task}
 
 if [ ${task} = repository ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ]; then
 echo -e "\e[32msync limited to F24-F27...\e[0m"
