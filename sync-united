@@ -169,9 +169,17 @@ popd
 mupl() {
 
 # LIST PACKAGES IN LOCAL
-ls *.rpm ${motherpath}/x86_64/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-rpms.txt
-ls *.rpm ${motherpath}/x86_64/debug/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-debugs.txt
-ls *src.rpm ${motherpath}/srpm/ | grep -ve repodata -e repoview | sort -u > $HOME/output-result-srpms.txt
+pushd ${motherpath}/x86_64/
+ls *.rpm | grep -ve repodata -e repoview -e debug | sort -u > $HOME/output-result-rpms.txt
+popd
+
+pushd ${motherpath}/x86_64/debug/
+ls *.rpm | grep -ve repodata -e repoview | sort -u > $HOME/output-result-debugs.txt
+popd
+
+pushd ${motherpath}/srpm/
+ls *src.rpm | grep -ve repodata -e repoview | sort -u > $HOME/output-result-srpms.txt
+popd
 
 # LIST PACKAGES IN CLOUD
 # RPMS
