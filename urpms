@@ -203,7 +203,7 @@ exit
 
 SRPMcheck() {
 name_build
-counting=$( ls -1 ${directory}/rpmbuild/GIT/${name}/SRPMS/ | grep "${name}-*.src.rpm" | wc -l )
+counting=$( ls -1 ${directory}/rpmbuild/GIT/${name}/SRPMS/ | grep ${name} | grep .src.rpm | wc -l )
 if [ "${counting}" -ge 2 ]; then
 find $PWD/SRPMS/ -name "${name}-*.src.rpm" -mmin -2 -exec rm -f {} ';'
 exit 1
@@ -258,7 +258,6 @@ fi
 buildrpm() {
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
-
   pushd ${directory}/rpmbuild/GIT/${name}/
 if [ -n "${SNAPSHOT}" ]; then
   chmod a+x ${SNAPSHOT}
@@ -271,20 +270,25 @@ fi
   spectool -g ${specfile}
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
-# if [ -n "${NO_MOCK}" ] && [ "${NO_MOCK}" = true ]; then
+re_enabling_repos
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
+if [ "${massive_spec}" != true ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y install gcc gcc-c++
-  dnf -y builddep ${specfile}
+fi
+  dnf -y builddep "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
-  find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
+find . -iname *.rpm -exec cp -n {} ${MOCK_DEF_PATH}/ \;
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 SRPMcheck
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
   popd
+local_repo
+massdependency
+upload_rpm
 }
 
 local_repo() {
@@ -292,18 +296,24 @@ path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
 pushd ${MOCK_DEF_PATH}/
-cp -f *.fc*.*rpm ${repodirectory}/
+cp -f *.rpm ${repodirectory}/ 
  popd
-pushd ${repodirectory}/
+pushd "${repodirectory}"
+rm -rf repodata/
+ rm -f $( dnf -y repomanage --keep=1 --old $PWD )
 sign_rpm
 createrepo .
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+local_install_packages
+fi
 popd
 }
 
 enjoy_repo() {
 #if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
-echo '[enjoy]
+echo '
+[enjoy]
 name=enjoy
 baseurl=file:///root/enjoy
 enabled=1
@@ -336,7 +346,7 @@ fi
 
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
-pushd ${repodirectory}/
+pushd "${repodirectory}"
 ls *.rpm | sort -u > output-result.txt
 sign_rpm
 
@@ -425,33 +435,48 @@ fi
 
 massrebuild() {
 if [ -f importantbump ]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+local_install_packages
+fi
 file=importantbump
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -t ${TARGET} -b true
+/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -b true
+done <"$file"
+local_repo
+
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+while IFS= read -r line; do
+        # display $line or do something with $line
+/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
 done <"$file"
 local_repo
 fi
+else
+echo 'mass rebuild failed'
+exit 1
+ fi
 }
 
 massdependency() {
 name_build
-if [ ${name} = x264 ]; then
+if [ "${name}" = x264 ]; then
 repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
-elif [ ${name} = x265 ]; then
+elif [ "${name}" = x265 ]; then
 repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
-elif [ ${name} = ffmpeg ]; then
+elif [ "${name}" = ffmpeg ]; then
 repoquery --whatrequires ffmpeg-libs --source | grep -v ffmpeg | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
-elif [ ${name} = libquicktime ]; then
+elif [ "${name}" = libquicktime ]; then
 repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
-elif [ ${name} = gstreamer1 ]; then
+elif [ "${name}" = gstreamer1 ]; then
 echo 'gstreamer1-plugins-base' > importantbump
 massrebuild
-elif [ ${name} = gstreamer1-plugins-base ]; then
+elif [ "${name}" = gstreamer1-plugins-base ]; then
 echo 'gstreamer1-plugins-good
 gstreamer1-libav
 gstreamer1-plugins-bad-nonfree
@@ -469,13 +494,24 @@ name_build
 #------------
 # Current version 
 dnf -y download --source ${name}
+re_enabling_repos
 rpack=$(rpm -qip ${name}*src.rpm | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
-if [ ${rpack} -gt ${curver} ]; then
+if [ -z "${rpack}" ]; then
+echo "Source from repo doesn't exist"
+exit 1
+elif [ -z "${curver}" ]; then
+echo "Spec file in massive build doesn't exist"
+exit 1
+fi
+
+if [ "${rpack}" > "${curver}" ]; then
 echo "You need update ${name}"
 exit 1
-elif [ ${rpack} -eq ${curver} ]; then
+elif [ "${rpack}" = "${curver}" ]; then
 echo 'Same version, then enabled the automatic release'
+elif [ "${rpack}" < "${curver}" ]; then
+echo 'Great, a updated packages; then enabled the automatic release'
 fi
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
@@ -533,6 +569,19 @@ popd
 }
 
 
+local_install_packages() {
+dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
+}
+
+re_enabling_repos() {
+dnf -y config-manager --set-disabled unitedrpms-source 
+dnf -y config-manager --set-disabled updates-source 
+dnf -y config-manager --set-disabled fedora-source 
+dnf -y config-manager --set-enabled fedora
+dnf -y config-manager --set-enabled updates
+dnf -y config-manager --set-enabled unitedrpms
+}
+
 #  BEGIN THE PROGRAM
 
 readargs "$@"
@@ -589,8 +638,8 @@ if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y install gcc gcc-c++
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm
-  find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
-  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
+  find . -type f -name "*.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
+  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/$liner-*.src.rpm 
 fi
@@ -620,8 +669,8 @@ if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
   dnf -y install gcc gcc-c++
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
-  find . -type f -name "*.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
-  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp  {} ${MOCK_DEF_PATH}/ \;
+  find . -type f -name "*.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
+  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
@@ -636,11 +685,6 @@ elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; 
 echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
-local_repo
-massdependency
-upload_rpm
-echo -e "\e[32mChecking for rpms in the Cloud ...\e[0m"
-upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 else
 usage
