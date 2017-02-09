@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/gstreamer1 -s gstreamer1.spec -r true -d 'dist .fc25':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/gstreamer1 -s gstreamer1.spec -r true -d 'dist .fc25' -b true:
         parallel: true
         timeout: 9600
 
