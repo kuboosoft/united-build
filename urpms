@@ -273,17 +273,17 @@ echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 re_enabling_repos
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
-if [ "${massive_spec}" != true ]; then
   dnf -y update
   dnf -y install @development-tools
   dnf -y install gcc gcc-c++
-fi
   dnf -y builddep "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
 find . -iname *.rpm -exec cp -n {} ${MOCK_DEF_PATH}/ \;
+local_repo
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 SRPMcheck
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+local_repo
 fi
   popd
 local_repo
@@ -490,13 +490,14 @@ fi
 
 Inrelease() {
 name_build
-
+local_repo
 #------------
 # Current version 
 dnf -y download --source ${name}
 re_enabling_repos
-rpack=$(rpm -qip ${name}*src.rpm | grep 'Version' | awk '{print $3}')
-curver=$(rpm -q --qf "%{version}\n" --specfile ${specfile} | head -1)
+sign_rpm
+rpack=$(rpm -qip ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
+curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
 if [ -z "${rpack}" ]; then
 echo "Source from repo doesn't exist"
 exit 1
@@ -505,12 +506,13 @@ echo "Spec file in massive build doesn't exist"
 exit 1
 fi
 
-if [ "${rpack}" > "${curver}" ]; then
-echo "You need update ${name}"
+gt=$(echo "${rpack}" > "${curver}" | bc -q )
+if [ "$gt" = 1 ]; then
+echo "You need update gstreamer1"
 exit 1
 elif [ "${rpack}" = "${curver}" ]; then
 echo 'Same version, then enabled the automatic release'
-elif [ "${rpack}" < "${curver}" ]; then
+else 
 echo 'Great, a updated packages; then enabled the automatic release'
 fi
 #------------
@@ -570,16 +572,24 @@ popd
 
 
 local_install_packages() {
-dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
+dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e urpms )
 }
 
 re_enabling_repos() {
+fedora_release=$(rpm -E %fedora) 
+
+if [ "${fedora_release}" -ge 26 ]; then
+dnf -y config-manager --set-disabled rawhide-source
+dnf -y config-manager --set-enabled unitedrpms
+dnf -y config-manager --set-enabled rawhide
+else
 dnf -y config-manager --set-disabled unitedrpms-source 
 dnf -y config-manager --set-disabled updates-source 
 dnf -y config-manager --set-disabled fedora-source 
 dnf -y config-manager --set-enabled fedora
 dnf -y config-manager --set-enabled updates
 dnf -y config-manager --set-enabled unitedrpms
+fi
 }
 
 #  BEGIN THE PROGRAM
