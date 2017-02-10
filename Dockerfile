@@ -8,7 +8,6 @@ RUN rm -rf united-build \
 && chmod a+x urpms \
 && ./urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -r true -d 'dist .fc26'
 
-COPY ./usr/src/app
 
 EXPOSE 3000
 
