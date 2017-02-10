@@ -6,7 +6,7 @@ RUN rm -rf united-build \
 && git clone https://github.com/kuboosoft/united-build.git \
 && cd united-build \
 && chmod a+x urpms \
-&& ./urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -r true -d 'dist .fc26'
+&& ./urpms -g UnitedRPMs/gstreamer1 -s gstreamer1.spec -r true -d 'dist .fc26'
 
 VOLUME ["/var/lib/mock"]
 USER root
