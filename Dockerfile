@@ -8,6 +8,7 @@ RUN rm -rf united-build \
 && chmod a+x urpms \
 && ./urpms -g UnitedRPMs/chromium-freeworld -s chromium-freeworld.spec -r true -d 'dist .fc26'
 
+CACHE OFF
 
 EXPOSE 3000
 
