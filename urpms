@@ -696,8 +696,9 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 echo -e "\e[36mDONE...\e[0m"
+exit 0
 else
 usage
-exit
+exit 1
 fi
 #  END ALL
