@@ -15,4 +15,6 @@ build:
         code: | 
           /urpms -g UnitedRPMs/opera -s opera.spec -r true -d 'dist .fc25'
 
+#
+
 
