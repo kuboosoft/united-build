@@ -212,7 +212,6 @@ fi
 ass=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
 if [ "$ass" != "0" ]; then
 echo "${name} is already built"
-exit 0
 fi
 
 bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name}-*.src.rpm 2> /dev/null | wc -l)
@@ -279,11 +278,9 @@ SRPMcheck
   dnf -y builddep "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
 find . -iname *.rpm -exec cp -n {} ${MOCK_DEF_PATH}/ \;
-local_repo
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 SRPMcheck
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
-local_repo
 fi
   popd
 local_repo
