@@ -247,6 +247,9 @@ echo -e "\e[32mCreating job directories...\e[0m"
 git_task() {
 echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
+if [ -d ${directory}/rpmbuild/GIT/${name} ]; then
+rm -rf ${directory}/rpmbuild/GIT/${name}/
+fi
 git clone https://github.com/${url_git}.git ${directory}/rpmbuild/GIT/${name}
 if [ ! -f ${directory}/rpmbuild/GIT/${name}/${specfile} ]; then
 echo 'Hey check if your git repository exists!'
@@ -301,6 +304,7 @@ rm -rf repodata/
 sign_rpm
 createrepo .
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+dnf -y clean metadata
 local_install_packages
 fi
 popd
