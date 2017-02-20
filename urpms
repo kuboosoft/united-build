@@ -247,9 +247,7 @@ echo -e "\e[32mCreating job directories...\e[0m"
 git_task() {
 echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
-if [ -d ${directory}/rpmbuild/GIT/${name} ]; then
-rm -rf ${directory}/rpmbuild/GIT/${name}/
-fi
+rm -rf ${directory}/rpmbuild/GIT/*
 git clone https://github.com/${url_git}.git ${directory}/rpmbuild/GIT/${name}
 if [ ! -f ${directory}/rpmbuild/GIT/${name}/${specfile} ]; then
 echo 'Hey check if your git repository exists!'
@@ -258,6 +256,7 @@ fi
 }
 
 buildrpm() {
+# Our build task
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
   pushd ${directory}/rpmbuild/GIT/${name}/
@@ -276,12 +275,17 @@ re_enabling_repos
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
   dnf -y update
-  dnf -y install @development-tools
-  dnf -y install gcc gcc-c++
+  chroot_dependency
   dnf -y builddep "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
-find . -iname *.rpm -exec cp -n {} ${MOCK_DEF_PATH}/ \;
-elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
+cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
+cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
+cp -n SRPMS/* ${MOCK_DEF_PATH}/
+pushd "${MOCK_DEF_PATH}"
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
+popd
+elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
@@ -292,6 +296,7 @@ upload_rpm
 }
 
 local_repo() {
+# Our local repo; useful in massive rebuild
 path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
@@ -305,13 +310,12 @@ sign_rpm
 createrepo .
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean metadata
-local_install_packages
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
 fi
 popd
 }
 
 enjoy_repo() {
-#if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
 echo '
 [enjoy]
@@ -352,12 +356,12 @@ ls *.rpm | sort -u > output-result.txt
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
-cp -f ${MOCK_DEF_PATH}/build.log ${date}_build.log
-cp -f ${MOCK_DEF_PATH}/root.log ${date}_root.log
-cp -f ${MOCK_DEF_PATH}/state.log ${date}_state.log
-megaput ${date}_build.log --path /Root/logs/
-megaput ${date}_root.log --path /Root/logs/
-megaput ${date}_state.log --path /Root/logs/
+cp -f ${MOCK_DEF_PATH}/build.log ${name}_${date}_build.log
+cp -f ${MOCK_DEF_PATH}/root.log ${name}_${date}_root.log
+cp -f ${MOCK_DEF_PATH}/state.log ${name}_${date}_state.log
+megaput ${name}_${date}_build.log --path /Root/logs/
+megaput ${name}_${date}_root.log --path /Root/logs/
+megaput ${name}_${date}_state.log --path /Root/logs/
 fi
 
 megals --names /Root/unitedrpms/updates/repository/ > megalist24
@@ -391,7 +395,7 @@ popd
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
 b=800
-if [ -n "${TARGET}" ] && [ $zlog \> $b ] || [ "${massive_spec}" = true ]; then
+if [ -n "${TARGET}" ] && [ $zlog \> $b ] || [ "${massive_spec}" = true ] || [ "${NO_MOCK}" = true ]; then
 echo 'This log is too long to be displayed'
 elif [ -n "${TARGET}" ] && [ "$b" -gt "$zlog" ]; then
 cat ${MOCK_DEF_PATH}/build.log
@@ -408,6 +412,7 @@ chmod g+rws ${MOCK_DEF_PATH}/cache
 
 
 performance_mock() {
+# NO TOUCH! It alters the mock function
 echo 'config_opts['basedir'] = '/home/makerpm/mock/'
 config_opts['cache_topdir'] = '/home/makerpm/mock/cache'
 config_opts['use_container_host_hostname'] = True
@@ -429,12 +434,14 @@ mv -f /tmp/new_perf.cfg ${TARGET}.cfg
 }
 
 check_depends() {
+# only necessary in Performance mock task
 if [ ! -f /usr/lib64/nosync/nosync.so ]; then
 dnf -y install nosync 
 fi
 }
 
 massrebuild() {
+# Our massive task
 if [ -f importantbump ]; then
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 local_install_packages
@@ -461,6 +468,7 @@ exit 1
 }
 
 massdependency() {
+# Some times we need a filter with massive rebuild...
 name_build
 if [ "${name}" = x264 ]; then
 repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -490,6 +498,7 @@ fi
 }
 
 Inrelease() {
+# Incremental release, in massive rebuild
 name_build
 local_repo
 #------------
@@ -544,6 +553,7 @@ mv -f ${name}2.spec ${specfile}
 
 Pushaugit() {
 # CREDENTIALS
+# In massive task, our release is incremental, all change in ".spec" files is updated automatic.
 name_build
 pushd ${directory}/rpmbuild/GIT/${name}/
 find . -name "${name}*.deb" -exec rm -r {} \; 
@@ -553,6 +563,14 @@ find . -name "${name}*.tar" -exec rm -r {} \;
 find . -name "${name}*.zip" -exec rm -r {} \; 
 find . -name "${name}*.rar" -exec rm -r {} \; 
 find . -name "${name}*.rpm" -exec rm -r {} \;
+
+if [ ! -f .gitignore ]; then
+echo "BUILD/*
+BUILDROOT/*
+RPMS/*
+SPECS/*
+SRPMS/*" > .gitignore 
+fi
 
 rm -rf BUILD \
 BUILDROOT \
@@ -571,12 +589,18 @@ fi
 popd
 }
 
+chroot_dependency() {
+# We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
+dnf -y install audit-libs basesystem bash binutils bzip2 bzip2-libs ca-certificates chkconfig coreutils coreutils-common cpio cpp cracklib crypto-policies curl cyrus-sasl-lib diffutils dwz elfutils elfutils-default-yama-scope elfutils-libelf elfutils-libs expat fedora-release fedora-repos file file-libs filesystem findutils fpc-srpm-macros gawk gc gcc gcc-c++ gdb-headless gdbm ghc-srpm-macros glib2 glibc glibc-all-langpacks glibc-common glibc-devel glibc-headers gmp gnat-srpm-macros gnupg2 gnutls go-srpm-macros grep guile gzip info isl kernel-headers keyutils-libs krb5-libs libacl libarchive libassuan libatomic_ops libattr libbabeltrace libblkid libcap libcap-ng libcom_err libcrypt-nss libcurl libdb libdb-utils libfdisk libffi libgcc libgcrypt libgomp libgpg-error libidn2 libipt libksba libmetalink libmount libmpc libnghttp2 libpsl libpwquality libselinux libsemanage libsepol libsigsegv libsmartcols libssh2 libstdc++ libstdc++-devel libtasn1 libtool-ltdl libunistring libutempter libuuid libverto libxml2 lua-libs lz4 lzo make mpfr ncurses ncurses-base ncurses-libs nettle npth nspr nss nss-pem nss-softokn nss-softokn-freebl nss-sysinit nss-tools nss-util ocaml-srpm-macros openldap openssl-libs p11-kit p11-kit-trust pam patch pcre perl-srpm-macros pkgconfig popt publicsuffix-list-dafsa python python-libs python-pip python-srpm-macros python2-setuptools qt5-srpm-macros readline redhat-rpm-config rpm rpm-build rpm-build-libs rpm-libs rpm-plugin-selinux sed setup shadow-utils sqlite-libs system-python-libs systemd-libs tar tzdata unzip ustr util-linux which xz xz-libs zip zlib
+}
 
 local_install_packages() {
+# Some times we need a massive rebuild, if we install directly builded rpms; we save time
 dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e urpms )
 }
 
 re_enabling_repos() {
+# In massive task, we compare our git version vrs repo version; and urpms makes automatic changes with incremental in release. It downloads the source and disable our repositories; we need enable again our repos...
 fedora_release=$(rpm -E %fedora) 
 
 if [ "${fedora_release}" -ge 26 ]; then
@@ -614,8 +638,12 @@ make_directory_task
 # Rules for our directories; I changed the default path in mock, then I need rules...
 rules_directory
 
-# HERE BEGIN THE BUILD PROCESS #
-# MASSIVE TASK ORGANIZATION
+
+
+#=== HERE BEGIN THE BUILD PROCESS === #
+
+# MASSIVE REBUILD TASK ORGANIZATION, YOU NEED A POWERFULL MACHINE
+# Our massive organization rebuild has no concept of packages version, it will give you the most recently tagged ones in git repository... we need a similar model to "default build".
 if [ "${massive}" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
 rm -f ${directory}/${organization}.txt
@@ -645,13 +673,14 @@ if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
 #  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
-  dnf -y install @development-tools
-  dnf -y install gcc gcc-c++
+  chroot_dependency
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm
-  find . -type f -name "*.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
-  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
-else
+cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
+cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
+cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
+cp -n SRPMS/* ${MOCK_DEF_PATH}/
+ else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/$liner-*.src.rpm 
 fi
 #
@@ -664,7 +693,6 @@ popd
 done <"$file"
 popd  
 local_repo
-massdependency
 upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # END MASSIVE TASK ORGANIZATION
@@ -676,22 +704,23 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
   dnf -y update
-  dnf -y install @development-tools
-  dnf -y install gcc gcc-c++
+  chroot_dependency
   dnf -y builddep *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
-  find . -type f -name "*.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
-  find $PWD/SRPMS/ -type f -name "*.src.rpm" -exec cp -n {} ${MOCK_DEF_PATH}/ \;
+cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
+cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
+cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
+cp -n SRPMS/* ${MOCK_DEF_PATH}/
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
-massdependency
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
 # END REMOTE URL
 
-# START DEFAULT TASK WITHOUT MASSIVE
+# START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION
+# In essential updates there are dependent packages; We have some filters for them; a massive rebuild, with incremental task.
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; then
 echo -e "\e[35mStarting complete task...\e[0m"
 git_task
