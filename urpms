@@ -508,6 +508,10 @@ re_enabling_repos
 sign_rpm
 rpack=$(rpm -qip ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
+
+rlc=$(rpm -qip ${name}*src.rpm | grep : | grep 'Release' | awk '{print $3}')
+rlcg=$(rpm -q --qf "%{release}\n" --specfile "${specfile}" | head -1)
+
 if [ -z "${rpack}" ]; then
 echo "Source from repo doesn't exist"
 exit 1
@@ -518,13 +522,10 @@ fi
 
 gt=$(echo "${rpack}" > "${curver}" | bc -q )
 if [ "$gt" = 1 ]; then
-echo "You need update gstreamer1"
+echo "You need update ${name}"
 exit 1
-elif [ "${rpack}" = "${curver}" ]; then
-echo 'Same version, then enabled the automatic release'
-else 
-echo 'Great, a updated packages; then enabled the automatic release'
-fi
+elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ]; then
+echo "Same version and release for ${name}, then enabled the automatic release"
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
 rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
@@ -547,6 +548,9 @@ f1="$(<changdata.txt)"
 awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.spec
 
 mv -f ${name}2.spec ${specfile}
+else 
+echo "Great, a updated package of ${name}; then the automatic release isn't necessary"
+fi
 
 }
 
