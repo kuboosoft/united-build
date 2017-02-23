@@ -255,8 +255,40 @@ exit 1
 fi
 }
 
+
+detect_local_package() {
+# We need detect packages already built in our local repository, useful for avoid bucles in massive rebuild
+s_inrepo=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
+p_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm 2> /dev/null | wc -l)
+n_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).noarch.rpm 2> /dev/null | wc -l)
+if [ "$s_inrepo" != "0" ] && [ "$p_inrepo" != "0" ]; then
+echo "${name} is already built"
+return 
+elif [ "$s_inrepo" != "0" ] && [ "$n_inrepo" != "0" ]; then
+echo "${name} is already built"
+return 
+else
+echo "Package ${name} not found in local repository; then we will attempt make a rpm for you, are you already test your package?"
+fi
+}
+
+
 buildrpm() {
 # Our build task
+# We need detect packages already built in our local repository, useful for avoid bucles in massive rebuild
+s_inrepo=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
+p_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm 2> /dev/null | wc -l)
+n_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).noarch.rpm 2> /dev/null | wc -l)
+if [ "$s_inrepo" != "0" ] && [ "$p_inrepo" != "0" ]; then
+echo "${name} is already built"
+return 
+elif [ "$s_inrepo" != "0" ] && [ "$n_inrepo" != "0" ]; then
+echo "${name} is already built"
+return 
+else
+echo "Package ${name} not found in local repository; then we will attempt make a rpm for you, are you already test your package?"
+fi
+
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
   pushd ${directory}/rpmbuild/GIT/${name}/
@@ -324,6 +356,7 @@ baseurl=file:///root/enjoy
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
+exclude=*.src.rpm
 ' > /etc/yum.repos.d/enjoy.repo
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
 if [ ! -f /etc/mock/${TARGET}.cfg ]; then
@@ -339,6 +372,7 @@ baseurl=file:///root/enjoy
 enabled=1
 skip_if_unavailable=1
 gpgcheck=0
+exclude=*.src.rpm
 ' > changdata.txt 
 
 f1="$(<changdata.txt)"
@@ -487,10 +521,10 @@ echo 'gstreamer1-plugins-base' > importantbump
 massrebuild
 elif [ "${name}" = gstreamer1-plugins-base ]; then
 echo 'gstreamer1-plugins-good
-gstreamer1-libav
 gstreamer1-plugins-bad-nonfree
 gstreamer1-plugins-bad-freeworld
-gstreamer1-plugins-ugly' > importantbump
+gstreamer1-plugins-ugly
+gstreamer1-libav' > importantbump
 massrebuild
 else
 echo 'No massive dependencies found or added to list'
@@ -503,7 +537,11 @@ name_build
 local_repo
 #------------
 # Current version 
+if [ "${name}" = gstreamer1 ]; then
+dnf -y download --source ${name}-devel
+else
 dnf -y download --source ${name}
+fi
 re_enabling_repos
 sign_rpm
 rpack=$(rpm -qip ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
@@ -519,6 +557,9 @@ elif [ -z "${curver}" ]; then
 echo "Spec file in massive build doesn't exist"
 exit 1
 fi
+# deleting the source downloaded we avoid a bucle task...
+rm -f ${name}*.src.rpm
+#
 
 gt=$(echo "${rpack}" > "${curver}" | bc -q )
 if [ "$gt" = 1 ]; then
