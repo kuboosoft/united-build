@@ -319,6 +319,7 @@ dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repo
 popd
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
+  /long-living-command &
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
   popd
@@ -741,6 +742,7 @@ popd
 local_repo
 upload_rpm
 echo -e "\e[36mDONE...\e[0m"
+exit 0
 # END MASSIVE TASK ORGANIZATION
 
 # START REMOTE Task only if you need rebuild a src.rpm from remote url
@@ -763,6 +765,7 @@ fi
   local_repo
   upload_rpm
 echo -e "\e[36mDONE...\e[0m"
+exit 0
 # END REMOTE URL
 
 # START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION
