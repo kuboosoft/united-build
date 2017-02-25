@@ -636,11 +636,12 @@ popd
 
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
+dnf -y clean packages
 dnf -y install audit-libs basesystem bash binutils bzip2 bzip2-libs ca-certificates chkconfig coreutils coreutils-common cpio cpp cracklib crypto-policies curl cyrus-sasl-lib diffutils dwz elfutils elfutils-default-yama-scope elfutils-libelf elfutils-libs expat fedora-release fedora-repos file file-libs filesystem findutils fpc-srpm-macros gawk gc gcc gcc-c++ gdb-headless gdbm ghc-srpm-macros glib2 glibc glibc-all-langpacks glibc-common glibc-devel glibc-headers gmp gnat-srpm-macros gnupg2 gnutls go-srpm-macros grep guile gzip info isl kernel-headers keyutils-libs krb5-libs libacl libarchive libassuan libatomic_ops libattr libbabeltrace libblkid libcap libcap-ng libcom_err libcrypt-nss libcurl libdb libdb-utils libfdisk libffi libgcc libgcrypt libgomp libgpg-error libidn2 libipt libksba libmetalink libmount libmpc libnghttp2 libpsl libpwquality libselinux libsemanage libsepol libsigsegv libsmartcols libssh2 libstdc++ libstdc++-devel libtasn1 libtool-ltdl libunistring libutempter libuuid libverto libxml2 lua-libs lz4 lzo make mpfr ncurses ncurses-base ncurses-libs nettle npth nspr nss nss-pem nss-softokn nss-softokn-freebl nss-sysinit nss-tools nss-util ocaml-srpm-macros openldap openssl-libs p11-kit p11-kit-trust pam patch pcre perl-srpm-macros pkgconfig popt publicsuffix-list-dafsa python python-libs python-pip python-srpm-macros python2-setuptools qt5-srpm-macros readline redhat-rpm-config rpm rpm-build rpm-build-libs rpm-libs rpm-plugin-selinux sed setup shadow-utils sqlite-libs system-python-libs systemd-libs tar tzdata unzip ustr util-linux which xz xz-libs zip zlib
 }
 
 local_install_packages() {
-# Some times we need a massive rebuild, if we install directly builded rpms; we save time
+# Some times we need a massive rebuild, if we install directly built rpms; we save time
 dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e urpms )
 }
 
