@@ -4,7 +4,7 @@
 # http://devcenter.wercker.com/docs/containers/index.html
 build:
     box:
-      id: davidva/unibuild-26
+      id: davidva/unibuild-24
       username: $USERNAME
       password: $PASSWORD
       tag: latest
@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/kdenlive -s kdenlive.spec -r true -d 'dist .fc26'
+          /urpms -g UnitedRPMs/kdenlive -s kdenlive.spec -r true -d 'dist .fc24'
 
 
 
