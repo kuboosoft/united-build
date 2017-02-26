@@ -512,7 +512,7 @@ elif [ "${name}" = x265 ]; then
 repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
-repoquery --whatrequires ffmpeg-libs --source | grep -v ffmpeg | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+repoquery --whatrequires ffmpeg-libs --source | grep -ve ffmpeg -e kodi | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 massrebuild
 elif [ "${name}" = libquicktime ]; then
 repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
