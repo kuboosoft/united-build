@@ -510,6 +510,21 @@ if [ "${name}" = x264 ]; then
 echo 'x265
 ffmpeg
 libav
+gstreamer1-libav
+libquicktime
+mlt-freeworld
+libopenshot
+idjc
+kodi
+minidlna
+mplayer
+moc
+mpd
+mpv
+obs-studio
+simplescreenrecorder
+vlc
+xine
 avidemux
 handbrake
 mythtv' > importantbump
@@ -519,6 +534,21 @@ elif [ "${name}" = x265 ]; then
 echo 'x264
 ffmpeg
 libav
+gstreamer1-libav
+libquicktime
+mlt-freeworld
+libopenshot
+idjc
+kodi
+minidlna
+mplayer
+moc
+mpd
+mpv
+obs-studio
+simplescreenrecorder
+vlc
+xine
 avidemux
 handbrake
 mythtv' > importantbump 
