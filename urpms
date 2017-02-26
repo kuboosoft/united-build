@@ -506,16 +506,43 @@ massdependency() {
 # Some times we need a filter with massive rebuild...
 name_build
 if [ "${name}" = x264 ]; then
-repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'x265
+ffmpeg
+libav
+avidemux
+handbrake
+mythtv' > importantbump
 massrebuild
 elif [ "${name}" = x265 ]; then
-repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'x264
+ffmpeg
+libav
+avidemux
+handbrake
+mythtv' > importantbump 
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
-repoquery --whatrequires ffmpeg-libs --source | grep -ve ffmpeg -e kodi | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'gstreamer1-libav
+libquicktime
+mlt-freeworld
+libopenshot
+idjc
+kodi
+minidlna
+mplayer
+moc
+mpd
+mpv
+obs-studio
+simplescreenrecorder
+vlc
+xine' > importantbump
 massrebuild
 elif [ "${name}" = libquicktime ]; then
-repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'mjpegtools' > importantbump
 massrebuild
 elif [ "${name}" = gstreamer1 ]; then
 echo 'gstreamer1-plugins-base' > importantbump
