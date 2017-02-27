@@ -510,25 +510,23 @@ if [ "${name}" = x264 ]; then
 # repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x265
 ffmpeg
-libav
 avidemux
 handbrake
-mythtv' > importantbump
+mythtv' >> importantbump
 massrebuild
 elif [ "${name}" = x265 ]; then
 # repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
 ffmpeg
-libav
 avidemux
 handbrake
-mythtv' > importantbump 
+mythtv' >> importantbump 
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then
 echo 'gstreamer1-libav
 libquicktime
-mlt-freeworld
+mlt
 libopenshot
 idjc
 kodi
@@ -540,11 +538,11 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-xine' >> importantbump
+xine-lib' >> importantbump
 else
 echo 'gstreamer1-libav
 libquicktime
-mlt-freeworld
+mlt
 libopenshot
 idjc
 kodi
@@ -556,7 +554,7 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-xine' > importantbump
+xine-lib' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
