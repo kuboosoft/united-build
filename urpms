@@ -496,6 +496,7 @@ while IFS= read -r line; do
 done <"$file"
 local_repo
 fi
+
 else
 echo 'mass rebuild failed'
 exit 1
@@ -510,21 +511,6 @@ if [ "${name}" = x264 ]; then
 echo 'x265
 ffmpeg
 libav
-gstreamer1-libav
-libquicktime
-mlt-freeworld
-libopenshot
-idjc
-kodi
-minidlna
-mplayer
-moc
-mpd
-mpv
-obs-studio
-simplescreenrecorder
-vlc
-xine
 avidemux
 handbrake
 mythtv' > importantbump
@@ -534,7 +520,13 @@ elif [ "${name}" = x265 ]; then
 echo 'x264
 ffmpeg
 libav
-gstreamer1-libav
+avidemux
+handbrake
+mythtv' > importantbump 
+massrebuild
+elif [ "${name}" = ffmpeg ]; then
+if [ -f importantbump ]; then
+echo 'gstreamer1-libav
 libquicktime
 mlt-freeworld
 libopenshot
@@ -548,12 +540,8 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-xine
-avidemux
-handbrake
-mythtv' > importantbump 
-massrebuild
-elif [ "${name}" = ffmpeg ]; then
+xine' >> importantbump
+else
 echo 'gstreamer1-libav
 libquicktime
 mlt-freeworld
@@ -569,10 +557,15 @@ obs-studio
 simplescreenrecorder
 vlc
 xine' > importantbump
+fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
 # repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+if [ -f importantbump ]; then
+echo 'mjpegtools' >> importantbump
+else
 echo 'mjpegtools' > importantbump
+fi
 massrebuild
 elif [ "${name}" = gstreamer1 ]; then
 echo 'gstreamer1-plugins-base' > importantbump
