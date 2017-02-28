@@ -506,25 +506,20 @@ exit 1
 massdependency() {
 # Some times we need a filter with massive rebuild...
 name_build
-if [ "${name}" = x264 ]; then
+if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
 # repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-echo 'x265
-ffmpeg
-avidemux
-handbrake
-mythtv' >> importantbump
-massrebuild
-elif [ "${name}" = x265 ]; then
-# repoquery --whatrequires x265-libs --source | grep -v x265 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
+x265
 ffmpeg
 avidemux
 handbrake
-mythtv' >> importantbump 
+mythtv' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then
-echo 'gstreamer1-libav
+echo 'rtmpdump
+xine-lib
+gstreamer1-libav
 libquicktime
 mlt
 libopenshot
@@ -537,10 +532,11 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc
-xine-lib' >> importantbump
+vlc' >> importantbump
 else
-echo 'gstreamer1-libav
+echo 'rtmpdump
+xine-lib
+gstreamer1-libav
 libquicktime
 mlt
 libopenshot
@@ -553,8 +549,7 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc
-xine-lib' > importantbump
+vlc' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
@@ -686,7 +681,7 @@ popd
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
 dnf -y clean packages
-dnf -y install audit-libs basesystem bash binutils bzip2 bzip2-libs ca-certificates chkconfig coreutils coreutils-common cpio cpp cracklib crypto-policies curl cyrus-sasl-lib diffutils dwz elfutils elfutils-default-yama-scope elfutils-libelf elfutils-libs expat fedora-release fedora-repos file file-libs filesystem findutils fpc-srpm-macros gawk gc gcc gcc-c++ gdb-headless gdbm ghc-srpm-macros glib2 glibc glibc-all-langpacks glibc-common glibc-devel glibc-headers gmp gnat-srpm-macros gnupg2 gnutls go-srpm-macros grep guile gzip info isl kernel-headers keyutils-libs krb5-libs libacl libarchive libassuan libatomic_ops libattr libbabeltrace libblkid libcap libcap-ng libcom_err libcrypt-nss libcurl libdb libdb-utils libfdisk libffi libgcc libgcrypt libgomp libgpg-error libidn2 libipt libksba libmetalink libmount libmpc libnghttp2 libpsl libpwquality libselinux libsemanage libsepol libsigsegv libsmartcols libssh2 libstdc++ libstdc++-devel libtasn1 libtool-ltdl libunistring libutempter libuuid libverto libxml2 lua-libs lz4 lzo make mpfr ncurses ncurses-base ncurses-libs nettle npth nspr nss nss-pem nss-softokn nss-softokn-freebl nss-sysinit nss-tools nss-util ocaml-srpm-macros openldap openssl-libs p11-kit p11-kit-trust pam patch pcre perl-srpm-macros pkgconfig popt publicsuffix-list-dafsa python python-libs python-pip python-srpm-macros python2-setuptools qt5-srpm-macros readline redhat-rpm-config rpm rpm-build rpm-build-libs rpm-libs rpm-plugin-selinux sed setup shadow-utils sqlite-libs system-python-libs systemd-libs tar tzdata unzip ustr util-linux which xz xz-libs zip zlib
+dnf -y install @buildsys-build
 }
 
 local_install_packages() {
