@@ -512,8 +512,7 @@ echo 'x264
 x265
 ffmpeg
 avidemux
-handbrake
-mythtv' > importantbump
+handbrake' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then
