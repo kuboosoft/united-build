@@ -523,7 +523,6 @@ libquicktime
 mlt
 libopenshot
 idjc
-kodi
 minidlna
 mplayer
 moc
@@ -531,7 +530,8 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc' >> importantbump
+vlc
+kodi' >> importantbump
 else
 echo 'rtmpdump
 xine-lib
@@ -540,7 +540,6 @@ libquicktime
 mlt
 libopenshot
 idjc
-kodi
 minidlna
 mplayer
 moc
@@ -548,7 +547,8 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc' > importantbump
+vlc
+kodi' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
