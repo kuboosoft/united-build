@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/kdenlive -s kdenlive.spec -r true -d 'dist .fc24'
+          /urpms -g UnitedRPMs/opera -s opera.spec -r true -d 'dist .fc24'
 
 
 
