@@ -516,7 +516,7 @@ handbrake' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then
-echo 'rtmpdump
+echo 'libshout-idjc
 xine-lib
 gstreamer1-libav
 libquicktime
@@ -533,7 +533,7 @@ simplescreenrecorder
 vlc
 kodi' >> importantbump
 else
-echo 'rtmpdump
+echo 'libshout-idjc
 xine-lib
 gstreamer1-libav
 libquicktime
@@ -594,8 +594,8 @@ rlc=$(rpm -qip ${name}*src.rpm | grep : | grep 'Release' | awk '{print $3}')
 rlcg=$(rpm -q --qf "%{release}\n" --specfile "${specfile}" | head -1)
 
 if [ -z "${rpack}" ]; then
-echo "Source from repo doesn't exist"
-exit 1
+echo "Source from repository rpm doesn't exist"
+#exit 1
 elif [ -z "${curver}" ]; then
 echo "Spec file in massive build doesn't exist"
 exit 1
