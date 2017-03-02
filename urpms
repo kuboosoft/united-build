@@ -516,8 +516,7 @@ handbrake' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then
-echo 'libshout-idjc
-xine-lib
+echo 'xine-lib
 gstreamer1-libav
 libquicktime
 mlt
@@ -530,11 +529,9 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc
-kodi' >> importantbump
+vlc' >> importantbump
 else
-echo 'libshout-idjc
-xine-lib
+echo 'xine-lib
 gstreamer1-libav
 libquicktime
 mlt
@@ -547,8 +544,7 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc
-kodi' > importantbump
+vlc' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then

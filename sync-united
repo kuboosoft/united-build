@@ -265,12 +265,12 @@ megamkdir /Root/unitedrpms/${task}/x86_64/repoview
 megamkdir /Root/unitedrpms/${task}/srpm/repodata
 megamkdir /Root/unitedrpms/${task}/srpm/repoview
 
-megacopy --local ${motherpath}/x86_64/debug/repodata --remote /Root/unitedrpms/${task}/x86_64/debug/repodata
-megacopy --local ${motherpath}/x86_64/debug/repoview --remote /Root/unitedrpms/${task}/x86_64/debug/repoview 
-megacopy --local ${motherpath}/x86_64/repodata --remote /Root/unitedrpms/${task}/x86_64/repodata
-megacopy --local ${motherpath}/x86_64/repoview --remote /Root/unitedrpms/${task}/x86_64/repoview
-megacopy --local ${motherpath}/srpm/repodata --remote /Root/unitedrpms/${task}/srpm/repodata
-megacopy --local ${motherpath}/srpm/repoview --remote /Root/unitedrpms/${task}/srpm/repoview
+#megacopy --local ${motherpath}/x86_64/debug/repodata --remote /Root/unitedrpms/${task}/x86_64/debug/repodata
+#megacopy --local ${motherpath}/x86_64/debug/repoview --remote /Root/unitedrpms/${task}/x86_64/debug/repoview 
+#megacopy --local ${motherpath}/x86_64/repodata --remote /Root/unitedrpms/${task}/x86_64/repodata
+#megacopy --local ${motherpath}/x86_64/repoview --remote /Root/unitedrpms/${task}/x86_64/repoview
+#megacopy --local ${motherpath}/srpm/repodata --remote /Root/unitedrpms/${task}/srpm/repodata
+#megacopy --local ${motherpath}/srpm/repoview --remote /Root/unitedrpms/${task}/srpm/repoview
 rm -f /tmp/megalist*
 echo 'Completed sync with Mega'
 }
@@ -313,5 +313,8 @@ m_mv
 job
 sfsync
 mupl
+
+rm -rf "${motherpath}"
+rm -rf "${raiz}"
 echo 'DONE'
 
