@@ -119,7 +119,9 @@ rpm-sign wget curl createrepo repoview fedora-packager git gnupg sshpass rsync b
 
 
 #### ** Limitants **
-Mock need special permits, no all CI services accept it... then you need run 'urpms' on rpmbuild mode using the especific version of your distribution linux. urpms emulates a similar Mock task.
+* Mock need special permits, no all CI services accept it... then you need run 'urpms' on rpmbuild mode using the especific version of your distribution linux. urpms emulates a similar Mock task.
+
+* Build a rpm with "mock" and docker is very slow, we recomends build without mock (super fast)...
 
 
 
