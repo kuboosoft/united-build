@@ -528,8 +528,7 @@ moc
 mpd
 mpv
 obs-studio
-simplescreenrecorder
-vlc' >> importantbump
+simplescreenrecorder' >> importantbump
 else
 echo 'xine-lib
 gstreamer1-libav
@@ -543,8 +542,7 @@ moc
 mpd
 mpv
 obs-studio
-simplescreenrecorder
-vlc' > importantbump
+simplescreenrecorder' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
