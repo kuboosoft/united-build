@@ -4,7 +4,7 @@
 # http://devcenter.wercker.com/docs/containers/index.html
 build:
     box:
-      id: davidva/unibuild-25
+      id: davidva/unibuild
       username: $USERNAME
       password: $PASSWORD
       tag: latest

@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/mpg123 -s mpg123.spec -r true -d 'dist .fc24':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/opera -s opera.spec -r true -d 'dist .fc24':
         parallel: true
         timeout: 9600
 
