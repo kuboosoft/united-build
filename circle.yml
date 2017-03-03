@@ -6,11 +6,11 @@ machine:
 
 dependencies:
   pre:
-    - sudo docker pull davidva/unibuild-24 || true
+    - sudo docker pull davidva/unibuild || true
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/chromium-widevine -s chromium-widevine.spec -r true -d 'dist .fc24':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/mpg123 -s mpg123.spec -r true -d 'dist .fc25':
         parallel: true
         timeout: 9600
 
