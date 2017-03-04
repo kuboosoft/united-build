@@ -4,7 +4,7 @@
 # http://devcenter.wercker.com/docs/containers/index.html
 build:
     box:
-      id: davidva/unibuild
+      id: davidva/unibuild-27
       username: $USERNAME
       password: $PASSWORD
       tag: latest
@@ -13,9 +13,9 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/chromium-widevine -s chromium-widevine.spec -r true -d 'dist .fc25'
+          /urpms -g UnitedRPMs/mpg123 -s mpg123.spec -r true -d 'dist .fc27'
 
-##
+
 
 
 
