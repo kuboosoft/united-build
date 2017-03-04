@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/mpg123 -s mpg123.spec -r true -d 'dist .fc27'
+          /urpms -g UnitedRPMs/openssl-freeworld -s openssl-freeworld.spec -r true -d 'dist .fc27'
 
 
 
