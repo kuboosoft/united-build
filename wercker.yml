@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/openssl-freeworld -s openssl-freeworld.spec -r true -d 'dist .fc26'
+          /urpms -g UnitedRPMs/broadcom-wl -s broadcom-wl.spec -r true -d 'dist .fc26'
 
 
 
