@@ -111,7 +111,9 @@ You need a image compatible with rpm... Fedora; I am not tested with Centos, Mag
 
 * Also you need the next dependencies:
 
-rpm-sign wget curl createrepo repoview fedora-packager git gnupg sshpass rsync bc python3-dnf-plugins-extras-repomanage docker
+rpm-sign wget curl createrepo repoview fedora-packager git gnupg sshpass rsync bc python3-dnf-plugins-extras-repomanage docker 
+
+dnf install 'dnf-command(config-manager)'
 
 
 #### ** Output dir **
