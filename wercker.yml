@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/broadcom-wl -s broadcom-wl.spec -r true -d 'dist .fc26'
+          /urpms -g UnitedRPMs/gstreamer1-plugins-ugly -s gstreamer1-plugins-ugly.spec -r true -d 'dist .fc26'
 
 #
 

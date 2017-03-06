@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/broadcom-wl -s broadcom-wl.spec -r true -d 'dist .fc27':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/gstreamer1-plugins-ugly -s gstreamer1-plugins-ugly.spec -r true -d 'dist .fc27':
         parallel: true
         timeout: 9600
 
