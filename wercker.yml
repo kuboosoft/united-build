@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/libmms -s libmms.spec -r true -d 'dist .fc27'
+          /urpms -g UnitedRPMs/vo-amrwbenc -s vo-amrwbenc.spec -r true -d 'dist .fc27'
 
 #
 
