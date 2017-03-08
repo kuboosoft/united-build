@@ -6,11 +6,11 @@ machine:
 
 dependencies:
   pre:
-    - sudo docker pull davidva/unibuild-27 || true
+    - sudo docker pull davidva/unibuild || true
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-27 /bin/sh urpms -g UnitedRPMs/vlc  -s vlc.spec -r true -d 'dist .fc27':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/kodi  -s kodi.spec -r true -d 'dist .fc25':
         parallel: true
         timeout: 9600
 
