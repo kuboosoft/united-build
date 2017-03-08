@@ -20,11 +20,11 @@ build:
     # Here you'd place anything you want to test. 
 #    - rm -f /urpms
 #    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
-#    - /urpms -g UnitedRPMs/opencore-amr -s opencore-amr.spec -t fedora-25-x86_64
+#    - /urpms -g UnitedRPMs/openssl-freeworld -s openssl-freeworld.spec -t fedora-25-x86_64
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/opencore-amr -s opencore-amr.spec -t fedora-rawhide-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/openssl-freeworld -s openssl-freeworld.spec -t fedora-25-x86_64
 
 notifications:
 email: davidva@tutanota.com

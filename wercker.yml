@@ -4,7 +4,7 @@
 # http://devcenter.wercker.com/docs/containers/index.html
 build:
     box:
-      id: davidva/unibuild-27
+      id: davidva/unibuild-26
       username: $USERNAME
       password: $PASSWORD
       tag: latest
@@ -13,9 +13,9 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/fdk -s fdk.spec -r true -d 'dist .fc27'
+          /urpms -g UnitedRPMs/openssl-freeworld -s openssl-freeworld.spec -r true -d 'dist .fc26'
 
-#
+
 
 
 
