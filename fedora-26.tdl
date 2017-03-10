@@ -1,0 +1,12 @@
+<template>
+    <name>fedora-26</name>
+    <os>
+        <name>Fedora</name>
+        <version>26</version>
+        <arch>x86_64</arch>
+        <install type='url'>
+            <url>https://dl.fedoraproject.org/pub/fedora/linux/development/26/Everything/x86_64/os/</url>
+        </install>
+        <rootpw>password</rootpw>
+    </os>
+</template>
