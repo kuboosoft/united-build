@@ -696,7 +696,7 @@ re_enabling_repos() {
 # In massive task, we compare our git version vrs repo version; and urpms makes automatic changes with incremental in release. It downloads the source and disable our repositories; we need enable again our repos...
 fedora_release=$(rpm -E %fedora) 
 
-if [ "${fedora_release}" -ge 26 ]; then
+if [ "${fedora_release}" -ge 27 ]; then
 dnf -y config-manager --set-disabled rawhide-source
 dnf -y config-manager --set-enabled unitedrpms
 dnf -y config-manager --set-enabled rawhide
