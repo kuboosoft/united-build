@@ -6,11 +6,11 @@ machine:
 
 dependencies:
   pre:
-    - sudo docker pull davidva/unibuild || true
+    - sudo docker pull davidva/unibuild-26 || true
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild /bin/sh urpms -g UnitedRPMs/kodi  -s kodi.spec -r true -d 'dist .fc25':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/live555  -s live555.spec -r true -d 'dist .fc26':
         parallel: true
         timeout: 9600
 
