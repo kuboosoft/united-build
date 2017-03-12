@@ -300,8 +300,8 @@ if [ "${massive_spec}" = true ]; then
   Inrelease 
 #  Pushaugit
 fi
-  spectool -g ${specfile}
-  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs ${specfile}
+  spectool -g "${specfile}"
+  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 re_enabling_repos
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
