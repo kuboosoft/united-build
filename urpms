@@ -512,7 +512,8 @@ echo 'x264
 x265
 ffmpeg
 avidemux
-handbrake' > importantbump
+handbrake
+gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 if [ -f importantbump ]; then

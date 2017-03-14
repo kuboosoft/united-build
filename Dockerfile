@@ -10,7 +10,7 @@ RUN rm -rf united-build \
 && chmod a+x /urpms \
 && ./urpms -g UnitedRPMs/x264 -s x264.spec -r true -d 'dist .fc26'
 
-CMD ["/bin/bash", "npm", "start"]
+CMD ["/bin/bash", "/usr/bin/bash", "npm", "start"]
 
 
 
