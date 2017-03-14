@@ -15,7 +15,7 @@ build:
         code: | 
           /urpms -g UnitedRPMs/spotify-client -s spotify-client.spec -r true -d 'dist .fc26'
 
-#####
+
 
 
 
