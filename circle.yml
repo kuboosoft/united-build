@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-27 /bin/sh urpms -g UnitedRPMs/mplayer  -s mplayer.spec -r true -d 'dist .fc27':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-27 /bin/sh urpms -g UnitedRPMs/fdk-aac  -s fdk-aac.spec -r true -d 'dist .fc27':
         parallel: true
         timeout: 9600
 
