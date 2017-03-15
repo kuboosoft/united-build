@@ -11,6 +11,7 @@ RUN rm -rf united-build \
 && ./urpms -g UnitedRPMs/x264 -s x264.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash", "npm", "start"]
+STOPSIGNAL SIGKILL
 
 
 
