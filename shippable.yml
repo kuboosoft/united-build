@@ -9,7 +9,7 @@ install: true
 
 build:
   pre_ci_boot:
-    image_name: davidva/unibuild
+    image_name: davidva/unibuild-26
     image_tag: latest
     pull: true
     env: FOO=bar
@@ -20,11 +20,11 @@ build:
     # Here you'd place anything you want to test. 
 #    - rm -f /urpms
 #    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
-#    - /urpms -g UnitedRPMs/gstreamer1-plugins-bad-freeworld -s gstreamer1-plugins-bad-freeworld.spec -t fedora-25-x86_64
+#    - /urpms -g UnitedRPMs/libdvdcss -s libdvdcss.spec -t fedora-25-x86_64
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/gstreamer1-plugins-bad-freeworld -s gstreamer1-plugins-bad-freeworld.spec -t fedora-24-x86_64
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-26 /bin/sh /urpms -g UnitedRPMs/libdvdcss -s libdvdcss.spec -t fedora-26-x86_64
 
 notifications:
 email: davidva@tutanota.com
