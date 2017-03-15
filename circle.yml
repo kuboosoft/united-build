@@ -6,11 +6,11 @@ machine:
 
 dependencies:
   pre:
-    - sudo docker pull davidva/unibuild-27 || true
+    - sudo docker pull davidva/unibuild-26 || true
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-27 /bin/sh urpms -g UnitedRPMs/mplayer  -s mplayer.spec -r true -d 'dist .fc27' -b true:
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/mplayer  -s mplayer.spec -r true -d 'dist .fc26' -b true:
         parallel: true
         timeout: 9600
 
