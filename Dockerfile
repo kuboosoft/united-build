@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/x264 -s x264.spec -r true -d 'dist .fc27'
+&& ./urpms -g UnitedRPMs/mplayer -s mplayer.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash", "npm", "start"]
 STOPSIGNAL SIGKILL
