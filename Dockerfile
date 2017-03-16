@@ -10,9 +10,8 @@ RUN rm -rf united-build \
 && chmod a+x /urpms \
 && ./urpms -g UnitedRPMs/mplayer -s mplayer.spec -r true -d 'dist .fc27'
 
-USER root
-CMD ["/bin/bash"]
-STOPSIGNAL SIGKILL
+CMD ["/bin/bash", "/usr/bin/bash"]
+
 
 
 
