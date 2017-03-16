@@ -11,7 +11,7 @@ RUN rm -rf united-build \
 && ./urpms -g UnitedRPMs/mplayer -s mplayer.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash"]
-SIGTERM STOPSIGNAL SIGKILL
+STOPSIGNAL SIGKILL
 
 
 
