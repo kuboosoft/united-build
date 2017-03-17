@@ -8,5 +8,6 @@ steps:
     image-name: davidva/unibuild-27
     dockerfile: Dockerfile
     tag: latest
+    no_cache: true
 #    tag: ${{CF_BRANCH}}
 #    privileged: true

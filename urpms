@@ -426,6 +426,7 @@ megaput $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
+rm -f output-result.txt
 popd
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
