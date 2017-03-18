@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/mplayer -s mplayer.spec -r true -d 'dist .fc27'
+&& ./urpms -g UnitedRPMs/aften -s aften.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
