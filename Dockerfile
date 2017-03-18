@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/chromium-widevine -s chromium-widevine.spec -r true -d 'dist .fc27'
+&& ./urpms -g UnitedRPMs/openshot -s openshot.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
