@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/avidemux  -s avidemux.spec -r true -d 'dist .fc26':
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-26 /bin/sh urpms -g UnitedRPMs/chromium-pepper-flash  -s chromium-pepper-flash.spec -r true -d 'dist .fc26':
         parallel: true
         timeout: 9600
 
