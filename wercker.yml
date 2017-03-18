@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/libshout-idjc -s libshout-idjc.spec -r true -d 'dist .fc27'
+          /urpms -g UnitedRPMs/openssl-spotify -s openssl-spotify.spec -r true -d 'dist .fc27'
 
 
 
