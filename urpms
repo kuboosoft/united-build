@@ -575,6 +575,7 @@ echo 'gstreamer1-plugins-base' > importantbump
 massrebuild
 elif [ "${name}" = gstreamer1-plugins-base ]; then
 echo 'gstreamer1-plugins-good
+gstreamer1-plugins-bad-free
 gstreamer1-plugins-bad-nonfree
 gstreamer1-plugins-bad-freeworld
 gstreamer1-plugins-ugly
@@ -848,6 +849,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
+killall `ps -aux | grep megaput | grep -v grep | awk '{ print $1 }'` && killall inotifywait \
 echo -e "\e[36mDONE...\e[0m"
 exit 0
 else
