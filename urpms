@@ -262,13 +262,20 @@ s_inrepo=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
 p_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm 2> /dev/null | wc -l)
 n_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).noarch.rpm 2> /dev/null | wc -l)
 if [ "$s_inrepo" != "0" ] && [ "$p_inrepo" != "0" ]; then
+echo '1ta' > /tmp/${name}.prb
 echo "${name} is already built"
 return 
 elif [ "$s_inrepo" != "0" ] && [ "$n_inrepo" != "0" ]; then
+echo '1ta' > /tmp/${name}.prb
 echo "${name} is already built"
 return 
 else
 echo "Package ${name} not found in local repository; then we will attempt make a rpm for you, are you already test your package?"
+if [ -f "/tmp/${name}.prb" ]
+echo "ERROR, loop detected with ${name}, check your spec file, changelog sources and patches"
+exit
+fi
+
 fi
 }
 
@@ -280,14 +287,20 @@ s_inrepo=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
 p_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm 2> /dev/null | wc -l)
 n_inrepo=$(ls ${repodirectory}/${name}-*.fc$(rpm -E %fedora).noarch.rpm 2> /dev/null | wc -l)
 if [ "$s_inrepo" != "0" ] && [ "$p_inrepo" != "0" ]; then
+echo '1ta' > /tmp/${name}.prb
 echo "${name} is already built"
 return 
 elif [ "$s_inrepo" != "0" ] && [ "$n_inrepo" != "0" ]; then
+echo '1ta' > /tmp/${name}.prb
 echo "${name} is already built"
 return 
 else
 echo "Package ${name} not found in local repository; then we will attempt make a rpm for you, are you already test your package?"
+if [ -f "/tmp/${name}.prb" ]
+echo "ERROR, loop detected with ${name}, check your spec file, changelog sources and patches"
+exit
 fi
+ fi
 
 echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
@@ -834,6 +847,7 @@ elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; 
 echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
+rm -rf /tmp/*.prb
 echo -e "\e[36mDONE...\e[0m"
 exit 0
 else
