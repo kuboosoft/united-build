@@ -1,4 +1,4 @@
-FROM davidva/unibuild-27:latest
+FROM davidva/unibuild-27
 
 MAINTAINER David Va <davidva@tutanota.com>
 

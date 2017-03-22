@@ -7,7 +7,7 @@ steps:
     description: UC - build step
     image-name: davidva/unibuild-27
     dockerfile: Dockerfile
-    tag: latest
+#    tag: master
     no_cache: true
-#    tag: ${{CF_BRANCH}}
+    tag: ${{CF_BRANCH}}
 #    privileged: true
