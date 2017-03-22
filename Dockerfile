@@ -9,7 +9,6 @@ RUN rm -rf united-build \
 && chmod a+x urpms \
 && chmod a+x /urpms \
 && dnf -y install psmisc \
-&& killall `ps -aux | grep megaput | grep -v grep | awk '{ print $1 }'` && killall inotifywait \
 && ./urpms -g UnitedRPMs/gstreamer1-plugins-bad-free -s gstreamer1-plugins-bad-free.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash"]
