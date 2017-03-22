@@ -296,7 +296,7 @@ echo "${name} is already built"
 return 
 else
 echo "Package ${name} not found in local repository; then we will attempt make a rpm for you, are you already test your package?"
-if [ -f "/tmp/${name}.prb" ]
+if [ -f "/tmp/${name}.prb" ]; then
 echo "ERROR, loop detected with ${name}, check your spec file, changelog sources and patches"
 exit
 fi
