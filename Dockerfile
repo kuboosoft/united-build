@@ -8,8 +8,6 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& pkill megaput \
-&& pkill urpms \
 && ./urpms -g UnitedRPMs/gstreamer1-plugins-bad-free -s gstreamer1-plugins-bad-free.spec -r true -d 'dist .fc27'
 
 CMD ["/bin/bash", "/usr/bin/bash"]
