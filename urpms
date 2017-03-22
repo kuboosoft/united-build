@@ -849,7 +849,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
-killall `ps -aux | grep megaput | grep -v grep | awk '{ print $1 }'` && killall inotifywait \
+ps -ef | grep megaput | grep -v grep | awk '{print $2}' | xargs kill -9
 echo -e "\e[36mDONE...\e[0m"
 exit 0
 else
