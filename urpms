@@ -557,7 +557,8 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc' >> importantbump
+vlc
+kodi' >> importantbump
 else
 echo 'xine-lib
 gstreamer1-libav
@@ -572,7 +573,8 @@ mpd
 mpv
 obs-studio
 simplescreenrecorder
-vlc' > importantbump
+vlc
+kodi' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ]; then
@@ -604,15 +606,8 @@ fi
 massrebuild
 elif [ "${name}" = libbluray ]; then
 # repoquery --whatrequires libbluray --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-if [ -f importantbump ]; then
 echo 'ffmpeg
-handbrake
-kodi' >> importantbump
-else
-echo 'ffmpeg
-handbrake
-kodi' > importantbump
-fi
+handbrake' > importantbump
 massrebuild
 else
 echo 'No massive dependencies found or added to list'
