@@ -12,8 +12,8 @@ build:
     image_name: davidva/unibuild-27
     image_tag: latest
     pull: true
-#    env: LM=ML UP=MP
-    secure: xb2nB1y8ydIHtfLfh+SrJneYXdCGIG9MO5YENAHK4pOwJO57QSmRvuiH/SZokklhD9zZ8DKKd9nbLghkxr6WlK8txeTCBRE/31+ayhsjwWBCykGG6KICkqeFjf+dZj2TubgQ3j++fF3Yy97xtzVqsOgVlehw67r5ZW6EOFIehXuYONeM4OqEyM0stzLGRZ0HuvxgUMm9YN3mYnfiZo6g/b34f5v3qVzwOBRPtmz3Q2aAW5uL2ObLXs+LMtRdJpsH8Dupr0Qa5K+sIFNPo9j4EKVYl0fBwXxbbxSUCLuAsM7yqo8UJLasMkWclQZ28lf5M5S3UZi5Y/L7Y2J6xQL4/g==
+#   env: LM=ML UP=MP
+    secure: 2CcgyRIxmpxEyqZtRfh3DvC5xuMCtiTAR3VToEyd6j5P7UWE1eeagr+3uabEKYy4Mx9c0G61eO/RPAJqh3QPsqwk9946e/N6Bjy7YU5FY5PvAg8JpLgMwJoE2XBXpEnsGJfRDo8RCypod66tLh/ch/sN00n2QQyd0FnrcfhxzlmXF0nm4kOqcyVwUvAT2oYMIVFzy5chVwJ8wZtBcZA7qCQLr3Xqml9yVl/h8SvJo2yTEj98GdpYtM/PGPIhSUKOYskolQavoNMzrrOJ69xxs6LJ91hhnUfwjlDEqSAhQLyQyz7s5yJxZp12EJsWUx0rP+N8yt1UWGNwZLrlrs9Nzg==
     options: "-e HOME=/root" 
 
 # commands in this section run inside your CI container. In addition, any commands such as ls, in this section can be used to skip default processing #for CI.
@@ -25,8 +25,7 @@ build:
 
 # the build scripts
 script:
-- secure: xb2nB1y8ydIHtfLfh+SrJneYXdCGIG9MO5YENAHK4pOwJO57QSmRvuiH/SZokklhD9zZ8DKKd9nbLghkxr6WlK8txeTCBRE/31+ayhsjwWBCykGG6KICkqeFjf+dZj2TubgQ3j++fF3Yy97xtzVqsOgVlehw67r5ZW6EOFIehXuYONeM4OqEyM0stzLGRZ0HuvxgUMm9YN3mYnfiZo6g/b34f5v3qVzwOBRPtmz3Q2aAW5uL2ObLXs+LMtRdJpsH8Dupr0Qa5K+sIFNPo9j4EKVYl0fBwXxbbxSUCLuAsM7yqo8UJLasMkWclQZ28lf5M5S3UZi5Y/L7Y2J6xQL4/g==
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/spotify-client -s spotify-client.spec -t fedora-25-x86_64 -c ${ML} ${MP}
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/spotify-client -s spotify-client.spec -t fedora-25-x86_64 -c davidjeremias82@gmail.com ${MP}
 
 notifications:
 email: davidva@tutanota.com
