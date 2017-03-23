@@ -223,6 +223,7 @@ fi
 ass=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
 if [ "$ass" != "0" ]; then
 echo "${name} is already built"
+exit 0
 fi
 
 bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name}-*.src.rpm 2> /dev/null | wc -l)
