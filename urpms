@@ -133,6 +133,19 @@ readargs() {
           usage
         fi
       ;;
+      -c)
+        if [ "$2" ] ; then
+          LOGIN="$2" 
+          PASS="$3"
+          shift ; shift
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       -d)
         if [ "$2" ] ; then
           DIST="$2"
@@ -407,35 +420,35 @@ if [ -n "${TARGET}" ]; then
 cp -f ${MOCK_DEF_PATH}/build.log ${name}_${date}_build.log
 cp -f ${MOCK_DEF_PATH}/root.log ${name}_${date}_root.log
 cp -f ${MOCK_DEF_PATH}/state.log ${name}_${date}_state.log
-megaput ${name}_${date}_build.log --path /Root/logs/
-megaput ${name}_${date}_root.log --path /Root/logs/
-megaput ${name}_${date}_state.log --path /Root/logs/
+megaput -u ${LOGIN} -p ${PASS} ${name}_${date}_build.log --path /Root/logs/
+megaput -u ${LOGIN} -p ${PASS} ${name}_${date}_root.log --path /Root/logs/
+megaput -u ${LOGIN} -p ${PASS} ${name}_${date}_state.log --path /Root/logs/
 fi
 
-megals --names /Root/unitedrpms/updates/repository/ > megalist24
-megals --names /Root/unitedrpms/updates/25/ > megalist25
-megals --names /Root/unitedrpms/updates/26/ > megalist26
-megals --names /Root/unitedrpms/updates/27/ > megalist27
-megals --names /Root/unitedrpms/updates/28/ > megalist28
-megals --names /Root/unitedrpms/updates/29/ > megalist29
-megals --names /Root/unitedrpms/updates/30/ > megalist30
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/repository/ > megalist24
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/25/ > megalist25
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/26/ > megalist26
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/27/ > megalist27
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/28/ > megalist28
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/29/ > megalist29
+megals -u ${LOGIN} -p ${PASS} --names /Root/unitedrpms/updates/30/ > megalist30
 
 Ou=output-result.txt
 while IFS= read -r result; do
 if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/repository/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/repository/
 elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/25/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/25/
 elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/26/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/26/
 elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/27/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/27/
 elif [ $(ls $result | grep -c fc28) -gt 0 ] && [ $(cat megalist28 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/28/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/28/
 elif [ $(ls $result | grep -c fc29) -gt 0 ] && [ $(cat megalist29 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/29/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/29/
 elif [ $(ls $result | grep -c fc30) -gt 0 ] && [ $(cat megalist30 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/30/
+megaput -u ${LOGIN} -p ${PASS} $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
 echo -e "\e[35mSynced with Mega Successfully...\e[0m"
@@ -849,7 +862,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
-pkill megaput
+pkill megaput -u ${LOGIN} -p ${PASS}
 echo -e "\e[36mDONE...\e[0m"
 exit 0
 else
