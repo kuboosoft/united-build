@@ -12,7 +12,7 @@ build:
     image_name: davidva/unibuild-27
     image_tag: latest
     pull: true
-    env: LM=ML UP=MP
+#    env: LM=ML UP=MP
     secure: xb2nB1y8ydIHtfLfh+SrJneYXdCGIG9MO5YENAHK4pOwJO57QSmRvuiH/SZokklhD9zZ8DKKd9nbLghkxr6WlK8txeTCBRE/31+ayhsjwWBCykGG6KICkqeFjf+dZj2TubgQ3j++fF3Yy97xtzVqsOgVlehw67r5ZW6EOFIehXuYONeM4OqEyM0stzLGRZ0HuvxgUMm9YN3mYnfiZo6g/b34f5v3qVzwOBRPtmz3Q2aAW5uL2ObLXs+LMtRdJpsH8Dupr0Qa5K+sIFNPo9j4EKVYl0fBwXxbbxSUCLuAsM7yqo8UJLasMkWclQZ28lf5M5S3UZi5Y/L7Y2J6xQL4/g==
     options: "-e HOME=/root" 
 
@@ -25,7 +25,7 @@ build:
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/spotify-client -s spotify-client.spec -t fedora-25-x86_64 -c $LM $MP
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/spotify-client -s spotify-client.spec -t fedora-25-x86_64 -c ${LM} ${MP}
 
 notifications:
 email: davidva@tutanota.com
