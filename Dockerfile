@@ -1,4 +1,4 @@
-FROM davidva/unibuild-27
+FROM davidva/unibuild-26
 
 MAINTAINER David Va <davidva@tutanota.com>
 
@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/vlc -s vlc.spec -r true -d 'dist .fc27' -c true
+&& ./urpms -g UnitedRPMs/kodi -s kodi.spec -r true -d 'dist .fc26' -c true
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
