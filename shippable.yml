@@ -24,7 +24,7 @@ build:
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/flowblade -s flowblade.spec -t fedora-25-x86_64 -c true
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild-27 /bin/sh /urpms -g UnitedRPMs/flowblade -s flowblade.spec -t fedora-25-x86_64 
 
 notifications:
 email: davidva@tutanota.com
