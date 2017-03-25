@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/obs-studio  -s obs-studio.spec -r true -d 'dist .fc24' -c true:
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/opera  -s opera.spec -r true -d 'dist .fc24' -c true:
         parallel: true
         timeout: 9600
 
