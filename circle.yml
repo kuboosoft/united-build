@@ -10,7 +10,7 @@ dependencies:
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/gstreamer1-plugins-ugly  -s gstreamer1-plugins-ugly.spec -r true -d 'dist .fc24' -c true:
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/gstreamer1-plugins-bad-free  -s gstreamer1-plugins-bad-free.spec -r true -d 'dist .fc24' -c true:
         parallel: true
         timeout: 9600
 

@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/gstreamer1-plugins-ugly -s gstreamer1-plugins-ugly.spec -r true -d 'dist .fc26' -c true
+&& ./urpms -g UnitedRPMs/gstreamer1-plugins-bad-free -s gstreamer1-plugins-bad-free.spec -r true -d 'dist .fc26' -c true
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
