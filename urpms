@@ -610,6 +610,10 @@ elif [ "${name}" = libbluray ]; then
 echo 'ffmpeg
 handbrake' > importantbump
 massrebuild
+elif [ "${name}" = openh264 ]; then
+# repoquery --whatrequires libbluray --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'gstreamer1-plugins-bad-freeworld' > importantbump
+massrebuild
 else
 echo 'No massive dependencies found or added to list'
 fi
