@@ -7,7 +7,7 @@
 [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=kuboosoft&repoName=united-build&branch=master&pipelineName=united-build&accountName=kuboosoft&type=cf-1)]( https://g.codefresh.io/repositories/kuboosoft/united-build/builds?filter=trigger:build;branch:master;service:58c365d2676c050100137ca6~united-build)
 
 
-URPMS, is a light tool for build rpms using rpmbuild and mock with docker, useful in Popular CI services. The project is in a primary phase. URPMS is part of the infraestructure of United RPMS Project.
+URPMS, is a light tool for build rpms using rpmbuild and mock with docker, useful in Popular CI services. The project is in a primary phase. Unite-Build is part of the infraestructure of United RPMS Project.
 
 
 ## ** Usage **
