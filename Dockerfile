@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/avidemux -s avidemux.spec -r true -d 'dist .fc26' -c true
+&& ./urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -r true -d 'dist .fc26' -c true
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
