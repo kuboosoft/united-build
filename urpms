@@ -340,12 +340,18 @@ cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 pushd "${MOCK_DEF_PATH}"
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
 popd
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
   /long-living-command &
+#
+if [ -f importantbump ]; then
+  /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+fi
+#
 fi
   popd
 local_repo
@@ -376,10 +382,14 @@ rm -rf repodata/
  rm -f $( dnf -y repomanage --keep=1 --old $PWD )
 sign_rpm
 createrepo .
+#
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean metadata
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy )
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
+elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
+mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
 fi
+#
 popd
 }
 
