@@ -349,7 +349,15 @@ SRPMcheck
 fi
   popd
 local_repo
+# These task unibuild-basic, do not need a massive build with x264 and x265.
+if [ "${name}" = unibuild-basic ] || [ "${name}" = libbluray ]
+echo 'no_build' > /tmp/stop
+fi
+# end unibuild-basic
 massdependency
+if [ -f /tmp/stop ]
+rm -f /tmp/stop
+fi 
 if [ "${CLOUD}" = true ]; then
 upload_rpm
 fi
@@ -534,7 +542,7 @@ exit 1
 massdependency() {
 # Some times we need a filter with massive rebuild...
 name_build
-if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
+if [ "${name}" = x264 ] || [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then
 # repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
 x265
@@ -543,7 +551,7 @@ avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
-elif [ "${name}" = ffmpeg ]; then
+elif [ "${name}" = ffmpeg ] && [ ! -f /tmp/stop ]; then
 if [ -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
@@ -559,7 +567,8 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-kodi' >> importantbump
+kodi
+deepin-music' >> importantbump
 else
 echo 'xine-lib
 gstreamer1-libav
@@ -575,10 +584,11 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-kodi' > importantbump
+kodi
+deepin-music' > importantbump
 fi
 massrebuild
-elif [ "${name}" = libquicktime ]; then
+elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 if [ -f importantbump ]; then
 echo 'mjpegtools' >> importantbump
@@ -597,7 +607,7 @@ gstreamer1-plugins-bad-freeworld
 gstreamer1-plugins-ugly
 gstreamer1-libav' > importantbump
 massrebuild
-elif [ "${name}" = live555 ]; then
+elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
 # repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 if [ -f importantbump ]; then
 echo 'vlc' >> importantbump
@@ -605,13 +615,55 @@ else
 echo 'vlc' > importantbump
 fi
 massrebuild
-elif [ "${name}" = libbluray ]; then
-# repoquery --whatrequires libbluray --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-echo 'ffmpeg
-handbrake' > importantbump
+elif [ "${name}" = libbluray ] && [ ! -f /tmp/stop ]; then
+# repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'xine-lib
+ffmpeg
+handbrake
+kodi
+mplayer
+mpv
+vlc
+' > importantbump
+massrebuild
+elif [ "${name}" = dtksettings ]; then
+# repoquery --whatrequires dtksettings --source | grep -v dtksettings | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'deepin-tool-kit' > importantbump
+massrebuild
+elif [ "${name}" = deepin-tool-kit ]; then
+# repoquery --whatrequires deepin-tool-kit --source | grep -v deepin-tool-kit | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'deepin-music' > importantbump
+massrebuild
+elif [ "${name}" = unibuild-basic ]; then
+# repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+echo 'x264
+x265
+lame
+a52dec
+libbluray
+xvidcore
+faad2
+libdca
+live555
+mpeg2dec
+twolame
+vcdimager
+aften
+opencore-amr
+faac
+libmms
+rtmpdump
+libmpeg2
+libquicktime
+nvenc
+mjpegtools
+libmng
+libdvdcss
+vo-aacenc
+vo-amrwbenc' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
-# repoquery --whatrequires libbluray --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 else
