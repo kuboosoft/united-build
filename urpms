@@ -350,7 +350,7 @@ fi
   popd
 local_repo
 # These task unibuild-basic, do not need a massive build with x264 and x265.
-if [ "${name}" = unibuild-basic ] || [ "${name}" = libbluray ]
+if [ "${name}" = unibuild-basic ] || [ "${name}" = libbluray ]; then
 echo 'no_build' > /tmp/stop
 fi
 # end unibuild-basic
