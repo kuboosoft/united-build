@@ -355,7 +355,7 @@ echo 'no_build' > /tmp/stop
 fi
 # end unibuild-basic
 massdependency
-if [ -f /tmp/stop ]
+if [ -f /tmp/stop ]; then
 rm -f /tmp/stop
 fi 
 if [ "${CLOUD}" = true ]; then
