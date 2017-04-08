@@ -3,16 +3,23 @@ language: generic
 sudo: false
 services:
 - docker
-#before_install:
-#- docker pull davidva/unibuild
-# docker ps -a
-# docker run carlad/sinatra /bin/sh -c "cd /root/sinatra; bundle exec rake test"
-#cache:
-#  directories:
-#    - /var/cache/mock/
+# DISABLE before_install if you want build with mock
+before_install:
+  - sudo apt-get update
+  - echo 'DOCKER_OPTS="-H tcp://127.0.0.1:2375 -H unix:///var/run/docker.sock -s devicemapper"' | sudo tee /etc/default/docker > /dev/null
+  - sudo service docker restart
+  - sleep 5
+  - sudo docker pull davidva/unibuild-24
 script:
-#- travis_wait 40 docker run --cap-add=SYS_ADMIN --privileged=true -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -t fedora-24-x86_64
-- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -t fedora-24-x86_64
+# DISABLE enable tne next line and delete add a # the next lines; if you want build with mock
+#- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -t fedora-24-x86_64
+- rm -rf united-build  
+- git clone https://github.com/kuboosoft/united-build.git 
+- cd united-build 
+- cp -f urpms / 
+- chmod a+x urpms 
+- chmod a+x /urpms 
+- /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -r true -d 'dist .fc24' -c true
 notifications:
   email: davidva@tutanota.com
 ##  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj

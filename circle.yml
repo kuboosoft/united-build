@@ -6,11 +6,11 @@ machine:
 
 dependencies:
   pre:
-    - sudo docker pull davidva/unibuild-24 || true
+    - sudo docker pull davidva/unibuild-27 || true
 
 test:
   override:
-    - docker run -v $(pwd):/root/enjoy davidva/unibuild-24 /bin/sh urpms -g UnitedRPMs/dtksettings  -s dtksettings.spec -r true -d 'dist .fc24' -c true:
+    - docker run -v $(pwd):/root/enjoy davidva/unibuild-27 /bin/sh urpms -g UnitedRPMs/dtksettings  -s dtksettings.spec -r true -d 'dist .fc27' -c true:
         parallel: true
         timeout: 9600
 
