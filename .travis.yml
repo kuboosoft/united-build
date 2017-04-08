@@ -13,8 +13,7 @@ before_install:
 script:
 # ENABLE tne next line and delete add a "#" the next lines; if you want build with mock
 #- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -t fedora-24-x86_64
-- rm -rf united-build/  \
- git clone https://github.com/kuboosoft/united-build.git \
+- git clone https://github.com/kuboosoft/united-build.git \
  cd united-build \
  cp -f urpms / \
  chmod a+x urpms \
