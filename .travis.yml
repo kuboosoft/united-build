@@ -13,13 +13,13 @@ before_install:
 script:
 # DISABLE enable tne next line and delete add a # the next lines; if you want build with mock
 #- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -t fedora-24-x86_64
-- rm -rf united-build  
-- git clone https://github.com/kuboosoft/united-build.git 
-- cd united-build 
-- cp -f urpms / 
-- chmod a+x urpms 
-- chmod a+x /urpms 
-- /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -r true -d 'dist .fc24' -c true
+- rm -rf united-build  \
+  git clone https://github.com/kuboosoft/united-build.git \
+  cd united-build \
+  cp -f urpms / \
+  chmod a+x urpms \
+  chmod a+x /urpms \
+  /urpms -g UnitedRPMs/dtksettings -s dtksettings.spec -r true -d 'dist .fc24' -c true
 notifications:
   email: davidva@tutanota.com
 ##  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj
