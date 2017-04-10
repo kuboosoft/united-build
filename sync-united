@@ -68,9 +68,9 @@ sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/ho
 
 clean_old() {
 echo -e "\e[31mDelete old versions...\e[0m"
-rm -f $(dnf repomanage --keep=2 --old ${motherpath}/x86_64/)
-rm -f $(dnf repomanage --keep=2 --old ${motherpath}/x86_64/debug/)
-rm -f $(dnf repomanage --keep=2 --old ${motherpath}/srpm/)
+rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/)
+rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/debug/)
+rm -f $(dnf repomanage --keep=1 --old ${motherpath}/srpm/)
 }
 
 make_repo() {
