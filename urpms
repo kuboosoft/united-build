@@ -188,6 +188,17 @@ readargs() {
           usage
         fi
       ;;
+      -u)
+        if [ "$2" ] ; then
+          UPP="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       *)
         echo "Unknown option or argument $1."
         echo
@@ -355,11 +366,6 @@ fi
 fi
   popd
 local_repo
-# These task unibuild-basic, do not need a massive build with x264 and x265.
-if [ "${name}" = unibuild-basic ] || [ "${name}" = libbluray ]; then
-echo 'no_build' > /tmp/stop
-fi
-# end unibuild-basic
 massdependency
 if [ -f /tmp/stop ]; then
 rm -f /tmp/stop
@@ -521,6 +527,13 @@ dnf -y install nosync
 fi
 }
 
+up_ornew() {
+# The filer for a initial package or update
+if [ "${UPP}" = true ]; then
+echo 'no_build' > /tmp/stop
+fi
+}
+
 massrebuild() {
 # Our massive task
 if [ -f importantbump ]; then
@@ -553,13 +566,35 @@ massdependency() {
 # Some times we need a filter with massive rebuild...
 name_build
 if [ "${name}" = x264 ] || [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then
+up_ornew
 # repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+if [ "${UPP}" = true ] && [ "${name}" = x264 ]; then
+echo 'ffmpeg
+libquicktime
+mplayer
+gstreamer1-plugins-ugly
+gstreamer-plugins-ugly
+avidemux
+handbrake
+libav
+mplayer
+mythtv
+obs-studio
+vlc' > importantbump
+elif [ "${UPP}" = true ] && [ "${name}" = x265 ]; then
+echo 'ffmpeg
+gstreamer1-plugins-bad-freeworld
+avidemux
+handbrake
+vlc' > importantbump
+elif [ "${UPP}" ! = true ]; then
 echo 'x264
 x265
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
+fi
 massrebuild
 elif [ "${name}" = ffmpeg ] && [ ! -f /tmp/stop ]; then
 if [ -f importantbump ]; then
@@ -625,7 +660,8 @@ else
 echo 'vlc' > importantbump
 fi
 massrebuild
-elif [ "${name}" = libbluray ] && [ ! -f /tmp/stop ]; then
+elif [ "${name}" = libbluray ]; then
+up_ornew
 # repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'xine-lib
 ffmpeg
@@ -645,6 +681,7 @@ elif [ "${name}" = deepin-tool-kit ]; then
 echo 'deepin-music' > importantbump
 massrebuild
 elif [ "${name}" = unibuild-basic ]; then
+up_ornew
 # repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
 x265

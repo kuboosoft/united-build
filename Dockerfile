@@ -8,7 +8,7 @@ RUN rm -rf united-build \
 && cp -f urpms / \
 && chmod a+x urpms \
 && chmod a+x /urpms \
-&& ./urpms -g UnitedRPMs/broadcom-bt-firmware -s broadcom-bt-firmware.spec -r true -d 'dist .fc26' -c true
+&& ./urpms -g UnitedRPMs/x265 -s x265.spec -r true -d 'dist .fc26' -c true -u true
 
 CMD ["/bin/bash", "/usr/bin/bash"]
 
