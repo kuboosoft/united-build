@@ -573,12 +573,8 @@ echo 'ffmpeg
 libquicktime
 mplayer
 gstreamer1-plugins-ugly
-gstreamer-plugins-ugly
 avidemux
 handbrake
-libav
-mplayer
-mythtv
 obs-studio
 vlc' > importantbump
 elif [ "${UPP}" = true ] && [ "${name}" = x265 ]; then
