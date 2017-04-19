@@ -5,7 +5,7 @@ steps:
   urpms:
     type: build
     description: UC - build step
-    image-name: davidva/unibuild-27
+    image-name: davidva/unibuild-24
     dockerfile: Dockerfile
 #    tag: master
     no_cache: true
