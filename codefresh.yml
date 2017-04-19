@@ -11,3 +11,4 @@ steps:
     no_cache: true
     tag: ${{CF_BRANCH}}
 #    privileged: true
+    autodestroy: always
