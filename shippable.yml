@@ -20,11 +20,11 @@ build:
     # Here you'd place anything you want to test. 
 #    - rm -f /urpms
 #    - wget -c https://raw.githubusercontent.com/kuboosoft/united-build/master/urpms && chmod a+x urpms
-#    - /urpms -g UnitedRPMs/gstreamer1 -s gstreamer1.spec -t fedora-25-x86_64
+#    - /urpms -g UnitedRPMs/minidlna -s minidlna.spec -t fedora-25-x86_64
 
 # the build scripts
 script:
-- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/gstreamer1 -s gstreamer1.spec -r true -d 'dist .fc25'    
+- docker run --privileged=true --cap-add=SYS_ADMIN -v $(pwd):/root/enjoy/ davidva/unibuild /bin/sh /urpms -g UnitedRPMs/minidlna -s minidlna.spec -r true -d 'dist .fc25' -c true    
 
 notifications:
 email: davidva@tutanota.com
