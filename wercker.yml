@@ -13,7 +13,7 @@ build:
         command-timeout: 30
         name: echo
         code: | 
-          /urpms -g UnitedRPMs/minidlna -s minidlna.spec -r true -d 'dist .fc24' -c true
+          /urpms -g UnitedRPMs/minidlna -s minidlna.spec -r true -d 'dist .fc24' 
 
 
 # dummy build 10
