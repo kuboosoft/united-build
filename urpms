@@ -365,7 +365,7 @@ cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 pushd "${MOCK_DEF_PATH}"
-if [ -f *.rpm ]; then
+if [ $(ls *.rpm | grep -c .rpm) -gt 0 ]; then
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
 fi
 popd
@@ -423,7 +423,7 @@ sign_rpm
 createrepo .
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
-dnf -y clean metadata
+dnf -y clean expire-cache
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
 mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
@@ -912,6 +912,12 @@ make_directory_task
 # Rules for our directories; I changed the default path in mock, then I need rules...
 rules_directory
 
+# Python issues
+# https://www.mail-archive.com/python-dev@python.org/msg95279.html
+# http://bugs.python.org/issue28180#msg282964
+# https://lists.fedorahosted.org/archives/list/python-devel@lists.fedoraproject.org/message/M2NMPTU74LCAFOZF7UOWHIKCWZKQ3YKP/
+
+export PYTHONCOERCECLOCALE=0
 
 
 #=== HERE BEGIN THE BUILD PROCESS === #
