@@ -409,6 +409,7 @@ fi
 
 local_repo() {
 # Our local repo; useful in massive rebuild
+enjoy_repo
 path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
