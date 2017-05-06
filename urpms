@@ -35,23 +35,23 @@ usage() {
   echo ""
   echo -e '\e[33m  -g url_git\e[0m'
   echo "    The git hub name user and project, example UnitedRPMs/ffmpeg"
-  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64"
+  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64 -u true"
   echo ""
   echo -e '\e[33m  -m massive\e[0m'
-  echo "    Make a massive rebuild rpm, the task is slow"
+  echo "    Make a massive rebuild rpm of all the organization, the task is slow (alpha)"
   echo "Usage: $0 -o UnitedRPMs -m true -t fedora-25-x86_64"
   echo ""
   echo -e '\e[33m  -r SRPM\e[0m'
-  echo "    Rebuild a src.rpm from remote url"
+  echo "    Rebuild a src.rpm from remote url (beta)"
   echo "Usage: $0 -t fedora-25-x86_64 -r http:www.foo/ffmpeg-foo.src.rpm "
   echo ""
   echo -e '\e[33m  -n SNAPSHOT\e[0m'
-  echo "    Generate the source file with a special script example ffmpeg-snapshot.sh "
+  echo "    Generate the source file with a special script example ffmpeg-snapshot.sh (beta)"
   echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -n ffmpeg-snapshot.sh "
   echo ""
   echo -e '\e[33m  -r NO_MOCK\e[0m'
-  echo "    Generate a rpm without mock, this task is not 100% reliable, but it works in some cases"
-  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -r true -d 'dist .fc25' "
+  echo "    Generate a rpm without mock, super fast"
+  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -r true -d 'dist .fc25' -u true"
   echo "--------------------------------------"
   echo "  -s SPECfile"
   echo '    The name of the RPM SPEC file, example "-s ffmpeg.spec" '
@@ -60,7 +60,9 @@ usage() {
   echo "  -t TARGET"
   echo '    mock config example "-t fedora-26-x86_64" '
   echo "  -d DIST"
-  echo "    Distribution number, only works with NO_MOCK; example: -r true -d 'dist .fc25' "
+  echo "    Distribution number, only works with NO_MOCK; example: -r true -d 'dist .fc25' -u true"
+  echo "  -u DIST"
+  echo "    Unique build, avoids build without a massive task of sub-requires ; example: -r true -d 'dist .fc25' -u true"
   exit 1
 }
 
@@ -167,6 +169,17 @@ readargs() {
         fi
       ;;
       -n)
+        if [ "$2" ] ; then
+          no_who_requires="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
+      -e)
         if [ "$2" ] ; then
           SNAPSHOT="$2"
           shift ; shift
@@ -340,39 +353,58 @@ fi
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 re_enabling_repos
+# if the build is with mock
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
   dnf -y update
   chroot_dependency
   dnf -y builddep "${specfile}"
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 pushd "${MOCK_DEF_PATH}"
+if [ -f *.rpm ]; then
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
+fi
 popd
+# If the build is without mock 
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
   /long-living-command &
-#
+# Conditional to accelerate the build
 if [ -f importantbump ]; then
   /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
-#
+# End conditional accelerate the build
 fi
   popd
 local_repo
+# Our conditional for build a unique build
+if [ "${UPP}" = true ]; then
+echo 'UNIQUE BUILD'
+else
+if [ "${no_who_requires}" = true ]; then
+up_ornew
+fi
 massdependency
+fi
+# End unique build conditional
+
+# Delete trash
 if [ -f /tmp/stop ]; then
 rm -f /tmp/stop
-fi 
+fi
+#
+
+# Conditional for sync to MEGA 
 if [ "${CLOUD}" = true ]; then
 upload_rpm
 fi
+# End conditional MEGA
 }
 
 local_repo() {
@@ -400,6 +432,11 @@ popd
 }
 
 enjoy_repo() {
+
+if [ ! -d "${repodirectory}" ]; then
+mkdir -p "${repodirectory}"
+fi
+
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
 echo '
 [enjoy]
@@ -460,19 +497,19 @@ megals --names /Root/unitedrpms/updates/30/ > megalist30
 
 Ou=output-result.txt
 while IFS= read -r result; do
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
+if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/repository/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/25/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/26/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/27/
-elif [ $(ls $result | grep -c fc28) -gt 0 ] && [ $(cat megalist28 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc28) -gt 0 ] && [ $(cat megalist28 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/28/
-elif [ $(ls $result | grep -c fc29) -gt 0 ] && [ $(cat megalist29 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc29) -gt 0 ] && [ $(cat megalist29 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/29/
-elif [ $(ls $result | grep -c fc30) -gt 0 ] && [ $(cat megalist30 | grep -c $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c fc30) -gt 0 ] && [ $(cat megalist30 | grep -c -x $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
@@ -490,6 +527,7 @@ fi
 }
 
 rules_directory() {
+# I am not sure, we are root...
 chown -R 1000:1000 ${directory}
 chown -R 1000:1000 ${repodirectory}
 # chown -R 1000:1000 ${MOCK_DEF_PATH}
@@ -499,7 +537,7 @@ chmod g+rws ${MOCK_DEF_PATH}/cache
 
 
 performance_mock() {
-# NO TOUCH! It alters the mock function
+# NO TOUCH OR ENABLE IT! It alters the mock function
 echo 'config_opts['basedir'] = '/home/makerpm/mock/'
 config_opts['cache_topdir'] = '/home/makerpm/mock/cache'
 config_opts['use_container_host_hostname'] = True
@@ -528,10 +566,8 @@ fi
 }
 
 up_ornew() {
-# The filer for a initial package or update
-if [ "${UPP}" = true ]; then
+# The filer for a initial package or unique, useful in new versions of fedora
 echo 'no_build' > /tmp/stop
-fi
 }
 
 massrebuild() {
@@ -563,12 +599,12 @@ exit 1
 }
 
 massdependency() {
-# Some times we need a filter with massive rebuild...
+# Some times we need a filter with massive rebuild... the /tmp/stop (dummy) makes a special build wihout packages dependent of the current build.
+# importantbump, is a list of all packages dependent of the current build (called massive rebuild)
 name_build
-if [ "${name}" = x264 ] || [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then
-up_ornew
+if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
 # repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-if [ "${UPP}" = true ] && [ "${name}" = x264 ]; then
+if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
 echo 'ffmpeg
 libquicktime
 mplayer
@@ -577,25 +613,28 @@ avidemux
 handbrake
 obs-studio
 vlc' > importantbump
-elif [ "${UPP}" = true ] && [ "${name}" = x265 ]; then
+elif [ "${name}" = x265 ] && [ -f /tmp/stop ]; then
 echo 'ffmpeg
 gstreamer1-plugins-bad-freeworld
 avidemux
 handbrake
 vlc' > importantbump
-elif [ "${UPP}" ! = true ]; then
+elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
 echo 'x264
 x265
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
+elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ -f /tmp/unibuild_basic.log ]; then 
+echo 'Basic build do not needs a massive rebuild for x264 or x265'
 fi
 massrebuild
 elif [ "${name}" = ffmpeg ] && [ ! -f /tmp/stop ]; then
 if [ -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
+gstreamer-ffmpeg
 libquicktime
 mlt
 libopenshot
@@ -613,6 +652,7 @@ deepin-music' >> importantbump
 else
 echo 'xine-lib
 gstreamer1-libav
+gstreamer-ffmpeg
 libquicktime
 mlt
 libopenshot
@@ -637,10 +677,10 @@ else
 echo 'mjpegtools' > importantbump
 fi
 massrebuild
-elif [ "${name}" = gstreamer1 ]; then
+elif [ "${name}" = gstreamer1 ] && [ ! -f /tmp/stop ]; then
 echo 'gstreamer1-plugins-base' > importantbump
 massrebuild
-elif [ "${name}" = gstreamer1-plugins-base ]; then
+elif [ "${name}" = gstreamer1-plugins-base ] && [ ! -f /tmp/stop ]; then
 echo 'gstreamer1-plugins-good
 gstreamer1-plugins-bad-free
 gstreamer1-plugins-bad-nonfree
@@ -677,6 +717,9 @@ elif [ "${name}" = deepin-tool-kit ]; then
 echo 'deepin-music' > importantbump
 massrebuild
 elif [ "${name}" = unibuild-basic ]; then
+# The next line avoids a massive rebuild of sub-dependencies in our basic packages "/tmp/unibuild_basic.log"
+echo 'basic build' > /tmp/unibuild_basic.log
+#
 up_ornew
 # repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
@@ -782,7 +825,7 @@ fi
 
 Pushaugit() {
 # CREDENTIALS
-# In massive task, our release is incremental, all change in ".spec" files is updated automatic.
+# In massive task, our release is incremental, all change in ".spec" files is updated automatic. Maybe the sync tool give us a best security...
 name_build
 pushd ${directory}/rpmbuild/GIT/${name}/
 find . -name "${name}*.deb" -exec rm -r {} \; 
@@ -872,7 +915,7 @@ rules_directory
 
 #=== HERE BEGIN THE BUILD PROCESS === #
 
-# MASSIVE REBUILD TASK ORGANIZATION, YOU NEED A POWERFULL MACHINE
+# MASSIVE REBUILD TASK ORGANIZATION, YOU NEED A POWERFULL MACHINE (BETA)
 # Our massive organization rebuild has no concept of packages version, it will give you the most recently tagged ones in git repository... we need a similar model to "default build".
 if [ "${massive}" = true ]; then
 echo -e "\e[35mStarting massive task...\e[0m"
@@ -905,7 +948,7 @@ if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
   chroot_dependency
   dnf -y builddep *.spec
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
@@ -930,7 +973,7 @@ echo -e "\e[36mDONE...\e[0m"
 exit 0
 # END MASSIVE TASK ORGANIZATION
 
-# START REMOTE Task only if you need rebuild a src.rpm from remote url
+# START REMOTE Task only if you need rebuild a src.rpm from remote url (BETA)
 elif [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ ${SRPM}
@@ -955,13 +998,15 @@ echo -e "\e[36mDONE...\e[0m"
 exit 0
 # END REMOTE URL
 
-# START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION
+# START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION (THE REAL TASK)
 # In essential updates there are dependent packages; We have some filters for them; a massive rebuild, with incremental task.
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; then
 echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
+rm -rf ${repodirectory}/
+rm -f /tmp/unibuild_basic.log
 pkill "megaput"
 echo -e "\e[36mDONE...\e[0m"
 exit 0

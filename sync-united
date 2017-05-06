@@ -25,7 +25,7 @@
 # | should be addressed to:                                                           |
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
-
+# The script is a shit because it doesn't has 60 lines ;)
 
 usage() {
   echo ""
@@ -115,6 +115,16 @@ popd
 mdow() {
 echo -e "\e[31mDownloading updates...\e[0m"
 megacopy --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
+}
+
+Cardow() {
+echo -e "\e[31mDownloading updates of travis-rpm-builder...\e[0m"
+curl -s https://api.github.com/repos/UnitedRPMs/travis-rpm-builder/releases/latest | grep browser_download_url | cut -d '"' -f 4 > $HOME/urls_mock_travis
+
+utra=$HOME/urls_mock_travis
+while IFS= read -r urlst; do
+wget -c -P ${raiz}/ $urlst 
+done <"$utra"
 }
 
 work_directory() {
@@ -307,6 +317,7 @@ dnf -y install fdupes
 fi
 work_directory
 sf_back
+Cardow
 mdow
 checkfiles
 m_mv
