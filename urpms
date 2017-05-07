@@ -238,9 +238,10 @@ exit
 
 SRPMcheck() {
 name_build
-counting=$( ls -1 ${directory}/rpmbuild/GIT/${name}/SRPMS/ | grep ${name} | grep .src.rpm | wc -l )
+counting=$( ls -1 ${directory}/rpmbuild/GIT/${name}/SRPMS/ | grep "${name}" | grep .src.rpm | wc -l )
 if [ "${counting}" -ge 2 ]; then
-find $PWD/SRPMS/ -name "${name}-*.src.rpm" -mmin -2 -exec rm -f {} ';'
+# find $PWD/SRPMS/ -name "${name}-*.src.rpm" -mmin -2 -exec rm -f {} ';'
+rm -f $( dnf -y repomanage --keep=1 --new $PWD/SRPMS/ )
 exit 1
 fi
 
@@ -476,7 +477,7 @@ fi
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd "${repodirectory}"
-ls *.rpm | sort -u > output-result.txt
+ls *.rpm | sort > output-result.txt
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
@@ -498,19 +499,19 @@ megals --names /Root/unitedrpms/updates/30/ > megalist30
 
 Ou=output-result.txt
 while IFS= read -r result; do
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ $(cat megalist24 | grep -c -x $result) -lt 1 ]; then
+if [ $(ls $result | grep -c .fc24.) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/repository/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ $(cat megalist25 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc25.) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/25/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ $(cat megalist26 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc26.) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/26/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ $(cat megalist27 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc27.) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/27/
-elif [ $(ls $result | grep -c fc28) -gt 0 ] && [ $(cat megalist28 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc28.) -gt 0 ] && [ $(cat megalist28 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/28/
-elif [ $(ls $result | grep -c fc29) -gt 0 ] && [ $(cat megalist29 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc29.) -gt 0 ] && [ $(cat megalist29 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/29/
-elif [ $(ls $result | grep -c fc30) -gt 0 ] && [ $(cat megalist30 | grep -c -x $result) -lt 1 ]; then
+elif [ $(ls $result | grep -c .fc30.) -gt 0 ] && [ $(cat megalist30 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/30/
 fi
 done <"$Ou"
@@ -1012,7 +1013,7 @@ echo -e "\e[35mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
-rm -rf ${repodirectory}/
+# rm -rf ${repodirectory}/
 rm -f /tmp/unibuild_basic.log
 pkill "megaput"
 echo -e "\e[36mDONE...\e[0m"
