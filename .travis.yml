@@ -12,8 +12,8 @@ before_install:
   - sudo docker pull davidva/unibuild-24
 script:
 # ENABLE tne next line and delete add a "#" the next lines; if you want build with mock
-#- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/deepin-music -s deepin-music.spec -t fedora-24-x86_64
-- "docker run --cap-add=SYS_ADMIN davidva/unibuild-24 /bin/sh /urpms -g UnitedRPMs/deepin-music -s deepin-music.spec -r true -d 'dist .fc24'"
+#- travis_wait 40 docker run --cap-add=SYS_ADMIN davidva/unibuild /bin/sh /urpms -g UnitedRPMs/mpv -s mpv.spec -t fedora-24-x86_64
+- "docker run --cap-add=SYS_ADMIN davidva/unibuild-24 /bin/sh /urpms -g UnitedRPMs/mpv -s mpv.spec -r true -d 'dist .fc24' -c true"
 notifications:
   email: davidva@tutanota.com
 ##  slack: unitedrpms:lzDykHTpajKrgmGz9NkrO1Hj

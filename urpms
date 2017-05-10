@@ -1014,6 +1014,7 @@ git_task
 buildrpm
 rm -rf /tmp/*.prb
 # rm -rf ${repodirectory}/
+rm -rf ${directory}/rpmbuild/GIT/
 rm -f /tmp/unibuild_basic.log
 pkill "megaput"
 echo -e "\e[36mDONE...\e[0m"
