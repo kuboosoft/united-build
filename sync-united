@@ -63,7 +63,8 @@ readargs() {
 
 
 sf_back() {
-sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+# sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
 }
 
 clean_old() {
@@ -327,7 +328,7 @@ user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = repository ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ]; then
+if [ ${task} = repository ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ]; then
 echo -e "\e[32msync limited to F24-F27...\e[0m"
 else
 echo 'ERROR'
@@ -346,8 +347,8 @@ mdow
 checkfiles
 m_mv
 job
-muchsfsync
-#sfsync
+#muchsfsync
+sfsync
 mupl
 
 rm -rf "${motherpath}"
