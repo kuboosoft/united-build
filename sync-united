@@ -63,8 +63,8 @@ readargs() {
 
 
 sf_back() {
-# sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
-sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
+sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+# sshpass -f $HOME/.chirubito rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
 }
 
 clean_old() {
