@@ -606,7 +606,7 @@ massdependency() {
 # importantbump, is a list of all packages dependent of the current build (called massive rebuild)
 name_build
 if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
-# repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
 echo 'ffmpeg
 libquicktime
@@ -673,7 +673,7 @@ deepin-music' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
-# repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 if [ -f importantbump ]; then
 echo 'mjpegtools' >> importantbump
 else
@@ -692,7 +692,7 @@ gstreamer1-plugins-ugly
 gstreamer1-libav' > importantbump
 massrebuild
 elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
-# repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 if [ -f importantbump ]; then
 echo 'vlc' >> importantbump
 else
@@ -701,7 +701,7 @@ fi
 massrebuild
 elif [ "${name}" = libbluray ]; then
 up_ornew
-# repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'xine-lib
 ffmpeg
 handbrake
@@ -712,11 +712,11 @@ vlc
 ' > importantbump
 massrebuild
 elif [ "${name}" = dtksettings ]; then
-# repoquery --whatrequires dtksettings --source | grep -v dtksettings | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires dtksettings --source | grep -v dtksettings | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'deepin-tool-kit' > importantbump
 massrebuild
 elif [ "${name}" = deepin-tool-kit ]; then
-# repoquery --whatrequires deepin-tool-kit --source | grep -v deepin-tool-kit | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires deepin-tool-kit --source | grep -v deepin-tool-kit | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'deepin-music' > importantbump
 massrebuild
 elif [ "${name}" = unibuild-basic ]; then
@@ -724,7 +724,7 @@ elif [ "${name}" = unibuild-basic ]; then
 echo 'basic build' > /tmp/unibuild_basic.log
 #
 up_ornew
-# repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
 x265
 lame
@@ -752,9 +752,32 @@ vo-aacenc
 vo-amrwbenc' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
-# repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+# dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
+elif [ "${name}" = faad2 ] && [ ! -f /tmp/stop ]; then
+if [ -f importantbump ]; then
+echo 'xine-lib
+mplayer
+avidemux
+deadbeef
+gstreamer1-plugins-bad-freeworld
+libquicktime
+moc
+mpd
+vlc' >> importantbump
+else
+echo 'xine-lib
+mplayer
+avidemux
+deadbeef
+gstreamer1-plugins-bad-freeworld
+libquicktime
+moc
+mpd
+vlc' > importantbump
+fi
+#
 else
 echo 'No massive dependencies found or added to list'
 fi
