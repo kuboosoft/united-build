@@ -777,6 +777,14 @@ moc
 mpd
 vlc' > importantbump
 fi
+elif [ "${name}" = faac ] && [ ! -f /tmp/stop ]; then
+if [ -f importantbump ]; then
+echo 'gstreamer1-plugins-bad-nonfree
+mplayer' >> importantbump
+else
+echo 'gstreamer1-plugins-bad-nonfree
+mplayer' > importantbump
+fi
 #
 else
 echo 'No massive dependencies found or added to list'
