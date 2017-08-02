@@ -247,14 +247,8 @@ fi
 Ou=$HOME/output-result-rpms.txt
 while IFS= read -r result; do
 pushd ${motherpath}/x86_64/
-if [ $(ls $result | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository ] && [ $(cat /tmp/megalistrepository | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/repository/x86_64/
-elif [ $(ls $result | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25 ] && [ $(cat /tmp/megalist25 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/25/x86_64/
-elif [ $(ls $result | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26 ] && [ $(cat /tmp/megalist26 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/26/x86_64/
-elif [ $(ls $result | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27 ] &&  [ $(cat /tmp/megalist27 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/27/x86_64/
+if [ $(ls $result | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task} ] && [ $(cat /tmp/megalist${task} | grep -c $result) -lt 1 ]; then
+megaput $result --path /Root/unitedrpms/${task}/x86_64/
 fi
 done <"$Ou"
 popd
@@ -263,14 +257,8 @@ popd
 Oa=$HOME/output-result-debugs.txt
 pushd ${motherpath}/x86_64/debug/
 while IFS= read -r resultb; do
-if [ $(ls $resultb | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository_debug ] && [ $(cat /tmp/megalistrepository_debug | grep -c $resultb ) -lt 1 ]; then
-megaput $resultb --path /Root/unitedrpms/repository/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25_debug ] && [ $(cat /tmp/megalist25_debug | grep -c $resultb ) -lt 1 ]; then
-megaput $resultb --path /Root/unitedrpms/25/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26_debug ] && [ $(cat /tmp/megalist26_debug | grep -c $resultb ) -lt 1 ]; then
-megaput $resultb --path /Root/unitedrpms/26/x86_64/debug/
-elif [ $(ls $resultb | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27_debug ] && [ $(cat /tmp/megalist27_debug | grep -c $resultb ) -lt 1 ]; then
-megaput $resultb --path /Root/unitedrpms/27/x86_64/debug/
+if [ $(ls $resultb | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_debug ] && [ $(cat /tmp/megalist${task}_debug | grep -c $resultb ) -lt 1 ]; then
+megaput $resultb --path /Root/unitedrpms/${task}/x86_64/debug/
 fi
 done <"$Oa"
 popd
@@ -280,14 +268,8 @@ popd
 Oe=$HOME/output-result-srpms.txt
 pushd ${motherpath}/srpm/
 while IFS= read -r resultc; do
-if [ $(ls $resultc | grep -c fc24) -gt 0 ] && [ -f /tmp/megalistrepository_SR ] && [ $( cat /tmp/megalistrepository_SR | grep -c $resultc ) -lt 1 ]; then
-megaput $resultc --path /Root/unitedrpms/repository/srpm/
-elif [ $(ls $resultc | grep -c fc25) -gt 0 ] && [ -f /tmp/megalist25_SR ] && [ $( cat /tmp/megalist25_SR | grep -c $resultc ) -lt 1 ]; then
-megaput $resultc --path /Root/unitedrpms/25/srpm/
-elif [ $(ls $resultc | grep -c fc26) -gt 0 ] && [ -f /tmp/megalist26_SR ] && [ $( cat /tmp/megalist26_SR | grep -c $resultc ) -lt 1 ]; then
-megaput $resultc --path /Root/unitedrpms/26/srpm/
-elif [ $(ls $resultc | grep -c fc27) -gt 0 ] && [ -f /tmp/megalist27_SR ] && [ $( cat /tmp/megalist27_SR | grep -c $resultc ) -lt 1 ]; then
-megaput $resultc --path /Root/unitedrpms/27/srpm/
+if [ $(ls $resultc | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_SR ] && [ $( cat /tmp/megalist${task}_SR | grep -c $resultc ) -lt 1 ]; then
+megaput $resultc --path /Root/unitedrpms/${task}/srpm/
 fi
 done <"$Oe"
 popd
@@ -328,8 +310,9 @@ user=kuboosoft
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = repository ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ]; then
-echo -e "\e[32msync limited to F24-F27...\e[0m"
+if [ ${task} = 24 ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ]; then
+echo -e "\e[32msync limited to F24-F28...\e[0m"
+echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
 echo -e "\e[32mSorry, check if exists the current release...\e[0m"
@@ -342,7 +325,7 @@ dnf -y install fdupes
 fi
 work_directory
 sf_back
-Cardow
+#Cardow
 mdow
 checkfiles
 m_mv

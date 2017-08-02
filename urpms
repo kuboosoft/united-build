@@ -61,7 +61,7 @@ usage() {
   echo '    mock config example "-t fedora-26-x86_64" '
   echo "  -d DIST"
   echo "    Distribution number, only works with NO_MOCK; example: -r true -d 'dist .fc25' -u true"
-  echo "  -u DIST"
+  echo "  -u UPP"
   echo "    Unique build, avoids build without a massive task of sub-requires ; example: -r true -d 'dist .fc25' -u true"
   exit 1
 }
@@ -490,7 +490,7 @@ megaput ${name}_${date}_root.log --path /Root/logs/
 megaput ${name}_${date}_state.log --path /Root/logs/
 fi
 
-megals --names /Root/unitedrpms/updates/repository/ > megalist24
+megals --names /Root/unitedrpms/updates/24/ > megalist24
 megals --names /Root/unitedrpms/updates/25/ > megalist25
 megals --names /Root/unitedrpms/updates/26/ > megalist26
 megals --names /Root/unitedrpms/updates/27/ > megalist27
@@ -501,7 +501,7 @@ megals --names /Root/unitedrpms/updates/30/ > megalist30
 Ou=output-result.txt
 while IFS= read -r result; do
 if [ $(ls $result | grep -c .fc24.) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/updates/repository/
+megaput $result --path /Root/unitedrpms/updates/24/
 elif [ $(ls $result | grep -c .fc25.) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
 megaput $result --path /Root/unitedrpms/updates/25/
 elif [ $(ls $result | grep -c .fc26.) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
