@@ -989,7 +989,7 @@ if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
 if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
   chroot_dependency
-  dnf -y builddep *.spec
+  dnf -y builddep *.spec || yum-builddep -y *.spec
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
