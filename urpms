@@ -359,7 +359,7 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
   dnf -y update
   chroot_dependency
-  dnf -y builddep "${specfile}"
+  dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
@@ -671,6 +671,8 @@ vlc
 kodi
 deepin-music' > importantbump
 fi
+elif [ "${name}" = ffmpeg ] && [ -f /tmp/unibuild_basic.log ]; then 
+echo 'Basic build do not needs a massive rebuild for ffmpeg'
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -693,11 +695,14 @@ gstreamer1-libav' > importantbump
 massrebuild
 elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+
 if [ -f importantbump ]; then
 echo 'vlc' >> importantbump
 else
 echo 'vlc' > importantbump
 fi
+elif [ "${name}" = live555 ] && [ -f /tmp/unibuild_basic.log ]; then 
+echo 'Basic build do not needs a massive rebuild for live555'
 massrebuild
 elif [ "${name}" = libbluray ]; then
 up_ornew
@@ -727,9 +732,6 @@ up_ornew
 # dnf repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 echo 'x264
 x265
-lame
-a52dec
-libbluray
 xvidcore
 faad2
 libdca
@@ -989,7 +991,7 @@ if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
 if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
   dnf -y update
   chroot_dependency
-  dnf -y builddep *.spec || yum-builddep -y *.spec
+  dnf -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
@@ -1024,7 +1026,7 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
   dnf -y update
   chroot_dependency
-  dnf -y builddep *.spec
+  dnf -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
