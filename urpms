@@ -253,7 +253,7 @@ fi
 
 bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name}-*.src.rpm 2> /dev/null | wc -l)
 if [ "$bsource" != "0" ]; then
-   echo "Exists src.rpm of ${name}, great"
+   echo -e "\e[36mExists src.rpm of ${name}, great\e[0m"
 else
 echo "Hey the src.rpm of ${name} does not exist; check your urls in sources and patches"
 exit 1
@@ -575,7 +575,7 @@ echo 'no_build' > /tmp/stop
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ]; then
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 local_install_packages
 fi
@@ -593,8 +593,25 @@ while IFS= read -r line; do
 /urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
 done <"$file"
 local_repo
-fi
 
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+while IFS= read -r line; do
+        # display $line or do something with $line
+/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
+done <"$file"
+local_repo
+fi
+# FIRST BUILD
+elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ]; then
+echo 'FIRST BUILD TASK'
+file=importantbump
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+while IFS= read -r line; do
+        # display $line or do something with $line
+/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -u true 
+done <"$file"
+local_repo
+fi
 else
 echo 'mass rebuild failed'
 exit 1
@@ -607,6 +624,7 @@ massdependency() {
 name_build
 if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
 # dnf repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+
 if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
 echo 'ffmpeg
 libquicktime
@@ -622,18 +640,17 @@ gstreamer1-plugins-bad-freeworld
 avidemux
 handbrake
 vlc' > importantbump
-elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
+elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then 
 echo 'x264
 x265
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
-elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ -f /tmp/unibuild_basic.log ]; then 
-echo 'Basic build do not needs a massive rebuild for x264 or x265'
 fi
 massrebuild
 elif [ "${name}" = ffmpeg ] && [ ! -f /tmp/stop ]; then
+
 if [ -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
@@ -652,7 +669,7 @@ simplescreenrecorder
 vlc
 kodi
 deepin-music' >> importantbump
-else
+elif [ ! -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
 gstreamer-ffmpeg
@@ -671,8 +688,6 @@ vlc
 kodi
 deepin-music' > importantbump
 fi
-elif [ "${name}" = ffmpeg ] && [ -f /tmp/unibuild_basic.log ]; then 
-echo 'Basic build do not needs a massive rebuild for ffmpeg'
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -695,15 +710,12 @@ gstreamer1-libav' > importantbump
 massrebuild
 elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-
 if [ -f importantbump ]; then
 echo 'vlc' >> importantbump
-else
+elif [ ! -f importantbump ]; then
 echo 'vlc' > importantbump
 fi
-elif [ "${name}" = live555 ] && [ -f /tmp/unibuild_basic.log ]; then 
-echo 'Basic build do not needs a massive rebuild for live555'
-massrebuild
+
 elif [ "${name}" = libbluray ]; then
 up_ornew
 # dnf repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -736,7 +748,6 @@ xvidcore
 faad2
 libdca
 live555
-mpeg2dec
 twolame
 vcdimager
 aften
@@ -745,10 +756,7 @@ faac
 libmms
 rtmpdump
 libmpeg2
-libquicktime
 nvenc
-mjpegtools
-libmng
 libdvdcss
 vo-aacenc
 vo-amrwbenc' > importantbump
@@ -758,6 +766,7 @@ elif [ "${name}" = openh264 ]; then
 echo 'gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = faad2 ] && [ ! -f /tmp/stop ]; then
+
 if [ -f importantbump ]; then
 echo 'xine-lib
 mplayer
@@ -768,7 +777,7 @@ libquicktime
 moc
 mpd
 vlc' >> importantbump
-else
+elif [ ! -f importantbump ]; then
 echo 'xine-lib
 mplayer
 avidemux
@@ -781,12 +790,26 @@ vlc' > importantbump
 fi
 massrebuild
 elif [ "${name}" = faac ] && [ ! -f /tmp/stop ]; then
+
 if [ -f importantbump ]; then
 echo 'gstreamer1-plugins-bad-nonfree
 mplayer' >> importantbump
-else
+elif [ ! -f importantbump ]; then
 echo 'gstreamer1-plugins-bad-nonfree
 mplayer' > importantbump
+fi
+massrebuild
+#
+elif [ "${name}" = kodi ] && [ ! -f /tmp/stop ]; then
+
+if [ -f importantbump ]; then
+echo 'kodi-platform
+kodi-pvr-addons
+kodi-addon-visualizations' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'kodi-platform
+kodi-pvr-addons
+kodi-addon-visualizations' > importantbump
 fi
 massrebuild
 #
@@ -855,7 +878,7 @@ awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.s
 mv -f ${name}2.spec ${specfile}
 megaput ${specfile} --path /Root/unitedrpms/automatic-release/
 else 
-echo "Great, a updated package of ${name}; then the automatic release isn't necessary"
+echo -e "\e[36mGreat, a updated package of ${name}; then the automatic release isn't necessary\e[0m"
 fi
 
 }
@@ -1047,7 +1070,7 @@ exit 0
 # START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION (THE REAL TASK)
 # In essential updates there are dependent packages; We have some filters for them; a massive rebuild, with incremental task.
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; then
-echo -e "\e[35mStarting complete task...\e[0m"
+echo -e "\e[32mStarting complete task...\e[0m"
 git_task
 buildrpm
 rm -rf /tmp/*.prb
