@@ -764,8 +764,11 @@ unrar
 unace
 nautilus-dropbox
 libaacs
-libbdplus
-celt' > importantbump
+celt
+libdvbpsi
+libmimic
+libmng
+openssl-spotify' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -816,6 +819,24 @@ elif [ ! -f importantbump ]; then
 echo 'kodi-platform
 kodi-pvr-addons
 kodi-addon-visualizations' > importantbump
+fi
+massrebuild
+#
+elif [ "${name}" = libaacs ] && [ ! -f /tmp/stop ]; then
+
+if [ -f importantbump ]; then
+echo 'libbdplus' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'libbdplus' > importantbump
+fi
+massrebuild
+#
+elif [ "${name}" = libshout-idjc ] && [ ! -f /tmp/stop ]; then
+
+if [ -f importantbump ]; then
+echo 'idjc' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'idjc' > importantbump
 fi
 massrebuild
 #
