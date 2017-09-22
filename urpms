@@ -374,7 +374,7 @@ popd
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
   /long-living-command &
-dnf -y install mock-unitedrpms
+dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms
 # Conditional to accelerate the build
 if [ -f importantbump ]; then
   /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
@@ -1049,7 +1049,7 @@ cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
  else
-  dnf -y install mock-unitedrpms
+  dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/$liner-*.src.rpm 
 fi
 #
@@ -1084,7 +1084,7 @@ cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 else
-  dnf -y install mock-unitedrpms
+  dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
