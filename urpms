@@ -346,6 +346,7 @@ name_build
 if [ -n "${SNAPSHOT}" ]; then
   chmod a+x ${SNAPSHOT}
   ./${SNAPSHOT}
+  pushd ${directory}/rpmbuild/GIT/${name}/
 fi
 if [ "${massive_spec}" = true ]; then
   Inrelease 
