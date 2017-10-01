@@ -47,7 +47,7 @@ usage() {
   echo ""
   echo -e '\e[33m  -n SNAPSHOT\e[0m'
   echo "    Generate the source file with a special script example ffmpeg-snapshot.sh (beta)"
-  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -n ffmpeg-snapshot.sh "
+  echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -e ffmpeg-snapshot.sh "
   echo ""
   echo -e '\e[33m  -r NO_MOCK\e[0m'
   echo "    Generate a rpm without mock, super fast"
@@ -344,6 +344,7 @@ echo -e "\e[32mMaking an rpm source...\e[0m"
 name_build
   pushd ${directory}/rpmbuild/GIT/${name}/
 if [ -n "${SNAPSHOT}" ]; then
+echo 'Snapshot enabled'
   chmod a+x ${SNAPSHOT}
   ./${SNAPSHOT}
   pushd ${directory}/rpmbuild/GIT/${name}/
