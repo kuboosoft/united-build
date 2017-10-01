@@ -261,7 +261,7 @@ fi
 }
 
 name_build() {
-name=$( echo ${specfile} | awk -F '.' '{print $1}' )
+name=$( echo "${url_git##*/}" )
 name_spec=$( rpm -q --qf "%{Name}\n" --specfile ${specfile} | head -1)
 }
 
