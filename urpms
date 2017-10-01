@@ -348,6 +348,7 @@ echo 'Snapshot enabled'
   chmod a+x ${SNAPSHOT}
   ./${SNAPSHOT}
   pushd ${directory}/rpmbuild/GIT/${name}/
+  find . -name \*.tar.* -exec cp {} $PWD \;
 fi
 if [ "${massive_spec}" = true ]; then
   Inrelease 
