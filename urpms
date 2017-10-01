@@ -251,18 +251,18 @@ echo "${name} is already built"
 exit 0
 fi
 
-bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name}-*.src.rpm 2> /dev/null | wc -l)
+bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name_spec}-*.src.rpm 2> /dev/null | wc -l)
 if [ "$bsource" != "0" ]; then
    echo -e "\e[36mExists src.rpm of ${name}, great\e[0m"
 else
-echo "Hey the src.rpm of ${name} does not exist; check your urls in sources and patches"
+echo "Hey the src.rpm of ${name_spec} does not exist; check your urls in sources and patches"
 exit 1
 fi
 }
 
 name_build() {
-#name=$( echo ${specfile} | awk -F '.' '{print $1}' )
-name=$( rpm -q --qf "%{name}\n" --specfile "${specfile}" | head -1)
+name=$( echo ${specfile} | awk -F '.' '{print $1}' )
+name_spec=$( rpm -q --qf "%{Name}\n" --specfile ${specfile} | head -1)
 }
 
 path_chroot() {
