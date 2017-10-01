@@ -261,7 +261,8 @@ fi
 }
 
 name_build() {
-name=$( echo ${specfile} | awk -F '.' '{print $1}' )
+#name=$( echo ${specfile} | awk -F '.' '{print $1}' )
+name=$( rpm -q --qf "%{name}\n" --specfile "${specfile}" | head -1)
 }
 
 path_chroot() {
