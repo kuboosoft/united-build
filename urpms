@@ -262,7 +262,9 @@ fi
 
 name_build() {
 name=$( echo "${url_git##*/}" )
-name_spec=$( rpm -q --qf "%{Name}\n" --specfile ${specfile} | head -1)
+if [ -d ${directory}/rpmbuild/GIT/${name}/ ]; then
+name_spec=$( rpm -q --qf "%{Name}\n" --specfile ${directory}/rpmbuild/GIT/${name}/${specfile} | head -1)
+fi
 }
 
 path_chroot() {
