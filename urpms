@@ -367,7 +367,7 @@ SRPMcheck
   chroot_dependency
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
-if [ ls -A RPMS/x86_64/${name}*.rpm ] || [ ls -A RPMS/i686/${name}*.rpm ] || [ ls -A RPMS/noarch/${name}*.rpm ]; then
+if [ -f RPMS/x86_64/${name}*.rpm ] || [ -f RPMS/i686/${name}*.rpm ] || [ -f RPMS/noarch/${name}*.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
@@ -393,7 +393,7 @@ else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
 # End conditional accelerate the build
-if [ ls -A ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ ls -A ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).noarch.rpm ]; then
+if [ -f ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -f ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
