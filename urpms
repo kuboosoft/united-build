@@ -874,7 +874,8 @@ else
 dnf -y download --source ${name}
 fi
 re_enabling_repos
-sign_rpm
+#sign_rpm
+ls
 rpack=$(rpm -qip ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
 
