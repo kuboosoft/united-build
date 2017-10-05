@@ -873,8 +873,17 @@ dnf -y download --source ${name}-devel
 else
 dnf -y download --source ${name}
 fi
+# If dnf fail downloading sources
+if [ ! -n  ${name}*src.rpm ]; then
+if [ "${name}" = gstreamer1 ]; then
+yumdownloader -y --source ${name}-devel
+else
+yumdownloader -y --source ${name}
+fi
+ fi
+
 re_enabling_repos
-#sign_rpm
+sign_rpm
 
 rpack=$(rpm --query --package --info ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
