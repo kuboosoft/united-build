@@ -683,8 +683,7 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-kodi
-deepin-music' >> importantbump
+kodi' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
@@ -701,9 +700,25 @@ mpv
 obs-studio
 simplescreenrecorder
 vlc
-kodi
-deepin-music' > importantbump
+kodi' > importantbump
 fi
+elif [ "${name}" = ffmpeg ] && [ -f /tmp/stop ]; then
+echo 'xine-lib
+gstreamer1-libav
+gstreamer-ffmpeg
+libquicktime
+mlt
+libopenshot
+idjc
+minidlna
+mplayer
+moc
+mpd
+mpv
+obs-studio
+simplescreenrecorder
+vlc
+kodi' > importantbump
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
