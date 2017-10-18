@@ -604,22 +604,15 @@ fi
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -lt 1 ]; then
+
+file=importantbump
+
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 local_install_packages
-fi
-file=importantbump
-if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
 /urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -b true
-done <"$file"
-local_repo
-
-elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
-while IFS= read -r line; do
-        # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
 done <"$file"
 local_repo
 
@@ -635,6 +628,12 @@ elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/sto
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
+while IFS= read -r line; do
+        # display $line or do something with $line
+/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -u true
+done <"$file"
+local_repo
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
 /urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -u true 
@@ -928,7 +927,8 @@ elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ]; then
 echo "Same version and release for ${name}, then enabled the automatic release"
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
-rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
+#rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
+rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | awk -F '%' '{print $1}')
 
 if [[ $var =~ ^[-+]?[0-9]+$ ]]; then
 increrele=$(($rele+1))
