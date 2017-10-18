@@ -595,6 +595,10 @@ elif [ ${name} = x265 ]; then
 echo 'x265_build' >> /tmp/stop
 elif [ ${name} = libbluray ]; then
 echo 'libbluray_build' >> /tmp/stop
+elif [ ${name} = kodi ]; then
+echo 'kodi_build' >> /tmp/stop
+elif [ ${name} = libquicktime ]; then
+echo 'libquicktime_build' >> /tmp/stop
 fi
 }
 
@@ -627,7 +631,7 @@ done <"$file"
 local_repo
 fi
 # FIRST BUILD
-elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $(cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build) -gt 0 ]; then
+elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
