@@ -378,7 +378,7 @@ cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 pushd "${MOCK_DEF_PATH}"
 if [ $(ls *.rpm | grep -c .rpm) -gt 0 ]; then
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
 fi
 popd
 # If the build is without mock 
@@ -442,9 +442,9 @@ createrepo .
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
-mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e importantbump )
+mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
 fi
 #
 popd
@@ -679,7 +679,7 @@ gstreamer1-plugins-bad-freeworld' > importantbump
 fi
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
-
+up_ornew
 if [ -f importantbump ]; then
 echo 'xine-lib
 gstreamer1-libav
@@ -929,7 +929,12 @@ echo "Same version and release for ${name}, then enabled the automatic release"
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
 rele=$(cat ${specfile} | grep "Release:" | awk '{ print $NF }' | grep -o '[0-9]*')
+
+if [[ $var =~ ^[-+]?[0-9]+$ ]]; then
 increrele=$(($rele+1))
+else
+increrele=$( calc $rele + 0.01 )
+fi
 sed -i "${SRE}s/${rele}/${increrele}/" ${specfile}
 
 dt=$(export LC_ALL=C && date "+%a %b %d %Y")
@@ -1002,7 +1007,7 @@ dnf -y install @buildsys-build
 
 local_install_packages() {
 # Some times we need a massive rebuild, if we install directly built rpms; we save time
-dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e -debuginfo -e repodata -e enjoy -e urpms )
+dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms )
 }
 
 re_enabling_repos() {
