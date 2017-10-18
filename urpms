@@ -587,6 +587,15 @@ fi
 up_ornew() {
 # The filer for a initial package or unique, useful in new versions of fedora
 echo 'no_build' > /tmp/stop
+if [ ${name} = ffmpeg ]; then
+echo 'ffmpeg_build' >> /tmp/stop
+elif [ ${name} = x264 ]; then
+echo 'x264_build' >> /tmp/stop
+elif [ ${name} = x265 ]; then
+echo 'x265_build' >> /tmp/stop
+elif [ ${name} = libbluray ]; then
+echo 'libbluray_build' >> /tmp/stop
+fi
 }
 
 massrebuild() {
@@ -618,7 +627,7 @@ done <"$file"
 local_repo
 fi
 # FIRST BUILD
-elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ]; then
+elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $(cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
@@ -665,7 +674,7 @@ handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
 fi
 massrebuild
-elif [ "${name}" = ffmpeg ] && [ ! -f /tmp/stop ]; then
+elif [ "${name}" = ffmpeg ]; then
 
 if [ -f importantbump ]; then
 echo 'xine-lib
@@ -702,23 +711,6 @@ simplescreenrecorder
 vlc
 kodi' > importantbump
 fi
-elif [ "${name}" = ffmpeg ] && [ -f /tmp/stop ]; then
-echo 'xine-lib
-gstreamer1-libav
-gstreamer-ffmpeg
-libquicktime
-mlt
-libopenshot
-idjc
-minidlna
-mplayer
-moc
-mpd
-mpv
-obs-studio
-simplescreenrecorder
-vlc
-kodi' > importantbump
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
