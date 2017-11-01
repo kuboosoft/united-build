@@ -741,7 +741,7 @@ echo 'vlc' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'vlc' > importantbump
 fi
-
+massrebuild
 elif [ "${name}" = libbluray ]; then
 up_ornew
 # dnf repoquery --whatrequires libbluray --source | grep -v libbluray | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
