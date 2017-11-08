@@ -763,6 +763,9 @@ elif [ "${name}" = deepin-tool-kit ]; then
 echo 'deepin-music' > importantbump
 massrebuild
 elif [ "${name}" = unibuild-basic ]; then
+# We need disabled unitedrpms repository for a new and clean build
+dnf -y config-manager --set-disabled unitedrpms
+
 # The next line avoids a massive rebuild of sub-dependencies in our basic packages "/tmp/unibuild_basic.log"
 echo 'basic build' > /tmp/unibuild_basic.log
 #
