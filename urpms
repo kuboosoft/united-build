@@ -363,6 +363,10 @@ re_enabling_repos
 # if the build is with mock
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 SRPMcheck
+# We need disabled unitedrpms repository for a new and clean build in unibuild-basic
+if [ "${name}" = unibuild-basic ]; then
+dnf -y config-manager --set-disabled unitedrpms
+fi
   dnf -y update
   chroot_dependency
   dnf -y builddep "${specfile}" 
