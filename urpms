@@ -1092,6 +1092,10 @@ if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs $liner.spec
 #  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
+# We need disabled unitedrpms repository for a new and clean build in unibuild-basic
+if [ "${name}" = unibuild-basic ]; then
+dnf -y config-manager --set-disabled unitedrpms
+fi
   dnf -y update
   chroot_dependency
   dnf -y builddep *.spec 
