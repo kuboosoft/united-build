@@ -302,13 +302,16 @@ fi
 }
 
 metadata_sync() {
-pushd ${motherpath}
-appstream-builder --verbose --max-threads=6 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=./tmp/ --output-dir=./appstream-data/ --basename="unitedrpms-${task}" --origin="unitedrpms-${task}" --enable-hidpi
+pushd ${motherpath}/x86_64/
+rm -rf ${motherpath}/x86_64/debug/
+rm -rf ${motherpath}/x86_64/repoview
+rm -rf ${motherpath}/x86_64/repodata
+appstream-builder --max-threads=6 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=./tmp/ --output-dir=./appstream-data/ --basename="unitedrpms-${task}" --origin="unitedrpms-${task}" --enable-hidpi
 popd
 }
 
 metadata_tag_git() {
-pushd ${motherpath} 
+pushd ${motherpath}/x86_64/ 
 source ~/.bashrc
 date_data=$(date "+%m/%d/%y%n")
 
