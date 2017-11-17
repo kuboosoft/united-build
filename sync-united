@@ -309,6 +309,7 @@ popd
 
 metadata_tag_git() {
 pushd ${motherpath} 
+source ~/.bashrc
 date_data=$(date "+%m/%d/%y%n")
 
 github-release delete \
