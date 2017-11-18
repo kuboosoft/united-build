@@ -303,9 +303,11 @@ fi
 
 metadata_sync() {
 pushd ${motherpath}/x86_64/
-rm -rf ${motherpath}/x86_64/debug/
-rm -rf ${motherpath}/x86_64/repoview/
-rm -rf ${motherpath}/x86_64/repodata/
+rm -rf $PWD/debug/
+rm -rf $PWD/repoview/
+rm -rf $PWD/repodata/
+mkdir -p $PWD/tmp/
+mkdir -p $PWD/appstream-data/
 appstream-builder --max-threads=6 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=$PWD/tmp/ --output-dir=$PWD/appstream-data/ --basename="unitedrpms" --origin="unitedrpms" --enable-hidpi
 popd
 }
