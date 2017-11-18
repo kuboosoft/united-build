@@ -336,7 +336,7 @@ github-release upload \
     --repo unitedrpms-appstream-data \
     --tag v0.1.0 \
     --name "${date_data}" \
-    --file ${motherpath}/appstream-data/$mcl
+    --file ${motherpath}/x86_64/appstream-data/$mcl
 done <"$flm"
 popd
 }
