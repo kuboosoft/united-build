@@ -333,16 +333,27 @@ ls $PWD/appstream-data/ > /tmp/file_metadata
 echo 'files listed...'
 cat /tmp/file_metadata
 
-flm=/tmp/file_metadata
-while IFS= read -r mcl; do
-source ~/.bashrc
+
 github-release upload \
     --user UnitedRPMs \
     --repo unitedrpms-appstream-data \
     --tag ${date_data} \
     --name "unitedrpms-appdata" \
-    --file $PWD/appstream-data/$mcl
-done <"$flm"
+    --file $PWD/appstream-data/unitedrpms.xml.gz
+
+github-release upload \
+    --user UnitedRPMs \
+    --repo unitedrpms-appstream-data \
+    --tag ${date_data} \
+    --name "unitedrpms-appdata" \
+    --file $PWD/appstream-data/unitedrpms-icons.tar.gz
+
+github-release upload \
+    --user UnitedRPMs \
+    --repo unitedrpms-appstream-data \
+    --tag ${date_data} \
+    --name "unitedrpms-appdata" \
+    --file $PWD/appstream-data/unitedrpms-screenshots.tar
 popd
 }
 
