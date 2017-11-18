@@ -306,7 +306,7 @@ pushd ${motherpath}/x86_64/
 rm -rf ${motherpath}/x86_64/debug/
 rm -rf ${motherpath}/x86_64/repoview/
 rm -rf ${motherpath}/x86_64/repodata/
-appstream-builder --max-threads=6 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=./tmp/ --output-dir=./appstream-data/ --basename="unitedrpms" --origin="unitedrpms" --enable-hidpi
+appstream-builder --max-threads=6 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=$PWD/tmp/ --output-dir=$PWD/appstream-data/ --basename="unitedrpms" --origin="unitedrpms" --enable-hidpi
 popd
 }
 
@@ -327,9 +327,9 @@ github-release release \
     --name "${date_data}" \
     --description "Not a movie, contrary to popular opinion. The magic is here!" 
 
-ls ${motherpath}/x86_64/appstream-data > file_metadata
+ls $PWD/appstream-data/ > /tmp/file_metadata
 
-flm=$HOME/file_metadata
+flm=/tmp/file_metadata
 while IFS= read -r mcl; do
 github-release upload \
     --user UnitedRPMs \
