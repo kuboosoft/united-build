@@ -315,7 +315,7 @@ popd
 metadata_tag_git() {
 pushd ${motherpath}/x86_64/ 
 source ~/.bashrc
-date_data=$(date "+%m-%d-%Y")
+date_data=$(date "+%m.%d.%Y")
 
 github-release delete \
     --user UnitedRPMs \
