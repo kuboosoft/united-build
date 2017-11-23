@@ -308,7 +308,7 @@ rm -rf $PWD/repoview/
 rm -rf $PWD/repodata/
 mkdir -p $PWD/tmp/
 mkdir -p $PWD/appstream-data/
-appstream-builder --max-threads=8 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=$PWD/tmp/ --output-dir=$PWD/appstream-data/ --screenshot-url=https://sourceforge.net/projects/unitedrpms/files/screenshots/ --basename="unitedrpms" --origin="unitedrpms" --enable-hidpi
+appstream-builder --max-threads=8 --log-dir=./logs/ --packages-dir=$PWD --temp-dir=$PWD/tmp/ --output-dir=$PWD/appstream-data/ --basename="unitedrpms" --origin="unitedrpms" --enable-hidpi
 popd
 }
 
