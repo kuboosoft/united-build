@@ -418,7 +418,11 @@ fi
 
 # Delete trash
 if [ -f /tmp/stop ]; then
+if [ "${no_who_requires}" = true ]; then
+echo "You disabled the massive rebuild, don't worry"
+else
 rm -f /tmp/stop
+fi
 fi
 #
 
