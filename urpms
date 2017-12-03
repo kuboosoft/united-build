@@ -385,7 +385,7 @@ if [ $(ls *.rpm | grep -c .rpm) -gt 0 ]; then
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
 fi
 popd
-# If the build is without mock 
+# If the build is with mock 
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ]; then
 SRPMcheck
   /long-living-command &
@@ -408,10 +408,8 @@ local_repo
 # Our conditional for build a unique build
 if [ "${UPP}" = true ]; then
 echo 'UNIQUE BUILD'
-else
-if [ "${no_who_requires}" = true ]; then
+elif [ "${no_who_requires}" = true ]; then
 up_ornew
-fi
 massdependency
 fi
 # End unique build conditional
