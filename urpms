@@ -417,11 +417,7 @@ fi
 
 # Delete trash
 if [ -f /tmp/stop ]; then
-if [ "${no_who_requires}" = true ]; then
-echo "You disabled the massive rebuild, don't worry"
-else
 rm -f /tmp/stop
-fi
 fi
 #
 
@@ -630,27 +626,26 @@ while IFS= read -r line; do
 done <"$file"
 local_repo
 fi
+  fi
+
 # FIRST BUILD
-elif [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -gt 0 ]; then
+if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 local_install_packages
 while IFS= read -r line; do
         # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -u true -n true
+/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -u true 
 done <"$file"
 local_repo
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -u true -n true 
+/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -u true 
 done <"$file"
 local_repo
 fi
-else
-echo 'mass rebuild failed'
-exit 1
  fi
 }
 
@@ -658,11 +653,8 @@ massdependency() {
 # Some times we need a filter with massive rebuild... the /tmp/stop (dummy) makes a special build wihout packages dependent of the current build.
 # importantbump, is a list of all packages dependent of the current build (called massive rebuild)
 name_build
-if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
-# dnf repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-up_ornew
-
 if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
+up_ornew
 echo 'ffmpeg
 libquicktime
 mplayer
@@ -671,20 +663,32 @@ avidemux
 handbrake
 obs-studio
 vlc' > importantbump
+massrebuild
 elif [ "${name}" = x265 ] && [ -f /tmp/stop ]; then
+up_ornew
 echo 'ffmpeg
 gstreamer1-plugins-bad-freeworld
 avidemux
 handbrake
 vlc' > importantbump
-elif [ "${name}" = x265 ] || [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then 
+massrebuild
+elif [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then 
+up_ornew
 echo 'x264
 x265
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
-fi
+massrebuild
+elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
+up_ornew 
+echo 'x264
+x265
+ffmpeg
+avidemux
+handbrake
+gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 up_ornew
@@ -726,6 +730,7 @@ fi
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires libquicktime --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+up_ornew
 if [ -f importantbump ]; then
 echo 'mjpegtools' >> importantbump
 else
@@ -745,6 +750,7 @@ gstreamer1-libav' > importantbump
 massrebuild
 elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+up_ornew
 if [ -f importantbump ]; then
 echo 'vlc' >> importantbump
 elif [ ! -f importantbump ]; then
@@ -814,7 +820,7 @@ elif [ "${name}" = openh264 ]; then
 echo 'gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = faad2 ] && [ ! -f /tmp/stop ]; then
-
+up_ornew
 if [ -f importantbump ]; then
 echo 'xine-lib
 mplayer
@@ -838,7 +844,7 @@ vlc' > importantbump
 fi
 massrebuild
 elif [ "${name}" = faac ] && [ ! -f /tmp/stop ]; then
-
+up_ornew
 if [ -f importantbump ]; then
 echo 'gstreamer1-plugins-bad-nonfree
 mplayer' >> importantbump
@@ -849,7 +855,7 @@ fi
 massrebuild
 #
 elif [ "${name}" = kodi ] && [ ! -f /tmp/stop ]; then
-
+up_ornew
 if [ -f importantbump ]; then
 echo 'kodi-platform
 kodi-pvr-addons
