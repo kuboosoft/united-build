@@ -656,6 +656,7 @@ massdependency() {
 name_build
 if [ "${name}" = x264 ] || [ "${name}" = x265 ]; then
 # dnf repoquery --whatrequires x264-libs --source | grep -v x264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
+up_ornew
 
 if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
 echo 'ffmpeg
