@@ -609,7 +609,7 @@ if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/sto
 
 file=importantbump
 
-if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ ! -f /tmp/stop]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ ! -f /tmp/stop ]; then
 local_install_packages
 while IFS= read -r line; do
         # display $line or do something with $line
@@ -617,7 +617,7 @@ while IFS= read -r line; do
 done <"$file"
 local_repo
 
-elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ ! -f /tmp/stop]; then
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ ! -f /tmp/stop ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
 /urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
