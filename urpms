@@ -408,6 +408,9 @@ local_repo
 # Our conditional for build a unique build
 if [ "${UPP}" = true ]; then
 echo 'UNIQUE BUILD'
+elif [ "${UPP}" = true ] && [ "${no_who_requires}" = true ]; then
+up_ornew
+massdependency
 elif [ "${no_who_requires}" = true ]; then
 up_ornew
 massdependency
