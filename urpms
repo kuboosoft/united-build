@@ -587,7 +587,7 @@ fi
 
 up_ornew() {
 # The filer for a initial package or unique, useful in new versions of fedora
-echo 'no_build' >> /tmp/stop
+echo 'no_build' > /tmp/stop
 if [ ${name} = ffmpeg ]; then
 echo 'ffmpeg_build' >> /tmp/stop
 elif [ ${name} = x264 ]; then
