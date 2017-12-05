@@ -676,8 +676,7 @@ echo 'x264
 ffmpeg
 avidemux
 handbrake
-gstreamer1-plugins-bad-freeworld
-vlc' > importantbump
+gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
 up_ornew 
