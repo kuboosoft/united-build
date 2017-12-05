@@ -414,9 +414,9 @@ fi
 # End unique build conditional
 
 # Delete trash
-if [ -f /tmp/stop ]; then
-rm -f /tmp/stop
-fi
+#if [ -f /tmp/stop ]; then
+#rm -f /tmp/stop
+#fi
 #
 
 # Conditional for sync to MEGA 
@@ -673,7 +673,6 @@ massrebuild
 elif [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then 
 up_ornew
 echo 'x264
-x265
 ffmpeg
 avidemux
 handbrake
@@ -681,8 +680,7 @@ gstreamer1-plugins-bad-freeworld' > importantbump
 massrebuild
 elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
 up_ornew 
-echo 'x264
-x265
+echo 'x265
 ffmpeg
 avidemux
 handbrake
@@ -917,7 +915,7 @@ curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
 
 rlc=$(rpm -qip ${name}*src.rpm | grep : | grep 'Release' | awk '{print $3}')
 rlcg=$(rpm -q --qf "%{release}\n" --specfile "${specfile}" | head -1)
-var=$( echo $rlcg | awk -F ".fc$(rpm -E %fedora)" '{print $1}' )
+var=$( echo $rlcg | awk -F ".fc$(rpm -E %fedora)" '{print $1}' | awk -F ".git" '{print $1}' )
 
 echo 'VERSIONS DETECTED IN SRC.RPM AND SPEC FILE'
 echo "rpack = $rpack"
