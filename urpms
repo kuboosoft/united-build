@@ -414,9 +414,9 @@ fi
 # End unique build conditional
 
 # Delete trash
-#if [ -f /tmp/stop ]; then
-#rm -f /tmp/stop
-#fi
+if [ -f /tmp/stop ]; then
+rm -f /tmp/stop
+fi
 #
 
 # Conditional for sync to MEGA 
@@ -587,7 +587,7 @@ fi
 
 up_ornew() {
 # The filer for a initial package or unique, useful in new versions of fedora
-echo 'no_build' > /tmp/stop
+echo 'no_build' >> /tmp/stop
 if [ ${name} = ffmpeg ]; then
 echo 'ffmpeg_build' >> /tmp/stop
 elif [ ${name} = x264 ]; then
@@ -676,7 +676,8 @@ echo 'x264
 ffmpeg
 avidemux
 handbrake
-gstreamer1-plugins-bad-freeworld' > importantbump
+gstreamer1-plugins-bad-freeworld
+vlc' > importantbump
 massrebuild
 elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
 up_ornew 
