@@ -743,7 +743,8 @@ gstreamer1-plugins-bad-free
 gstreamer1-plugins-bad-nonfree
 gstreamer1-plugins-bad-freeworld
 gstreamer1-plugins-ugly
-gstreamer1-libav' > importantbump
+gstreamer1-libav 
+gstreamer1-vaapi' > importantbump
 massrebuild
 elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
 # dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
