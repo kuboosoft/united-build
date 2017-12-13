@@ -672,20 +672,37 @@ vlc' > importantbump
 massrebuild
 elif [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then 
 up_ornew
+if [ -f importantbump ]; then
+echo 'x264
+ffmpeg
+avidemux
+handbrake
+gstreamer1-plugins-bad-freeworld
+vlc' >> importantbump
+elif [ ! -f importantbump ]; then
 echo 'x264
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld
 vlc' > importantbump
+fi
 massrebuild
 elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
 up_ornew 
+if [ -f importantbump ]; then
+echo 'x265
+ffmpeg
+avidemux
+handbrake
+gstreamer1-plugins-bad-freeworld' >> importantbump
+elif [ ! -f importantbump ]; then
 echo 'x265
 ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld' > importantbump
+fi
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 up_ornew
@@ -875,11 +892,20 @@ fi
 massrebuild
 #
 elif [ "${name}" = libshout-idjc ] && [ ! -f /tmp/stop ]; then
-
 if [ -f importantbump ]; then
 echo 'idjc' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'idjc' > importantbump
+fi
+massrebuild
+#
+#
+elif [ "${name}" = vlc ] && [ ! -f /tmp/stop ]; then
+up_ornew
+if [ -f importantbump ]; then
+echo 'phonon-vlc' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'phonon-vlc' > importantbump
 fi
 massrebuild
 #
