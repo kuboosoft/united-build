@@ -321,6 +321,9 @@ fi
 
 svnsources() {
 if [ $( cat *.spec | grep -c svn_url ) -gt 0 ]; then
+if [ ! -f /usr/bin/svn ]; then
+dnf -y install subversion
+fi
 svn_name=$( cat *.spec | grep -e 'Name:' -e 'name:' | awk '{print $2}' )
 REV=$( cat ${svn_name}.spec | grep -e '%global svn_rev' | awk '{print $3}' )
 svn_url=$( cat ${svn_name}.spec | grep -e '%global svn_url' | awk '{print $3}' )
