@@ -319,6 +319,22 @@ fi
 fi
 }
 
+svnsources() {
+if [ $( cat *.spec | grep -c svn_url ) -gt 0 ]; then
+svn_name=$( cat *.spec | grep -e 'Name:' -e 'name:' | awk '{print $2}' )
+REV=$( cat ${svn_name}.spec | grep -e '%global svn_rev' | awk '{print $3}' )
+svn_url=$( cat ${svn_name}.spec | grep -e '%global svn_url' | awk '{print $3}' )
+rm -rf ${svn_name}-${REV}/
+rm -f ${svn_name}-${REV}.tar.gz
+svn checkout --non-interactive --revision ${REV} ${svn_url} ${svn_name}-${REV}
+pushd ${svn_name}-${REV}
+echo "You are in Revision:$( svnversion . )"
+popd
+tar -czf ${svn_name}-${REV}.tar.gz ${svn_name}-${REV}
+rm -rf ${svn_name}-${REV}/
+fi
+}
+
 
 buildrpm() {
 # Our build task
@@ -356,6 +372,7 @@ if [ "${massive_spec}" = true ]; then
   Inrelease 
 #  Pushaugit
 fi
+  svnsources
   spectool -g "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
@@ -1129,6 +1146,7 @@ while IFS= read -r liner; do
 pushd $liner
 # Start checking if exist a spec file
 if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
+  svnsources
   spectool -g $liner.spec
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs $liner.spec
 #  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
