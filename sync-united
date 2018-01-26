@@ -94,6 +94,12 @@ repoview .
 sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
 pushd ${motherpath}
+
+# Recently update
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview/
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
+
 # repoview
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview/ 
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/debug/repoview/
@@ -103,11 +109,6 @@ sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.source
 sshpass -f $HOME/.chirubito rsync -av --delete srpm/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/repodata/
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repodata/
 sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
-
-# Recently update
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview/
-sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
 
 # sshpass -f $HOME/.chirubito rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 sshpass -f $HOME/.chirubito rsync -av --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
