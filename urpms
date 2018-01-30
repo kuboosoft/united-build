@@ -633,14 +633,14 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ ! -f /tmp/stop ]; then
 local_install_packages
 while IFS= read -r line; do
         # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -b true
+/urpms -g UnitedRPMs/$line -s $line.spec -r true -d "${DIST}" -b true -u true
 done <"$file"
 local_repo
 
 elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ ! -f /tmp/stop ]; then
 while IFS= read -r line; do
         # display $line or do something with $line
-/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true
+/urpms -g UnitedRPMs/$line -s $line.spec -t "${TARGET}" -b true -u true
 done <"$file"
 local_repo
 fi
@@ -671,12 +671,13 @@ massdependency() {
 # Some times we need a filter with massive rebuild... the /tmp/stop (dummy) makes a special build wihout packages dependent of the current build.
 # importantbump, is a list of all packages dependent of the current build (called massive rebuild)
 name_build
-if [ "${name}" = x264 ] && [ -f /tmp/stop ]; then
+if [ "${name}" = x264 ]; then
 up_ornew
 echo 'ffmpeg
 libquicktime
 mplayer
 gstreamer1-plugins-ugly
+gstreamer-plugins-ugly
 avidemux
 handbrake
 obs-studio
@@ -706,22 +707,6 @@ avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld
 vlc' > importantbump
-fi
-massrebuild
-elif [ "${name}" = x264 ] && [ ! -f /tmp/stop ]; then
-up_ornew 
-if [ -f importantbump ]; then
-echo 'x265
-ffmpeg
-avidemux
-handbrake
-gstreamer1-plugins-bad-freeworld' >> importantbump
-elif [ ! -f importantbump ]; then
-echo 'x265
-ffmpeg
-avidemux
-handbrake
-gstreamer1-plugins-bad-freeworld' > importantbump
 fi
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
