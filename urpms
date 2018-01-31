@@ -616,6 +616,8 @@ elif [ ${name} = x265 ]; then
 echo 'x265_build' >> /tmp/stop
 elif [ ${name} = libbluray ]; then
 echo 'libbluray_build' >> /tmp/stop
+elif [ ${name} = live555 ]; then
+echo 'live555_build' >> /tmp/stop
 elif [ ${name} = kodi ]; then
 echo 'kodi_build' >> /tmp/stop
 elif [ ${name} = libquicktime ]; then
@@ -625,7 +627,7 @@ fi
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -lt 1 ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build ) -lt 1 ]; then
 
 file=importantbump
 
@@ -647,7 +649,7 @@ fi
   fi
 
 # FIRST BUILD
-if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e kodi_build -e libquicktime_build ) -gt 0 ]; then
+if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build ) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
