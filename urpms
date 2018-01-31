@@ -768,7 +768,7 @@ gstreamer1-plugins-ugly
 gstreamer1-libav 
 gstreamer1-vaapi' > importantbump
 massrebuild
-elif [ "${name}" = live555 ] && [ ! -f /tmp/stop ]; then
+elif [ "${name}" = live555 ]; then
 # dnf repoquery --whatrequires live555 --source | grep -v libquicktime | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
 up_ornew
 if [ -f importantbump ]; then
