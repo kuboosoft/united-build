@@ -95,20 +95,14 @@ sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
 pushd ${motherpath}
 
-# Recently update
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview/
-sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/
+ 
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/debug/
 
-# repoview
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview/ 
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/debug/repoview/
-sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/repoview/ 
-
-# repodata
-sshpass -f $HOME/.chirubito rsync -av --delete srpm/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/repodata/
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repodata/
-sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
 
 # sshpass -f $HOME/.chirubito rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 sshpass -f $HOME/.chirubito rsync -av --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
@@ -349,6 +343,18 @@ done <"$flm"
 popd
 }
 
+run_ping() {
+ping -q -c5 google.com > /dev/null
+ 
+if [ $? -eq 0 ]
+then
+	echo 'PING OK'
+else
+echo 'PING test failed, check your conection!'
+exit 1
+fi
+}
+
 
 #-----------------------
 
@@ -372,6 +378,8 @@ fi
 if [ ! -f /usr/bin/fdupes ] ; then
 dnf -y install fdupes
 fi
+
+run_ping
 work_directory
 sf_back
 #Cardow
