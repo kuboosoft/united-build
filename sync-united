@@ -375,6 +375,10 @@ exit
 fi
 
 
+if [ ! -f /usr/bin/ping ] ; then
+dnf -y install iputils
+fi
+
 if [ ! -f /usr/bin/fdupes ] ; then
 dnf -y install fdupes
 fi
