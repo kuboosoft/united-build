@@ -344,7 +344,7 @@ popd
 }
 
 run_ping() {
-ping -q -c5 google.com > /dev/null
+wget -q "www.google.com" -O /dev/null
  
 if [ $? -eq 0 ]
 then
@@ -372,11 +372,6 @@ else
 echo 'ERROR'
 echo -e "\e[32mSorry, check if exists the current release...\e[0m"
 exit
-fi
-
-
-if [ ! -f /usr/bin/ping ] ; then
-dnf -y install iputils
 fi
 
 if [ ! -f /usr/bin/fdupes ] ; then
