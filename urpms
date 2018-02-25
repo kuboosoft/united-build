@@ -338,6 +338,17 @@ rm -rf ${svn_name}-${REV}/
 fi
 }
 
+run_ping() {
+status=$(curl -I "https://sourceforge.net/" 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
+ 
+if [ ${status} -eq 200 ]; then
+	echo 'PING OK'
+else
+echo 'SF or your conection is DOWN!'
+exit 1
+fi
+}
+
 
 buildrpm() {
 # Our build task
@@ -379,6 +390,7 @@ fi
   spectool -g "${specfile}"
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
+run_ping
 re_enabling_repos
 # if the build is with mock
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
