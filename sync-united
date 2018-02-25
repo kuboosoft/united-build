@@ -349,7 +349,7 @@ popd
 run_ping() {
 status=$(curl -I "https://sourceforge.net/" 2> /dev/null | head -n 1 | cut -d ' ' -f 2)
  
-if [ $status -eq 200 ]; then
+if [ ${status} -eq 200 ]; then
 	echo 'PING OK'
 else
 echo 'SF or your conection is DOWN!'
