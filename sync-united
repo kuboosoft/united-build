@@ -106,6 +106,10 @@ sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repoview/ ${user}@fr
 sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
 sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/repoview/ 
 sshpass -f $HOME/.chirubito rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
+sshpass -f $HOME/.chirubito rsync -av --delete srpm/repodata/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/${task}/srpm/repodata/
+
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/${task}/x86_64/repodata/
+sshpass -f $HOME/.chirubito rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
 
 # sshpass -f $HOME/.chirubito rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 sshpass -f $HOME/.chirubito rsync -av --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
