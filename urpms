@@ -634,8 +634,6 @@ elif [ ${name} = kodi ]; then
 echo 'kodi_build' >> /tmp/stop
 elif [ ${name} = libquicktime ]; then
 echo 'libquicktime_build' >> /tmp/stop
-elif [ ${name} = gstreamer1-plugins-base ]; then
-echo 'gstreamer1-plugins-base_build' >> /tmp/stop
 fi
 }
 
