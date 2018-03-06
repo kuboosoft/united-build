@@ -641,7 +641,7 @@ fi
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build gstreamer1-plugins-base_build ) -lt 1 ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build ) -lt 1 ]; then
 
 file=importantbump
 
@@ -663,7 +663,7 @@ fi
   fi
 
 # FIRST BUILD
-if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build gstreamer1-plugins-base_build ) -gt 0 ]; then
+if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build ) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
