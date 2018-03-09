@@ -847,9 +847,9 @@ echo 'x264
 x265
 xvidcore
 faad2
+fdk-aac
 libdca
 live555
-twolame
 vcdimager
 aften
 opencore-amr
@@ -868,9 +868,15 @@ libaacs
 celt
 libdvbpsi
 libmimic
-libmng
 openssl-spotify
-openh264' > importantbump
+openh264
+kvazaar
+libmysofa
+shine
+vmaf
+libva-intel-driver
+exfat-utils
+broadcom-wl-dkms' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
