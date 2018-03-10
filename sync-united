@@ -118,6 +118,16 @@ popd
 }
 
 
+osdnsync() {
+echo -e "\e[31mSync with OSDN...\e[0m"
+pushd ${motherpath}
+
+sshpass -f $HOME/.chirubito rsync -rav --delete . ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
+
+popd
+}
+
+
 
 muchsfsync() {
 echo -e "\e[31mSync with Much Sf...\e[0m"
@@ -368,10 +378,11 @@ fi
 readargs "$@"
 
 user=kuboosoft
+userB=davidva
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = 24 ] || [ ${task} = 25 ] || [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ]; then
+if [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ]; then
 echo -e "\e[32msync limited to F24-F28...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
@@ -394,6 +405,7 @@ m_mv
 job
 #muchsfsync
 sfsync
+osdnsync
 mupl
 metadata_sync
 metadata_tag_git
