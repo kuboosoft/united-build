@@ -876,7 +876,11 @@ shine
 vmaf
 libva-intel-driver
 exfat-utils
-broadcom-wl-dkms' > importantbump
+broadcom-wl-dkms
+ffmpeg
+xine-lib
+libquicktime
+mlt' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
