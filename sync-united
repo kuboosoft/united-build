@@ -121,9 +121,10 @@ popd
 osdnsync() {
 echo -e "\e[31mSync with OSDN...\e[0m"
 pushd ${motherpath}
-
-sshpass -f $HOME/.chirubito rsync -rav --delete . ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
-
+rm -rf srpm/repoview/
+rm -rf x86_64/repoview/
+rm -rf x86_64/debug/repoview/
+sshpass -f $HOME/.chirubito rsync -rav --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
 popd
 }
 
