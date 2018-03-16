@@ -96,20 +96,14 @@ echo -e "\e[31mSync with Sf...\e[0m"
 pushd ${motherpath}
 
 rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
-rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repoview/ 
 rsync -av --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview
  
 rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview
-rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repoview/
 rsync -av --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/debug/
 
 rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
-rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/repoview/ 
 rsync -av --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
 rsync -av --delete srpm/repodata/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/${task}/srpm/repodata/
-
-rsync -av --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/${task}/x86_64/repodata/
-rsync -av --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
 
 # rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 rsync -av --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
@@ -384,7 +378,7 @@ raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
 if [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ]; then
-echo -e "\e[32msync limited to F24-F28...\e[0m"
+echo -e "\e[32msync limited to F26-F29...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
