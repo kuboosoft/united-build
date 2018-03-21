@@ -108,10 +108,10 @@ rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" 
 rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
 if [[ $? -gt 0 ]]; then
-echo 'Done rsync succes'
-else
 echo 'ERROR rsymc failed'
 exit 1
+else
+echo 'Done rsync succes'
 fi
 
 popd
