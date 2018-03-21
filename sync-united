@@ -121,27 +121,6 @@ rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.o
 popd
 }
 
-
-
-muchsfsync() {
-echo -e "\e[31mSync with Much Sf...\e[0m"
-pushd ${motherpath}
-rsync -rav --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/x86_64/repoview/ 
-rsync -rav --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/muchpack/htdocs/x86_64/repoview/
-
-rsync -rav --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/x86_64/debug/repoview/
-rsync -rav --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/muchpack/htdocs/x86_64/debug/repoview/
-
-rsync -rav --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/srpm/repoview/ 
-rsync -rav --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/muchpack/htdocs/srpm/repoview/
-
-# rsync -rav --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
-rsync -rav --delete . ${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/
-
-popd
-}
-
-
 mdow() {
 echo -e "\e[31mDownloading updates...\e[0m"
 megacopy --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
@@ -394,7 +373,6 @@ mdow
 checkfiles
 m_mv
 job
-#muchsfsync
 sfsync
 osdnsync
 mupl

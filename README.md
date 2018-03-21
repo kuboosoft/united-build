@@ -1,11 +1,5 @@
 # united-build
 
-[![Travis branch](https://img.shields.io/travis/rust-lang/rust/master.svg?style=flat-square)](https://travis-ci.org/kuboosoft/united-build)
-[![Shippable](https://img.shields.io/shippable/5444c5ecb904a4b21567b0ff.svg?style=flat-square)](https://app.shippable.com/projects/582ce4db2bbf381000df99f3)
-[![CircleCI](https://circleci.com/gh/kuboosoft/united-build.svg?style=svg)](https://circleci.com/gh/kuboosoft/united-build)
-[![wercker status](https://app.wercker.com/status/507dabc6a9f204010ba0693770a20639/m/master "wercker status")](https://app.wercker.com/project/byKey/507dabc6a9f204010ba0693770a20639)
-[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=kuboosoft&repoName=united-build&branch=master&pipelineName=united-build&accountName=kuboosoft&type=cf-1)]( https://g.codefresh.io/repositories/kuboosoft/united-build/builds?filter=trigger:build;branch:master;service:58c365d2676c050100137ca6~united-build)
-
 
 URPMS, is a light tool for build rpms using rpmbuild and mock with docker, useful in Popular CI services. The project is in a primary phase. Unite-Build is part of the infraestructure of United RPMS Project.
 
