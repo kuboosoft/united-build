@@ -62,6 +62,12 @@ readargs() {
 }
 
 
+upd_hosts() {
+megacopy --local "$HOME/" --remote /Root/unitedrpms/conocidos_host/known_hosts --download
+cat $HOME/known_hosts >> $HOME/.ssh/known_hosts
+rm -f $HOME/known_hosts
+}
+
 sf_back() {
 #rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
 rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
@@ -284,6 +290,10 @@ rm -f /tmp/megalist*
 echo 'Completed sync with Mega'
 }
 
+hosts_k() {
+megaput $HOME/.ssh/known_hosts --path /Root/unitedrpms/conocidos_host/
+}
+
 checkfiles() {
 if [ "$(ls -A ${raiz})" ]; then
 echo "Great ${raiz} is not Empty"
@@ -375,6 +385,7 @@ fi
 
 run_ping
 work_directory
+upd_hosts
 ssh-agent
 eval `ssh-agent`
 ssh-add ~/.ssh/id_ecdsa
@@ -387,6 +398,7 @@ job
 sfsync
 osdnsync
 mupl
+hosts_k
 metadata_sync
 metadata_tag_git
 
