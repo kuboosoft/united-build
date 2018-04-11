@@ -399,7 +399,7 @@ SRPMcheck
 if [ "${name}" = unibuild-basic ]; then
 dnf -y config-manager --set-disabled unitedrpms
 fi
-  dnf -y update
+  dnf clean all && dnf -y update
   dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms
   chroot_dependency
   dnf -y builddep "${specfile}" 
