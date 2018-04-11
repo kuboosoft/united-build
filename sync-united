@@ -374,6 +374,8 @@ fi
 
 run_ping
 work_directory
+ssh-agent
+eval `ssh-agent`
 sf_back
 #Cardow
 mdow
