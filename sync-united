@@ -63,7 +63,8 @@ readargs() {
 
 
 sf_back() {
-rsync -avP -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+#rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
 # rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
 }
 
@@ -95,17 +96,17 @@ sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
 pushd ${motherpath}
 
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview
  
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/debug/repoview
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/debug/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/debug/
 
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/srpm/repoview/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
 
 # rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
 if [[ $? -gt 0 ]]; then
 echo 'ERROR rsymc failed'
@@ -124,7 +125,7 @@ pushd ${motherpath}
 rm -rf srpm/repoview/
 rm -rf x86_64/repoview/
 rm -rf x86_64/debug/repoview/
-rsync -rav -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
 popd
 }
 
