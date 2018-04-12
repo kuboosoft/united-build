@@ -1131,8 +1131,8 @@ fi
 
 auth_mg() {
 wget -c -P /root/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
-tar xJf mppass.tar.xz -C /root/
 pushd /root/
+tar xJf mppass.tar.xz -C /root/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out auth
 mv -f auth /root/.megarc
