@@ -454,6 +454,7 @@ fi
 
 # Conditional for sync to MEGA 
 if [ "${CLOUD}" = true ]; then
+auth_mg
 upload_rpm
 fi
 # End conditional MEGA
@@ -1050,7 +1051,10 @@ f1="$(<changdata.txt)"
 awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.spec
 
 mv -f ${name}2.spec ${specfile}
+if [ "${CLOUD}" = true ]; then
+auth_mg
 megaput ${specfile} --path /Root/unitedrpms/automatic-release/
+fi
 else 
 echo -e "\e[36mGreat, a updated package of ${name}; then the automatic release isn't necessary\e[0m"
 fi
@@ -1123,6 +1127,18 @@ dnf -y config-manager --set-enabled fedora
 dnf -y config-manager --set-enabled updates
 dnf -y config-manager --set-enabled unitedrpms
 fi
+}
+
+auth_mg() {
+wget -c -P /root/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
+tar xJf mppass.tar.xz -C /root/
+pushd /root/
+openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
+openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out auth
+mv -f auth /root/.megarc
+rm -f *.enc
+rm -f *.pem
+popd
 }
 
 #  BEGIN THE PROGRAM
