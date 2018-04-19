@@ -150,6 +150,7 @@ done <"$utra"
 }
 
 work_directory() {
+rm -rf ${motherpath}
 mkdir -p ${motherpath}
 mkdir -p "${raiz}"
 mkdir -p ${motherpath}/srpm/repoview/
