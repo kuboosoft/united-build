@@ -734,7 +734,6 @@ elif [ "${name}" = ffmpeg ]; then
 up_ornew
 if [ -f importantbump ]; then
 echo 'xine-lib
-gstreamer1-libav
 gstreamer-ffmpeg
 libquicktime
 mlt
@@ -742,7 +741,6 @@ libopenshot
 idjc
 minidlna
 mplayer
-moc
 mpd
 mpv
 obs-studio
@@ -751,7 +749,6 @@ vlc
 kodi' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'xine-lib
-gstreamer1-libav
 gstreamer-ffmpeg
 libquicktime
 mlt
@@ -759,7 +756,6 @@ libopenshot
 idjc
 minidlna
 mplayer
-moc
 mpd
 mpv
 obs-studio
