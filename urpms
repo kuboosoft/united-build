@@ -747,7 +747,9 @@ moc
 obs-studio
 simplescreenrecorder
 vlc
-kodi' >> importantbump
+kodi
+deadbeef
+audacity-freeworld' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'xine-lib
 gstreamer-ffmpeg
@@ -763,7 +765,9 @@ moc
 obs-studio
 simplescreenrecorder
 vlc
-kodi' > importantbump
+kodi
+deadbeef
+audacity-freeworld' > importantbump
 fi
 massrebuild
 elif [ "${name}" = libquicktime ] && [ ! -f /tmp/stop ]; then
