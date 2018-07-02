@@ -638,12 +638,24 @@ elif [ ${name} = libquicktime ]; then
 echo 'libquicktime_build' >> /tmp/stop
 elif [ ${name} = gstreamer1-plugins-base ]; then
 echo 'gstreamer1-plugins-base_build' >> /tmp/stop
+elif [ ${name} = libopenshot ]; then
+echo 'libopenshot_build' >> /tmp/stop
+elif [ ${name} = libshout-idjc ]; then
+echo 'libshout-idjc_build' >> /tmp/stop
+elif [ ${name} = openh264 ]; then
+echo 'openh264_build' >> /tmp/stop
+elif [ ${name} = faad2 ]; then
+echo 'faad2_build' >> /tmp/stop
+elif [ ${name} = faac ]; then
+echo 'faac_build' >> /tmp/stop
+elif [ ${name} = libaacs ]; then
+echo 'libaacs_build' >> /tmp/stop
 fi
 }
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build ) -lt 1 ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build ) -lt 1 ]; then
 echo "MASS REBUILD TASK FOR ${name}"
 file=importantbump
 
@@ -665,7 +677,7 @@ fi
   fi
 
 # FIRST BUILD
-if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build ) -gt 0 ]; then
+if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
@@ -830,14 +842,6 @@ mpv
 vlc
 ' > importantbump
 massrebuild
-elif [ "${name}" = dtksettings ]; then
-# dnf repoquery --whatrequires dtksettings --source | grep -v dtksettings | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-echo 'deepin-tool-kit' > importantbump
-massrebuild
-elif [ "${name}" = deepin-tool-kit ]; then
-# dnf repoquery --whatrequires deepin-tool-kit --source | grep -v deepin-tool-kit | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-echo 'deepin-music' > importantbump
-massrebuild
 elif [ "${name}" = unibuild-basic ]; then
 # We need disabled unitedrpms repository for a new and clean build
 dnf -y config-manager --set-disabled unitedrpms
@@ -927,7 +931,7 @@ massrebuild
 #
 elif [ "${name}" = kodi ] && [ ! -f /tmp/stop ]; then
 up_ornew
-if [ -f importantbump ]; then
+if [ -f importantbump ] || [ ! -f importantbump ]; then
 echo 'kodi-platform
 kodi-pvr-addons
 kodi-addon-visualizations' >> importantbump
@@ -939,7 +943,7 @@ fi
 massrebuild
 #
 elif [ "${name}" = libaacs ] && [ ! -f /tmp/stop ]; then
-
+up_ornew
 if [ -f importantbump ]; then
 echo 'libbdplus' >> importantbump
 elif [ ! -f importantbump ]; then
@@ -948,10 +952,20 @@ fi
 massrebuild
 #
 elif [ "${name}" = libshout-idjc ] && [ ! -f /tmp/stop ]; then
+up_ornew
 if [ -f importantbump ]; then
 echo 'idjc' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'idjc' > importantbump
+fi
+massrebuild
+#
+elif [ "${name}" = libopenshot ] && [ ! -f /tmp/stop ]; then
+up_ornew
+if [ -f importantbump ]; then
+echo 'openshot' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'openshot' >> importantbump
 fi
 massrebuild
 #
