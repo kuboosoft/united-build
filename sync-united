@@ -255,7 +255,7 @@ Ou=$HOME/output-result-rpms.txt
 while IFS= read -r result; do
 pushd ${motherpath}/x86_64/
 if [ $(ls $result | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task} ] && [ $(cat /tmp/megalist${task} | grep -c $result) -lt 1 ]; then
-megaput $result --path /Root/unitedrpms/${task}/x86_64/
+megaput "$result" --path /Root/unitedrpms/${task}/x86_64/
 fi
 done <"$Ou"
 popd
@@ -265,7 +265,7 @@ Oa=$HOME/output-result-debugs.txt
 pushd ${motherpath}/x86_64/debug/
 while IFS= read -r resultb; do
 if [ $(ls $resultb | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_debug ] && [ $(cat /tmp/megalist${task}_debug | grep -c $resultb ) -lt 1 ]; then
-megaput $resultb --path /Root/unitedrpms/${task}/x86_64/debug/
+megaput "$resultb" --path /Root/unitedrpms/${task}/x86_64/debug/
 fi
 done <"$Oa"
 popd
@@ -276,7 +276,7 @@ Oe=$HOME/output-result-srpms.txt
 pushd ${motherpath}/srpm/
 while IFS= read -r resultc; do
 if [ $(ls $resultc | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_SR ] && [ $( cat /tmp/megalist${task}_SR | grep -c $resultc ) -lt 1 ]; then
-megaput $resultc --path /Root/unitedrpms/${task}/srpm/
+megaput "$resultc" --path /Root/unitedrpms/${task}/srpm/
 fi
 done <"$Oe"
 popd
