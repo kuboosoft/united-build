@@ -37,9 +37,9 @@ usage() {
   echo "    The git hub name user and project, example UnitedRPMs/ffmpeg"
   echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64 -u true"
   echo ""
-  echo -e '\e[33m  -m massive\e[0m'
-  echo "    Make a massive rebuild rpm of all the organization, the task is slow (alpha)"
-  echo "Usage: $0 -o UnitedRPMs -m true -t fedora-25-x86_64"
+  echo -e '\e[33m  -i imputgit\e[0m'
+  echo "    Make rpm from a specific git branch"
+  echo "Usage: $0 -i UnitedRPMs/ffmpeg -s ffmpeg.spec -r true -d 'dist .fc29' -i 29 -u true"
   echo ""
   echo -e '\e[33m  -r SRPM\e[0m'
   echo "    Rebuild a src.rpm from remote url (beta)"
@@ -55,8 +55,6 @@ usage() {
   echo "--------------------------------------"
   echo "  -s SPECfile"
   echo '    The name of the RPM SPEC file, example "-s ffmpeg.spec" '
-  echo "  -o organization"
-  echo "    The name of the organization GIT, only in massive task."
   echo "  -t TARGET"
   echo '    mock config example "-t fedora-26-x86_64" '
   echo "  -d DIST"
@@ -83,17 +81,6 @@ readargs() {
       -t)
         if [ "$2" ] ; then
           TARGET="$2"
-          shift ; shift
-        else
-          echo "Missing a value for $1."
-          echo
-          shift
-          usage
-        fi
-      ;;
-      -o)
-        if [ "$2" ] ; then
-          organization="$2"
           shift ; shift
         else
           echo "Missing a value for $1."
@@ -157,9 +144,9 @@ readargs() {
           usage
         fi
       ;;
-      -m)
+      -i)
         if [ "$2" ] ; then
-          massive="$2"
+          imputgit="$2"
           shift ; shift
         else
           echo "Missing a value for $1."
@@ -289,6 +276,15 @@ echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
 rm -rf ${directory}/rpmbuild/GIT/*
 git clone https://github.com/${url_git}.git ${directory}/rpmbuild/GIT/${name}
+if [ -n "${imputgit}" ]; then
+pushd ${directory}/rpmbuild/GIT/${name}
+git checkout --force "${imputgit}"
+popd
+elif [ -z "${imputgit}" ]; then
+pushd ${directory}/rpmbuild/GIT/${name}
+git checkout --force master
+popd
+fi
 if [ ! -f ${directory}/rpmbuild/GIT/${name}/${specfile} ]; then
 echo 'Hey check if your git repository exists!'
 exit 1
@@ -491,7 +487,7 @@ if [ ! -d "${repodirectory}" ]; then
 mkdir -p "${repodirectory}"
 fi
 
-if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
+if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true ]; then
 echo '
 [enjoy]
 name=enjoy
@@ -501,7 +497,7 @@ skip_if_unavailable=1
 gpgcheck=0
 exclude=*.src.rpm
 ' > /etc/yum.repos.d/enjoy.repo
-elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ "${massive_spec}" != true ] && [ "${massive}" != true ]; then
+elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ] && [ "${massive_spec}" != true ]; then
 if [ ! -f /etc/mock/${TARGET}.cfg ]; then
 echo 'The build config mock does not exist'
 echo 'Check your configuration or update your mock package'
@@ -1187,76 +1183,12 @@ export PYTHONCOERCECLOCALE=0
 
 #=== HERE BEGIN THE BUILD PROCESS === #
 
-# MASSIVE REBUILD TASK ORGANIZATION, YOU NEED A POWERFULL MACHINE (BETA)
-# Our massive organization rebuild has no concept of packages version, it will give you the most recently tagged ones in git repository... we need a similar model to "default build".
-if [ "${massive}" = true ]; then
-echo -e "\e[35mStarting massive task...\e[0m"
-rm -f ${directory}/${organization}.txt
-curl -s https://api.github.com/orgs/${organization}/repos?per_page=200 | grep html_url | grep "${organization}/" | awk -F '"html_url": "' '{print $2}' | awk -F '",' '{print $1}' | sed 's/$/.git/' | tee ${directory}/${organization}.txt
-
-# clone all git repositories
-echo -e "\e[32mCloning all repositories ${url_git}...\e[0m"
-pushd ${directory}/rpmbuild/GIT/
-file=${directory}/${organization}.txt
-while IFS= read -r line; do
-        # display $line or do something with $line
-    git clone $line 
-done <"$file"
-
-# srpm and build task
-echo -e "\e[32mMaking rpm...\e[0m"
-rm -f repositories.txt
-ls -d */ | sed 's:/::g' | grep -v "chromium-freeworld" | tee repositories.txt
-file=repositories.txt
-while IFS= read -r liner; do
-        # display $liner or do something with $liner
-pushd $liner
-# Start checking if exist a spec file
-if [ $(ls | grep -c $liner.spec) -gt 0 ]; then
-  svnsources
-  spectool -g $liner.spec
-  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs $liner.spec
-#  if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ] && [ "${massive}" = true ]; then
-# We need disabled unitedrpms repository for a new and clean build in unibuild-basic
-if [ "${name}" = unibuild-basic ]; then
-dnf -y config-manager --set-disabled unitedrpms
-fi
-  dnf -y update
-  chroot_dependency
-  dnf -y builddep *.spec 
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/$liner-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
-cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
-cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
-cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
-cp -n SRPMS/* ${MOCK_DEF_PATH}/
- else
-  dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms
-  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/$liner-*.src.rpm 
-fi
-#
-local_repo
-else
-echo "the repository $liner does not include a spec file"
-fi
-# End check spec file
-popd  
-done <"$file"
-popd  
-local_repo
-if [ "${CLOUD}" = true ]; then
-upload_rpm
-fi
-echo -e "\e[36mDONE...\e[0m"
-exit 0
-# END MASSIVE TASK ORGANIZATION
-
 # START REMOTE Task only if you need rebuild a src.rpm from remote url (BETA)
-elif [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
+if [ -n "${SRPM}" ]; then
 echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
   wget -c -P $PWD/SRPMS/ ${SRPM}
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
-if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ] && [ "${massive}" != true ]; then
+if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
   dnf -y update
   chroot_dependency
   dnf -y builddep *.spec 
@@ -1277,9 +1209,9 @@ echo -e "\e[36mDONE...\e[0m"
 exit 0
 # END REMOTE URL
 
-# START DEFAULT TASK, WITHOUT MASSIVE REBUILD ORGANIZATION (THE REAL TASK)
+# START DEFAULT TASK (THE REAL TASK)
 # In essential updates there are dependent packages; We have some filters for them; a massive rebuild, with incremental task.
-elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ] && [ "${massive}" != true ]; then
+elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ]; then
 echo -e "\e[32mStarting complete task...\e[0m"
 git_task
 buildrpm
