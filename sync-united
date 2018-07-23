@@ -402,9 +402,10 @@ upd_hosts
 ssh-agent
 eval `ssh-agent`
 ssh-add ~/.ssh/id_ecdsa
+mdow
 sf_back
 #Cardow
-mdow
+#mdow
 checkfiles
 m_mv
 job
