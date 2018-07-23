@@ -144,7 +144,7 @@ echo -e "\e[31mDownloading updates...\e[0m"
 echo "UploadSpeedLimit = 0" >> /root/.megarc
 echo "DownloadSpeedLimit = 0" >> /root/.megarc
 echo "Timeout = 20" >> /root/.megarc
-megacopy --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
+megacopy --disable-resume --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
 }
 
 Cardow() {
