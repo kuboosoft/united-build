@@ -70,7 +70,7 @@ rm -f $HOME/known_hosts
 
 sf_back() {
 #rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
-rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+rsync -avP -e "ssh -o StrictHostKeyChecking=no" -P --delete --stats --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
 # rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
 }
 
