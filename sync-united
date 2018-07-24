@@ -174,7 +174,6 @@ mkdir -p ${motherpath}/x86_64/repodata/
 
 m_mv() {
 pushd "${raiz}"
-fdupes -d $PWD
 mv -f *src.rpm ${motherpath}/srpm/
 mv -f *debuginfo*.rpm ${motherpath}/x86_64/debug/
 mv -f *debugsource*.rpm ${motherpath}/x86_64/debug/
@@ -383,17 +382,13 @@ userB=davidva
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ]; then
-echo -e "\e[32msync limited to F26-F29...\e[0m"
+if [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ]; then
+echo -e "\e[32msync limited to F26-F30...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
 echo -e "\e[32mSorry, check if exists the current release...\e[0m"
 exit
-fi
-
-if [ ! -f /usr/bin/fdupes ] ; then
-dnf -y install fdupes
 fi
 
 run_ping
