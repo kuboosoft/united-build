@@ -92,7 +92,7 @@ mock config example
          git name repository    name spec file  mode rpmbuild  Distro version   disabled massive rebuild
 
 
-*  Build without mock with specific brach in github
+*  Build without mock with specific branch in github
 
    urpms -g UnitedRPMs/opera    -s opera.spec    -i 27         -b true    -d 'dist .fc29'   -u true
          -------------------    -------------  ----------   ------------  ---------------   -------
@@ -105,7 +105,7 @@ mock config example
          -------------------    -------------   ---------------------------   -------
          git name repository    name spec file  mode mock with distro build   disabled massive rebuild
 
-*  Build with mock with specific brach in github
+*  Build with mock with specific branch in github
 
    urpms -g UnitedRPMs/opera    -s opera.spec     -i 27     -t fedora-29-x86_64           -u true
          -------------------    -------------   ----------  ---------------------------   -------
