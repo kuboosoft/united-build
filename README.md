@@ -52,14 +52,17 @@ The project is in a primary phase. "unibuild" is part of the infraestructure of 
 
 ```
   -t TARJET
-    mock config example 
+
+Mode mock + dist build
+
+mock config example 
 
   -t fedora-26-x86_64
 ```
 
 ```
   -d DIST
-    Rpmbuild mode with tag distribution 
+   In combination with Rpmbuild mode with tag distribution 
    
   -d 'dist .fc29'
 
@@ -71,8 +74,9 @@ The project is in a primary phase. "unibuild" is part of the infraestructure of 
   -b BUILD
 
    Mode rpmbuild
+   You need combine with (-d 'dist .fcXX')
 
-  -b true 
+  -b true -d 'dist .fcXX'
 
 ```
 
@@ -83,14 +87,16 @@ The project is in a primary phase. "unibuild" is part of the infraestructure of 
 
 *  Build without mock
 
-   urpms -g UnitedRPMs/opera -s opera.spec -b true -d 'dist .fc29'
-         -------------------
-         git name repository
+   urpms -g UnitedRPMs/opera    -s opera.spec     -b true     -d 'dist .fc29'    -u true
+         -------------------    -------------   ------------  ---------------    -------
+         git name repository    name spec file  mode rpmbuild  Distro version    disabled massive rebuild
 
 
 *  Build with mock
 
-   urpms -g UnitedRPMs/opera -s opera.spec -t fedora-29-x86_64
+   urpms -g UnitedRPMs/opera    -s opera.spec      -t fedora-29-x86_64         -u true
+         -------------------    -------------   ---------------------------    -------
+         git name repository    name spec file  mode mock with distro build    disabled massive rebuild
 
 ```
 
