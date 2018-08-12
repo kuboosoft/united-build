@@ -1,7 +1,17 @@
 # united-build
 
 
-URPMS, is a light tool for build rpms using rpmbuild and mock with docker, useful in Popular CI services. The project is in a primary phase. Unite-Build is part of the infraestructure of United RPMS Project.
+URPMS/unibuild, is a light tool for build rpms using rpmbuild or mock with docker, useful in Popular CI services. 
+Short discription: 
+- It rebase your package to the latest version from a github repository; if detects a massive rebuild.
+- You can use svn sources
+- Unibuild test your package, installing after built.
+- Build in mode mock and rpmbuild; by default in mode rpmbuild.
+- You can choise branches in your github repository for build your rpm.
+
+Your github repository need to include: 1 spec file (with downloables source files), patches.
+
+The project is in a primary phase. "unibuild" is part of the infraestructure of UnitedRPMs Project.
 
 
 ## ** Usage **
@@ -12,17 +22,7 @@ URPMS, is a light tool for build rpms using rpmbuild and mock with docker, usefu
     The git hub name user and project, example (-g UnitedRPMs/ffmpeg)
 
 
- urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-24-x86_64
-
-```
-
-
-```
-  -m massive organization
-
-   Make a massive rebuild rpm of your organization" (-m true)
-
- urpms -o UnitedRPMs -m true -t fedora-25-x86_64
+ urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-29-x86_64
 
 ```
 
@@ -31,14 +31,14 @@ URPMS, is a light tool for build rpms using rpmbuild and mock with docker, usefu
 
    Rebuild a src.rpm from remote url (-r url/foo.src.rpm)
 
-   urpms -t fedora-25-x86_64 -r http:www.foo/ffmpeg-foo.src.rpm 
+   urpms -t fedora-29-x86_64 -r http:www.foo/ffmpeg-foo.src.rpm 
 
 ```
 
 ```
   -n SNAPSHOT
    Generate the source file with a special script example (-n ffmpeg-snapshot.sh)
-   urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -n ffmpeg-snapshot.sh "
+   urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-29-x86_64 -n ffmpeg-snapshot.sh "
 ```
 
 "--------------------------------------"
@@ -48,11 +48,6 @@ URPMS, is a light tool for build rpms using rpmbuild and mock with docker, usefu
 
   -s ffmpeg.spec
 
-```
-
-```
-  -o organization (-o UnitedRPMs)
-    The name of the organization GIT, only in massive organization task. You need a powerful machine...
 ```
 
 ```
@@ -66,7 +61,7 @@ URPMS, is a light tool for build rpms using rpmbuild and mock with docker, usefu
   -d DIST
     Rpmbuild mode with tag distribution 
    
-  -d 'dist .fc25'
+  -d 'dist .fc29'
 
 ```
 
@@ -88,13 +83,14 @@ URPMS, is a light tool for build rpms using rpmbuild and mock with docker, usefu
 
 *  Build without mock
 
-   urpms -g UnitedRPMs/opera -s opera.spec -b true -d 'dist .fc25'
-
+   urpms -g UnitedRPMs/opera -s opera.spec -b true -d 'dist .fc29'
+         -------------------
+         git name repository
 
 
 *  Build with mock
 
-   urpms -g UnitedRPMs/opera -s opera.spec -t fedora-25-x86_64
+   urpms -g UnitedRPMs/opera -s opera.spec -t fedora-29-x86_64
 
 ```
 
