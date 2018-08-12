@@ -85,25 +85,41 @@ mock config example
 ```
 ### Examples
 
+## MODE RPMBUILD
+
 *  Build without mock
 
-   urpms -g UnitedRPMs/opera    -s opera.spec     -b true     -d 'dist .fc29'   -u true
+   urpms -g UnitedRPMs/opera    -s opera.spec     -r true     -d 'dist .fc29'   -u true
          -------------------    -------------   ------------  ---------------   -------
          git name repository    name spec file  mode rpmbuild  Distro version   disabled massive rebuild
 
+*  Build without mock + rebase mode
+
+   urpms -g UnitedRPMs/opera    -s mpv.spec     -b true      -r true       -d 'dist .fc28'   -u true
+         -------------------    -------------   -----------  ------------  ---------------   -------
+         git name repository    name spec file  rebase mode  mode rpmbuild  Distro version   disabled massive rebuild
 
 *  Build without mock with specific branch in github
 
-   urpms -g UnitedRPMs/opera    -s opera.spec    -i 27         -b true    -d 'dist .fc29'   -u true
+   urpms -g UnitedRPMs/opera    -s opera.spec    -i 27        -r true     -d 'dist .fc29'   -u true
          -------------------    -------------  ----------   ------------  ---------------   -------
          git name repository    name spec file git branch   mode rpmbuild  Distro version   disabled massive rebuild
 
+
+
+## MODE MOCK
 
 *  Build with mock
 
    urpms -g UnitedRPMs/opera    -s opera.spec      -t fedora-29-x86_64        -u true
          -------------------    -------------   ---------------------------   -------
          git name repository    name spec file  mode mock with distro build   disabled massive rebuild
+
+*  Build with mock + rebase mode
+
+   urpms -g UnitedRPMs/opera    -s opera.spec     -b true    -t fedora-29-x86_64          -u true
+         -------------------    -------------   -----------  ---------------------------  -------
+         git name repository    name spec file  rebase mode  mode mock with distro build  disabled massive rebuild
 
 *  Build with mock with specific branch in github
 
