@@ -177,6 +177,17 @@ readargs() {
           usage
         fi
       ;;
+      -f)
+        if [ "$2" ] ; then
+          SRPM="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       -r)
         if [ "$2" ] ; then
           NO_MOCK="$2"

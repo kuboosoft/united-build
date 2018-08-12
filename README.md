@@ -27,11 +27,15 @@ The project is in a primary phase. "unibuild" is part of the infraestructure of 
 ```
 
 ```
-  -r SRPM
+  -f SRPM
 
-   Rebuild a src.rpm from remote url (-r url/foo.src.rpm)
+   Rebuild a src.rpm from remote url (-f url/foo.src.rpm)
 
-   urpms -t fedora-29-x86_64 -r http:www.foo/ffmpeg-foo.src.rpm 
+## MODE MOCK
+   urpms -t fedora-29-x86_64 -f http:www.foo/ffmpeg-foo.src.rpm 
+
+## MODE RPMBUILD
+   urpms -d 'dist .fc29' -f http:www.foo/ffmpeg-foo.src.rpm
 
 ```
 
