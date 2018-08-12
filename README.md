@@ -7,7 +7,7 @@ Short discription:
 - You can use svn sources
 - Unibuild test your package, installing after built.
 - Build in mode mock and rpmbuild; by default in mode rpmbuild.
-- You can choise branches in your github repository for build your rpm.
+- You can choise branches in your github repository for build your rpm (by default uses master).
 
 Your github repository need to include: 1 spec file (with downloables source files), patches.
 
@@ -87,16 +87,29 @@ mock config example
 
 *  Build without mock
 
-   urpms -g UnitedRPMs/opera    -s opera.spec     -b true     -d 'dist .fc29'    -u true
-         -------------------    -------------   ------------  ---------------    -------
-         git name repository    name spec file  mode rpmbuild  Distro version    disabled massive rebuild
+   urpms -g UnitedRPMs/opera    -s opera.spec     -b true     -d 'dist .fc29'   -u true
+         -------------------    -------------   ------------  ---------------   -------
+         git name repository    name spec file  mode rpmbuild  Distro version   disabled massive rebuild
+
+
+*  Build without mock with specific brach in github
+
+   urpms -g UnitedRPMs/opera    -s opera.spec    -i 27         -b true    -d 'dist .fc29'   -u true
+         -------------------    -------------  ----------   ------------  ---------------   -------
+         git name repository    name spec file git branch   mode rpmbuild  Distro version   disabled massive rebuild
 
 
 *  Build with mock
 
-   urpms -g UnitedRPMs/opera    -s opera.spec      -t fedora-29-x86_64         -u true
-         -------------------    -------------   ---------------------------    -------
-         git name repository    name spec file  mode mock with distro build    disabled massive rebuild
+   urpms -g UnitedRPMs/opera    -s opera.spec      -t fedora-29-x86_64        -u true
+         -------------------    -------------   ---------------------------   -------
+         git name repository    name spec file  mode mock with distro build   disabled massive rebuild
+
+*  Build with mock with specific brach in github
+
+   urpms -g UnitedRPMs/opera    -s opera.spec     -i 27     -t fedora-29-x86_64           -u true
+         -------------------    -------------   ----------  ---------------------------   -------
+         git name repository    name spec file  git branch  mode mock with distro build   disabled massive rebuild
 
 ```
 
@@ -121,6 +134,6 @@ dnf install 'dnf-command(config-manager)'
 * Mock need special permits, no all CI services accept it... then you need run 'urpms' on rpmbuild mode using the especific version of your distribution linux. urpms emulates a similar Mock task.
 
 * Build a rpm with "mock" and docker is very slow, we recomends build without mock (super fast)...
-
+* Some cases is necessary escape to characters.
 
 
