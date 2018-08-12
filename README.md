@@ -40,9 +40,9 @@ The project is in a primary phase. "unibuild" is part of the infraestructure of 
 ```
 
 ```
-  -n SNAPSHOT
+  -e SNAPSHOT
    Generate the source file with a special script example (-n ffmpeg-snapshot.sh)
-   urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-29-x86_64 -n ffmpeg-snapshot.sh "
+   urpms -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-29-x86_64 -e ffmpeg-snapshot.sh "
 ```
 
 "--------------------------------------"
@@ -75,12 +75,12 @@ mock config example
 "--------------------------------------"
 
 ```
-  -b BUILD
+  -r BUILD
 
    Mode rpmbuild
    You need combine with (-d 'dist .fcXX')
 
-  -b true -d 'dist .fcXX'
+  -r true -d 'dist .fcXX'
 
 ```
 

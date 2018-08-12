@@ -41,11 +41,11 @@ usage() {
   echo "    Make rpm from a specific git branch"
   echo "Usage: $0 -i UnitedRPMs/ffmpeg -s ffmpeg.spec -r true -d 'dist .fc29' -i 29 -u true"
   echo ""
-  echo -e '\e[33m  -r SRPM\e[0m'
+  echo -e '\e[33m  -f SRPM\e[0m'
   echo "    Rebuild a src.rpm from remote url (beta)"
-  echo "Usage: $0 -t fedora-25-x86_64 -r http:www.foo/ffmpeg-foo.src.rpm "
+  echo "Usage: $0 -t fedora-25-x86_64 -f http:www.foo/ffmpeg-foo.src.rpm "
   echo ""
-  echo -e '\e[33m  -n SNAPSHOT\e[0m'
+  echo -e '\e[33m  -e SNAPSHOT\e[0m'
   echo "    Generate the source file with a special script example ffmpeg-snapshot.sh (beta)"
   echo "Usage: $0 -g UnitedRPMs/ffmpeg -s ffmpeg.spec -t fedora-25-x86_64 -e ffmpeg-snapshot.sh "
   echo ""
