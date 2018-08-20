@@ -858,7 +858,9 @@ echo 'basic build' > /tmp/unibuild_basic.log
 #
 up_ornew
 # dnf repoquery --whatrequires unibuild-basic --source | grep -v unibuild-basic | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
-echo 'x264
+echo 'unitedrpms
+mock-unitedrpms
+x264
 x265
 xvidcore
 faad2
@@ -895,7 +897,10 @@ broadcom-wl-dkms
 ffmpeg
 xine-lib
 libquicktime
-mlt' > importantbump
+mlt
+broadcom-bt-firmware
+python3-soco
+python-keyrings-alt' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
