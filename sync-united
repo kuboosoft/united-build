@@ -382,8 +382,8 @@ userB=davidva
 raiz=$HOME/f${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = 26 ] || [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ]; then
-echo -e "\e[32msync limited to F26-F30...\e[0m"
+if [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ]; then
+echo -e "\e[32msync limited to F27-F30...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
