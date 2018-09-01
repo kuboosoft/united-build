@@ -657,12 +657,14 @@ elif [ ${name} = faac ]; then
 echo 'faac_build' >> /tmp/stop
 elif [ ${name} = libaacs ]; then
 echo 'libaacs_build' >> /tmp/stop
+elif [ ${name} = vmaf ]; then
+echo 'vmaf_build' >> /tmp/stop
 fi
 }
 
 massrebuild() {
 # Our massive task
-if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build ) -lt 1 ]; then
+if [ -f importantbump ] && [ ! -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build -e vmaf_build ) -lt 1 ]; then
 echo "MASS REBUILD TASK FOR ${name}"
 file=importantbump
 
@@ -684,7 +686,7 @@ fi
   fi
 
 # FIRST BUILD
-if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build) -gt 0 ]; then
+if [ -f importantbump ] && [ -f /tmp/unibuild_basic.log ] || [ $( cat /tmp/stop | grep -c -e ffmpeg_build -e x264_build -e x265_build -e libbluray_build -e live555_build -e kodi_build -e libquicktime_build -e gstreamer1-plugins-base_build -e libopenshot_build -e libshout-idjc_build -e openh264_build -e faad2_build -e faac_build -e libaacs_build -e vmaf_build ) -gt 0 ]; then
 echo 'FIRST BUILD TASK'
 file=importantbump
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
@@ -960,6 +962,15 @@ if [ -f importantbump ]; then
 echo 'libbdplus' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'libbdplus' > importantbump
+fi
+massrebuild
+#
+elif [ "${name}" = vmaf ] && [ ! -f /tmp/stop ]; then
+up_ornew
+if [ -f importantbump ]; then
+echo 'ffmpeg' >> importantbump
+elif [ ! -f importantbump ]; then
+echo 'ffmpeg' >> importantbump
 fi
 massrebuild
 #
