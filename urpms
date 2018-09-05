@@ -228,7 +228,7 @@ checkargs() {
  elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
     echo 'Using mock mode'
  elif [ -z "${TARGET}" ] && [ -z "${NO_MOCK}" ] ; then
-    echo -e '\e[31mMissing target, example your need add "-t fedora-25-x86_64"\e[0m'
+    echo -e '\e[31mMissing target, example your need add "-t fedora-30-x86_64"\e[0m'
     usage
 exit
   fi
@@ -356,6 +356,15 @@ exit 1
 fi
 }
 
+cloudbuilt() {
+if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ]; then
+auth_mg
+pushd ${repodirectory}
+megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
+popd
+fi
+}
+
 
 buildrpm() {
 # Our build task
@@ -398,6 +407,7 @@ fi
   rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 run_ping
+cloudbuilt
 re_enabling_repos
 # if the build is without mock
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
@@ -411,7 +421,7 @@ fi
   chroot_dependency
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
-if [ -n $PWD/RPMS/x86_64/${name}*.rpm ] || [ -n $PWD/RPMS/i686/${name}*.rpm ] || [ -n $PWD/RPMS/noarch/${name}*.rpm ]; then
+if [ -n $PWD/RPMS/x86_64/${name}*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}*.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
@@ -437,7 +447,7 @@ else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
 # End conditional accelerate the build
-if [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).noarch.rpm ]; then
+if [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
@@ -484,9 +494,15 @@ createrepo .
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
+if [ "$(ls -A $PWD)" ]; then
+     echo "Great $PWD is not Empty"
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
+fi
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
+if [ "$(ls -A $PWD)" ]; then
+     echo "Great $PWD is not Empty"
 mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
+fi
 fi
 #
 popd
@@ -1060,7 +1076,7 @@ gt=$(echo "${rpack}" > "${curver}" | bc -q )
 if [ "$gt" = 1 ]; then
 echo "You need update ${name}"
 exit 1
-elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ]; then
+elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ] || [ "${massive_spec}" = true ]; then
 echo "Same version and release for ${name}, then enabled the automatic release"
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
