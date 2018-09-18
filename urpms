@@ -418,6 +418,10 @@ if [ "${name}" = unibuild-basic ]; then
 dnf -y config-manager --set-disabled unitedrpms
 fi
   dnf clean all 
+security_updates=$( dnf -q updateinfo list sec | awk '{print $3}' )
+if [ -n "$security_updates" ]; then
+  dnf -y update $security_updates
+fi
   dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
   chroot_dependency
   dnf -y builddep "${specfile}" 
@@ -1157,6 +1161,12 @@ popd
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
 dnf -y clean all
+
+security_updates=$( dnf -q updateinfo list sec | awk '{print $3}' )
+if [ -n "$security_updates" ]; then
+dnf -y update $security_updates
+fi
+
 dnf -y install @buildsys-build
 }
 
