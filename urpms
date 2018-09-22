@@ -243,13 +243,13 @@ rm -f $( dnf -y repomanage --keep=1 --new $PWD/SRPMS/ )
 exit 1
 fi
 
-ass=$(ls ${repodirectory}/${name}-*.src.rpm 2> /dev/null | wc -l)
+ass=$(ls ${repodirectory}/${name_spec}-[0-9]*.src.rpm 2> /dev/null | wc -l)
 if [ "$ass" != "0" ]; then
 echo "${name} is already built"
 exit 0
 fi
 
-bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name_spec}-*.src.rpm 2> /dev/null | wc -l)
+bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name_spec}-[0-9]*.src.rpm 2> /dev/null | wc -l)
 if [ "$bsource" != "0" ]; then
    echo -e "\e[36mExists src.rpm of ${name}, great\e[0m"
 else
@@ -426,7 +426,7 @@ fi
   chroot_dependency
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${MOCK_DEF_PATH}/build.log
-if [ -n $PWD/RPMS/x86_64/${name}*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}*.rpm ]; then
+if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
@@ -452,7 +452,7 @@ else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
 # End conditional accelerate the build
-if [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-*.fc$(rpm -E %fedora).noarch.rpm ]; then
+if [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
