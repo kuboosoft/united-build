@@ -419,8 +419,8 @@ dnf -y config-manager --set-disabled unitedrpms
 fi
   dnf clean all 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
-if [ -n "${security_updates}" ]; then
-  dnf -y upgrade "${security_updates}"
+if [ -n "$security_updates" ]; then
+  dnf -y update "$security_updates"
 else
   dnf -y update --bugfix
 fi
@@ -1165,8 +1165,8 @@ chroot_dependency() {
 dnf -y clean all
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
-if [ -n "${security_updates}" ]; then
-dnf -y upgrade "${security_updates}"
+if [ -n "$security_updates" ]; then
+dnf -y update "$security_updates"
 else
 dnf -y update --bugfix
 fi
