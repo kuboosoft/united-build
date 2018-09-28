@@ -422,7 +422,7 @@ security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
   dnf -y update "$security_updates"
 else
-  dnf -y update --bugfix
+  dnf -y update 
 fi
   dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
   chroot_dependency
@@ -1168,7 +1168,7 @@ security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
 dnf -y update "$security_updates"
 else
-dnf -y update --bugfix
+dnf -y update 
 fi
 
 dnf -y install @buildsys-build
