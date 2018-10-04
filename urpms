@@ -372,7 +372,7 @@ if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] &
 auth_mg
 pushd ${repodirectory}
 megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
-createrepo .
+createrepo_c --database ./
 popd
 fi
 }
@@ -508,7 +508,7 @@ pushd "${repodirectory}"
 rm -rf repodata/
  rm -f $( dnf -y repomanage --keep=1 --old $PWD )
 sign_rpm
-createrepo .
+createrepo_c --database ./
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
