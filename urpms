@@ -1089,7 +1089,7 @@ gt=$(echo "${rpack}" > "${curver}" | bc -q )
 if [ "$gt" = 1 ]; then
 echo "You need update ${name}"
 exit 1
-elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ] || [ "${massive_spec}" = true ]; then
+elif [ "${rpack}" = "${curver}" ] && [ "${rlc}" = "${rlcg}" ]; then
 echo "Same version and release for ${name}, then enabled the automatic release"
 #------------
 SRE=$( sed -n '/Release:/=' ${specfile} | sort | head -1 )
