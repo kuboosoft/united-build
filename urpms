@@ -1048,18 +1048,13 @@ local_repo
 #------------
 # Current version 
 if [ "${name}" = gstreamer1 ]; then
-dnf -y --disablerepo=enjoy download --source ${name}-devel
+dnf -y download --source ${name}-devel
 else
-dnf -y --disablerepo=enjoy download --source ${name}
+dnf -y download --source ${name}
 fi
 # If dnf fail downloading sources
 if [ ! -f  ${name}*src.rpm ]; then
-echo 'yumdownloader mode'
-if [ "${name}" = gstreamer1 ]; then
-yumdownloader -y --source ${name}-devel
-else
-yumdownloader -y --source ${name}
-fi
+echo "failed download ${name} src.rpm source"
  fi
 
 re_enabling_repos
