@@ -210,6 +210,17 @@ readargs() {
           usage
         fi
       ;;
+      -w)
+        if [ "$2" ] ; then
+          REPOCLOUD="$2"
+          shift ; shift
+        else
+          echo "Missing a value for $1."
+          echo
+          shift
+          usage
+        fi
+      ;;
       *)
         echo "Unknown option or argument $1."
         echo
@@ -357,7 +368,7 @@ fi
 }
 
 cloudbuilt() {
-if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ]; then
+if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] && [ "${REPOCLOUD}" = true ]; then
 auth_mg
 pushd ${repodirectory}
 megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
