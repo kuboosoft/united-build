@@ -428,7 +428,7 @@ SRPMcheck
 if [ "${name}" = unibuild-basic ]; then
 dnf -y config-manager --set-disabled unitedrpms
 fi
-  dnf -y clean all && rm -f /var/lib/dnf/history 
+  dnf -y clean all && rm -rf /var/lib/dnf/history 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
   dnf -y upgrade "$security_updates"
@@ -1168,7 +1168,7 @@ popd
 
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
-dnf -y clean all && rm -f /var/lib/dnf/history
+dnf -y clean all && rm -rf /var/lib/dnf/history
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
