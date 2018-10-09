@@ -373,7 +373,7 @@ auth_mg
 pushd ${repodirectory}
 megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
 createrepo_c --database ./
-dnf -y clean metadata && dnf -y refresh
+dnf -y clean metadata 
 popd
 fi
 }
@@ -537,8 +537,10 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ] && [ "${massive_spec}" != true 
 echo '
 [enjoy]
 name=enjoy
+failovermethod=priority
 baseurl=file:///root/enjoy
 enabled=1
+priority=1
 skip_if_unavailable=1
 gpgcheck=0
 exclude=*.src.rpm
@@ -553,8 +555,10 @@ fi
 echo '
 [enjoy]
 name=enjoy
+failovermethod=priority
 baseurl=file:///root/enjoy
 enabled=1
+priority=1
 skip_if_unavailable=1
 gpgcheck=0
 exclude=*.src.rpm
