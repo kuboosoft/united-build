@@ -373,7 +373,7 @@ auth_mg
 pushd ${repodirectory}
 megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
 createrepo_c --database ./
-dnf clean metadata && dnf -y refresh
+dnf -y clean metadata && dnf -y refresh
 popd
 fi
 }
