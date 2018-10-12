@@ -761,34 +761,14 @@ handbrake
 obs-studio
 vlc' > importantbump
 massrebuild
-elif [ "${name}" = x265 ] && [ -f /tmp/stop ]; then
+elif [ "${name}" = x265 ]; then 
 up_ornew
 echo 'ffmpeg
-gstreamer1-plugins-bad-freeworld
-avidemux
-handbrake
-vlc
-mpv' > importantbump
-massrebuild
-elif [ "${name}" = x265 ] && [ ! -f /tmp/stop ]; then 
-up_ornew
-if [ -f importantbump ]; then
-echo 'x264
-ffmpeg
-avidemux
-handbrake
-gstreamer1-plugins-bad-freeworld
-vlc
-mpv' >> importantbump
-elif [ ! -f importantbump ]; then
-echo 'x264
-ffmpeg
 avidemux
 handbrake
 gstreamer1-plugins-bad-freeworld
 vlc
 mpv' > importantbump
-fi
 massrebuild
 elif [ "${name}" = ffmpeg ]; then
 up_ornew
