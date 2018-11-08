@@ -372,7 +372,7 @@ if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] &
 auth_mg
 pushd ${repodirectory}
 megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
-createrepo_c --database ./
+createrepo_c --database --compatibility ./
 dnf -y clean metadata 
 popd
 fi
