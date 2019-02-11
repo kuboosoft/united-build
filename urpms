@@ -372,8 +372,7 @@ if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] &
 auth_mg
 pushd ${repodirectory}
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
-systemctl --user enable onedrive
-systemctl --user start onedrive
+onedrive -v --synchronize
 onedrive -v --resync
 createrepo_c --database --compatibility ./
 dnf -y clean metadata 
@@ -590,7 +589,7 @@ popd
 fi
 
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
-onedrive --monitor -v --resync 
+onedrive -v --synchronize
 onedrive -v --resync
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
