@@ -27,7 +27,7 @@
 # +-----------------------------------------------------------------------------------+
 
 directory=$HOME/build
-repodirectory=$HOME/enjoy
+repodirectory=$HOME/enjoy/unitedrpms/updates/$(rpm -E %fedora)
 MOCK_DEF_PATH=${directory}/mock
 date=$(date +%Y%m%d_%H:%M:%S)
 
@@ -371,7 +371,9 @@ cloudbuilt() {
 if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] && [ "${REPOCLOUD}" = true ]; then
 auth_mg
 pushd ${repodirectory}
-megacopy --local $PWD --remote /Root/unitedrpms/updates/$(rpm -E %fedora)/ --download
+sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
+onedrive -v --resync
+onedrive -v --resync
 createrepo_c --database --compatibility ./
 dnf -y clean metadata 
 popd
@@ -488,7 +490,7 @@ rm -f /tmp/stop
 fi
 #
 
-# Conditional for sync to MEGA 
+# Conditional for sync to Cloud 
 if [ "${CLOUD}" = true ]; then
 auth_mg
 upload_rpm
@@ -538,7 +540,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///root/enjoy
+baseurl=file:///~/enjoy/unitedrpms/updates/30
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -556,7 +558,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///root/enjoy
+baseurl=file:///~/enjoy/unitedrpms/updates/30/
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -575,47 +577,20 @@ fi
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd "${repodirectory}"
-ls *.rpm | sort > output-result.txt
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
-cp -f ${MOCK_DEF_PATH}/build.log ${name}_${date}_build.log
-cp -f ${MOCK_DEF_PATH}/root.log ${name}_${date}_root.log
-cp -f ${MOCK_DEF_PATH}/state.log ${name}_${date}_state.log
-megaput ${name}_${date}_build.log --path /Root/logs/
-megaput ${name}_${date}_root.log --path /Root/logs/
-megaput ${name}_${date}_state.log --path /Root/logs/
-fi
-
-megals --names /Root/unitedrpms/updates/24/ > megalist24
-megals --names /Root/unitedrpms/updates/25/ > megalist25
-megals --names /Root/unitedrpms/updates/26/ > megalist26
-megals --names /Root/unitedrpms/updates/27/ > megalist27
-megals --names /Root/unitedrpms/updates/28/ > megalist28
-megals --names /Root/unitedrpms/updates/29/ > megalist29
-megals --names /Root/unitedrpms/updates/30/ > megalist30
-
-Ou=output-result.txt
-while IFS= read -r result; do
-if [ $(ls $result | grep -c .fc24.) -gt 0 ] && [ $(cat megalist24 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/24/
-elif [ $(ls $result | grep -c .fc25.) -gt 0 ] && [ $(cat megalist25 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/25/
-elif [ $(ls $result | grep -c .fc26.) -gt 0 ] && [ $(cat megalist26 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/26/
-elif [ $(ls $result | grep -c .fc27.) -gt 0 ] && [ $(cat megalist27 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/27/
-elif [ $(ls $result | grep -c .fc28.) -gt 0 ] && [ $(cat megalist28 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/28/
-elif [ $(ls $result | grep -c .fc29.) -gt 0 ] && [ $(cat megalist29 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/29/
-elif [ $(ls $result | grep -c .fc30.) -gt 0 ] && [ $(cat megalist30 | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/updates/30/
-fi
-done <"$Ou"
-echo -e "\e[35mSynced with Mega Successfully...\e[0m"
-rm -f output-result.txt
+echo ${MOCK_DEF_PATH} >> ~/.config/onedrive/sync_lis
+pushd ${MOCK_DEF_PATH}
+mv -f build.log ${name}_${date}_build.log
+mv -f root.log ${name}_${date}_root.log
+mv -f state.log ${name}_${date}_state.log
 popd
+fi
+
+sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
+onedrive -v --resync
+onedrive -v --resync
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
 b=800
@@ -1105,7 +1080,7 @@ awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.s
 
 mv -f ${name}2.spec ${specfile}
 auth_mg
-megaput ${specfile} --path /Root/unitedrpms/automatic-release/
+megaput ${specfile} --path ~/unitedrpms/automatic-release/
 else 
 echo -e "\e[36mGreat, a updated package of ${name}; then the automatic release isn't necessary\e[0m"
 fi
@@ -1189,15 +1164,18 @@ fi
 }
 
 auth_mg() {
-wget -c -P /root/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
-pushd /root/
-tar xJf mppass.tar.xz -C /root/
+wget -c -P ~/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
+pushd ~/
+mkdir -p ~/.config/onedrive/
+tar xJf mppass.tar.xz -C ~/.config/onedrive/
+pushd ~/.config/onedrive/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
-openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out auth
-echo "UploadSpeedLimit = 0" >> auth
-mv -f auth /root/.megarc
+openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
+openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
 rm -f *.enc
 rm -f *.pem
+rm -f ~/mppass.tar.xz
+popd
 popd
 }
 
