@@ -588,7 +588,7 @@ popd
 fi
 
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
-onedrive -v --synchronize
+onedrive -v --upload-only
 
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
