@@ -26,8 +26,8 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-directory=/root/build
-repodirectory=/root/enjoy/unitedrpms/updates/$(rpm -E %fedora)
+directory=~/build
+repodirectory=~/enjoy/unitedrpms/updates/$(rpm -E %fedora)
 MOCK_DEF_PATH=${directory}/mock
 date=$(date +%Y%m%d_%H:%M:%S)
 
@@ -371,7 +371,6 @@ cloudbuilt() {
 if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] && [ "${REPOCLOUD}" = true ]; then
 auth_mg
 pushd ${repodirectory}
-sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
 onedrive -v --synchronize
 createrepo_c --database --compatibility ./
 dnf -y clean metadata 
@@ -443,8 +442,6 @@ fi
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
 if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.noarch.rpm ]; then
 echo "Successful build for ${name}"
-sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
-onedrive -v --synchronize
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
 fi
@@ -589,7 +586,6 @@ mv -f state.log ${name}_${date}_state.log
 popd
 fi
 
-sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
 onedrive -v --synchronize
 
 
@@ -1173,6 +1169,8 @@ pushd ~/.config/onedrive/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
 openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
+sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
+onedrive -v --synchronize
 rm -f *.enc
 rm -f *.pem
 rm -f ~/mppass.tar.xz
