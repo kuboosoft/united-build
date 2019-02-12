@@ -443,6 +443,8 @@ fi
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
 if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.noarch.rpm ]; then
 echo "Successful build for ${name}"
+sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
+onedrive -v --synchronize
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
 fi
@@ -588,7 +590,7 @@ popd
 fi
 
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
-onedrive -v --upload-only
+onedrive -v --synchronize
 
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
