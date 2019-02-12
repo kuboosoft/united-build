@@ -369,7 +369,6 @@ fi
 
 cloudbuilt() {
 if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] && [ "${REPOCLOUD}" = true ]; then
-auth_mg
 pushd ${repodirectory}
 onedrive -v --synchronize
 createrepo_c --database --compatibility ./
@@ -490,7 +489,6 @@ fi
 
 # Conditional for sync to Cloud 
 if [ "${CLOUD}" = true ]; then
-auth_mg
 upload_rpm
 fi
 # End conditional MEGA
@@ -538,7 +536,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///~/enjoy/unitedrpms/updates/$releasever
+baseurl=file:///~/unitedrpms/updates/$releasever
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -556,7 +554,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///~/enjoy/unitedrpms/updates/$releasever/
+baseurl=file:///~/unitedrpms/updates/$releasever/
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -1076,8 +1074,8 @@ f1="$(<changdata.txt)"
 awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.spec
 
 mv -f ${name}2.spec ${specfile}
-auth_mg
-megaput ${specfile} --path ~/unitedrpms/automatic-release/
+###auth_mg
+###megaput ${specfile} --path ~/unitedrpms/automatic-release/
 else 
 echo -e "\e[36mGreat, a updated package of ${name}; then the automatic release isn't necessary\e[0m"
 fi
@@ -1161,6 +1159,7 @@ fi
 }
 
 auth_mg() {
+rm -f mppass.tar.xz
 wget -c -P ~/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
 pushd ~/
 mkdir -p ~/.config/onedrive/
@@ -1240,6 +1239,7 @@ exit 0
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ]; then
 echo -e "\e[32mStarting complete task...\e[0m"
 git_task
+auth_mg
 buildrpm
 rm -rf /tmp/*.prb
 # rm -rf ${repodirectory}/
