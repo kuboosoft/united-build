@@ -26,8 +26,8 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-directory=$HOME/build
-repodirectory=$HOME/enjoy/unitedrpms/updates/$(rpm -E %fedora)
+directory=/root/build
+repodirectory=/root/enjoy/unitedrpms/updates/$(rpm -E %fedora)
 MOCK_DEF_PATH=${directory}/mock
 date=$(date +%Y%m%d_%H:%M:%S)
 
