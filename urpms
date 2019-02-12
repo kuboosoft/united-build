@@ -373,7 +373,6 @@ auth_mg
 pushd ${repodirectory}
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
 onedrive -v --synchronize
-onedrive -v --resync
 createrepo_c --database --compatibility ./
 dnf -y clean metadata 
 popd
@@ -590,7 +589,6 @@ fi
 
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" ~/.config/onedrive/sync_list
 onedrive -v --synchronize
-onedrive -v --resync
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
 b=800
