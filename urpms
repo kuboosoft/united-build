@@ -1239,7 +1239,9 @@ exit 0
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ]; then
 echo -e "\e[32mStarting complete task...\e[0m"
 git_task
+if [ "${CLOUD}" = true ]; then
 auth_mg
+fi
 buildrpm
 rm -rf /tmp/*.prb
 # rm -rf ${repodirectory}/
