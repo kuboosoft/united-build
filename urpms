@@ -27,7 +27,7 @@
 # +-----------------------------------------------------------------------------------+
 
 directory=/root/build
-repodirectory=/root/enjoy/unitedrpms/updates/$(rpm -E %fedora)
+repodirectory=/root/OneDrive/unitedrpms/updates/$(rpm -E %fedora)
 MOCK_DEF_PATH=${directory}/mock
 date=$(date +%Y%m%d_%H:%M:%S)
 
@@ -370,7 +370,7 @@ fi
 cloudbuilt() {
 if [ $( echo ${url_git} | grep -c UnitedRPMs) -gt 0 ] && [ "${CLOUD}" = true ] && [ "${REPOCLOUD}" = true ]; then
 pushd ${repodirectory}
-onedrive -v --synchronize --confdir /root/.config/onedrive/
+onedrive -v --synchronize
 createrepo_c --database --compatibility ./
 dnf -y clean metadata 
 popd
@@ -536,7 +536,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///root/unitedrpms/updates/$releasever
+baseurl=file:///root/OneDrive/unitedrpms/updates/$releasever
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -554,7 +554,7 @@ echo '
 [enjoy]
 name=enjoy
 failovermethod=priority
-baseurl=file:///root/unitedrpms/updates/$releasever/
+baseurl=file:///root/OneDrive/unitedrpms/updates/$releasever/
 enabled=1
 priority=1
 skip_if_unavailable=1
@@ -584,7 +584,7 @@ mv -f state.log ${name}_${date}_state.log
 popd
 fi
 
-onedrive -v --synchronize --confdir /root/.config/onedrive/
+onedrive -v --synchronize 
 
 
 zlog=$( du -k ${MOCK_DEF_PATH}/build.log | cut -f1 )
@@ -1169,7 +1169,7 @@ openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
 openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
-onedrive -v --synchronize --confdir /root/.config/onedrive/
+onedrive -v --synchronize 
 rm -f *.enc
 rm -f *.pem
 rm -f /root/mppass.tar.xz
