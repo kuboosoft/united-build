@@ -491,7 +491,7 @@ fi
 if [ "${CLOUD}" = true ]; then
 upload_rpm
 fi
-# End conditional MEGA
+# End conditional CLOUD
 }
 
 local_repo() {
@@ -1074,8 +1074,7 @@ f1="$(<changdata.txt)"
 awk -vf1="$f1" '/%changelog/{print;print f1;next}1' ${specfile} | tee ${name}2.spec
 
 mv -f ${name}2.spec ${specfile}
-###auth_mg
-###megaput ${specfile} --path ~/unitedrpms/automatic-release/
+onedrive -v --synchronize 
 else 
 echo -e "\e[36mGreat, a updated package of ${name}; then the automatic release isn't necessary\e[0m"
 fi
@@ -1172,6 +1171,7 @@ sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 onedrive -v --synchronize 
 rm -f *.enc
 rm -f *.pem
+rm -f *.txt
 rm -f /root/mppass.tar.xz
 popd
 popd
@@ -1245,7 +1245,7 @@ rm -rf /tmp/*.prb
 # rm -rf ${repodirectory}/
 rm -rf ${directory}/rpmbuild/GIT/
 rm -f /tmp/unibuild_basic.log
-pkill "megaput"
+pkill "onedrive"
 echo -e "\e[36mDONE...\e[0m"
 exit 0
 else
