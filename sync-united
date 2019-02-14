@@ -139,13 +139,32 @@ rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.o
 popd
 }
 
+auth_mg() {
+rm -f mppass.tar.xz
+wget -c -P /root/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
+pushd /root
+mkdir -p /root/.config/onedrive/
+tar xJf mppass.tar.xz -C /root/.config/onedrive/
+pushd /root/.config/onedrive/
+openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
+openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
+openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
+sed -i "s|RELEASE|${task}|g" /root/.config/onedrive/sync_list
+rm -f *.enc
+rm -f *.pem
+rm -f *.txt
+rm -f /root/mppass.tar.xz
+popd
+popd
+}
+
 mdow() {
 rm -f ${raiz}/.megatmp.*
 echo -e "\e[31mDownloading updates...\e[0m"
-echo "UploadSpeedLimit = 0" >> /root/.megarc
-echo "DownloadSpeedLimit = 0" >> /root/.megarc
-echo "Timeout = 30" >> /root/.megarc
-megacopy --local "${raiz}" --remote /Root/unitedrpms/updates/${task}/ --download
+
+auth_mg
+
+onedrive -v --synchronize 
 }
 
 Cardow() {
@@ -379,11 +398,11 @@ readargs "$@"
 
 user=kuboosoft
 userB=davidva
-raiz=$HOME/f${task}
+raiz=/root/OneDrive/unitedrpms/updates/${task}
 motherpath=$HOME/${task}
 
-if [ ${task} = 27 ] || [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ]; then
-echo -e "\e[32msync limited to F27-F30...\e[0m"
+if [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ] || [ ${task} = 31 ]; then
+echo -e "\e[32msync limited to F28-F30...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
