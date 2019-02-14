@@ -562,6 +562,9 @@ gpgcheck=0
 exclude=*.src.rpm
 ' > changdata.txt 
 
+mock_conf=$( echo ${TARGET} | awk -F '-' '{print $2}' | awk -F '-' '{print $1}')
+sed -i 's|$releasever|$mock_conf|g' changdata.txt
+
 f1="$(<changdata.txt)"
 awk -vf1="$f1" '/# repos/{print;print f1;next}1' /etc/mock/${TARGET}.cfg | tee /tmp/new_repo.cfg
 pushd /etc/mock/
@@ -1167,7 +1170,12 @@ pushd /root/.config/onedrive/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
 openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
+if [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+mock_conf=$( echo ${TARGET} | awk -F '-' '{print $2}' | awk -F '-' '{print $1}')
+sed -i "s|RELEASE|$mock_conf|g" /root/.config/onedrive/sync_list
+else
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
+fi
 onedrive -v --synchronize 
 rm -f *.enc
 rm -f *.pem
