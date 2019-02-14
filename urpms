@@ -26,10 +26,10 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 
-directory=/root/build
-repodirectory=/root/OneDrive/unitedrpms/updates/$(rpm -E %fedora)
-MOCK_DEF_PATH=${directory}/mock
-date=$(date +%Y%m%d_%H:%M:%S)
+#directory=/root/build
+#repodirectory=/root/OneDrive/unitedrpms/updates/$(rpm -E %fedora)
+#MOCK_DEF_PATH=${directory}/mock
+#date=$(date +%Y%m%d_%H:%M:%S)
 
 usage() {
   echo ""
@@ -1182,6 +1182,17 @@ popd
 readargs "$@"
 
 checkargs
+
+# Absolute paths
+directory=/root/build
+if [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
+mock_conf=$( echo ${TARGET} | awk -F '-' '{print $2}' | awk -F '-' '{print $1}')
+repodirectory=/root/OneDrive/unitedrpms/updates/$mock_conf
+%else
+repodirectory=/root/OneDrive/unitedrpms/updates/$(rpm -E %fedora)
+%endif
+MOCK_DEF_PATH=${directory}/mock
+date=$(date +%Y%m%d_%H:%M:%S)
 
 # We need some programs
 # check_depends
