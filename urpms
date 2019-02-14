@@ -439,7 +439,7 @@ fi
   chroot_dependency
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
-if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.x86_64.rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.noarch.rpm ]; then
+if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
