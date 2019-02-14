@@ -579,11 +579,10 @@ pushd "${repodirectory}"
 sign_rpm
 
 if [ -n "${TARGET}" ]; then
-echo ${MOCK_DEF_PATH} >> ~/.config/onedrive/sync_lis
 pushd ${MOCK_DEF_PATH}
-mv -f build.log ${name}_${date}_build.log
-mv -f root.log ${name}_${date}_root.log
-mv -f state.log ${name}_${date}_state.log
+mv -f build.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
+mv -f root.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_root.log
+mv -f state.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_state.log
 popd
 fi
 
