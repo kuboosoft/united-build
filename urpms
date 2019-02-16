@@ -581,7 +581,7 @@ sign_rpm
 if [ -n "${TARGET}" ]; then
 pushd ${MOCK_DEF_PATH}
 mkdir -p /root/OneDrive/unitedrpms/mock_logs/
-mv -f build.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
+cp -f build.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
 mv -f root.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_root.log
 mv -f state.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_state.log
 popd
@@ -590,12 +590,12 @@ fi
 onedrive -v --synchronize 
 
 
-zlog=$( du -k /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log | cut -f1 )
+zlog=$( du -k build.log | cut -f1 )
 b=800
 if [ -n "${TARGET}" ] && [ $zlog \> $b ] || [ "${massive_spec}" = true ] || [ "${NO_MOCK}" = true ]; then
 echo 'This log is too long to be displayed'
 elif [ -n "${TARGET}" ] && [ "$b" -gt "$zlog" ]; then
-cat /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
+cat build.log
 fi
 }
 
