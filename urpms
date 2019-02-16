@@ -1175,7 +1175,11 @@ sed -i "s|RELEASE|$mock_conf|g" /root/.config/onedrive/sync_list
 else
 sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 fi
+
+if [ "${REPOCLOUD}" = true ]; then
 onedrive -v --synchronize 
+fi
+
 rm -f *.enc
 rm -f *.pem
 rm -f *.txt
