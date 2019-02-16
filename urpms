@@ -580,6 +580,7 @@ sign_rpm
 
 if [ -n "${TARGET}" ]; then
 pushd ${MOCK_DEF_PATH}
+mkdir -p /root/OneDrive/unitedrpms/mock_logs/
 mv -f build.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
 mv -f root.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_root.log
 mv -f state.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_state.log
