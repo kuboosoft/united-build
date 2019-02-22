@@ -1134,7 +1134,7 @@ else
 dnf -y update 
 fi
 
-dnf -y install @buildsys-build
+dnf -y install @buildsys-build python-rpm-macros
 }
 
 local_install_packages() {
