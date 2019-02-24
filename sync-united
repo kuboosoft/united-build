@@ -26,6 +26,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 # The script is a shit because it doesn't has 60 lines ;)
+# Requires: dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients unitedrpms
 
 usage() {
   echo ""
@@ -63,9 +64,7 @@ readargs() {
 
 
 upd_hosts() {
-megacopy --local "$HOME/" --remote /Root/unitedrpms/conocidos_host/known_hosts --download
-cat $HOME/known_hosts >> $HOME/.ssh/known_hosts
-rm -f $HOME/known_hosts
+cat /root/OneDrive/unitedrpms/conocidos_host > $HOME/.ssh/known_hosts
 }
 
 sf_back() {
@@ -230,99 +229,8 @@ sign_repo
 popd
 }
 
-mupl() {
-
-# LIST PACKAGES IN LOCAL
-pushd ${motherpath}/x86_64/
-ls *.rpm | grep -ve repodata -e repoview -e debug | sort -u > $HOME/output-result-rpms.txt
-popd
-
-pushd ${motherpath}/x86_64/debug/
-ls *.rpm | grep -ve repodata -e repoview | sort -u > $HOME/output-result-debugs.txt
-popd
-
-pushd ${motherpath}/srpm/
-ls *src.rpm | grep -ve repodata -e repoview | sort -u > $HOME/output-result-srpms.txt
-popd
-
-# LIST PACKAGES IN CLOUD
-# RPMS
-megals --names /Root/unitedrpms/${task}/x86_64/ | grep -ve repodata -e repoview > /tmp/megalist${task}
-
-# DEBUG
-megals --names /Root/unitedrpms/${task}/x86_64/debug/ | grep -ve repodata -e repoview > /tmp/megalist${task}_debug
-
-# SRPM
-megals --names /Root/unitedrpms/${task}/srpm/ | grep -ve repodata -e repoview > /tmp/megalist${task}_SR
-#
-
-echo -e "\e[31mSync with Mega...\e[0m"
-if [ -f ${motherpath}/x86_64/repodata/repomd.xml ]; then
-
-# DELETE OLD REPODATA AND REPOVIEW IN MG
-megarm /Root/unitedrpms/${task}/x86_64/repodata
-megarm /Root/unitedrpms/${task}/x86_64/debug/repodata
-megarm /Root/unitedrpms/${task}/srpm/repodata
-fi
-
-if [ -f ${motherpath}/x86_64/repoview/index.html ]; then
-megarm /Root/unitedrpms/${task}/x86_64/repoview
-megarm /Root/unitedrpms/${task}/x86_64/debug/repoview
-megarm /Root/unitedrpms/${task}/srpm/repoview
-fi
-
-# NOW THE REAL SYNC WITH MG
-# RPMS
-Ou=$HOME/output-result-rpms.txt
-while IFS= read -r result; do
-pushd ${motherpath}/x86_64/
-if [ $(ls $result | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task} ] && [ $(cat /tmp/megalist${task} | grep -c $result) -lt 1 ]; then
-megaput "$result" --path /Root/unitedrpms/${task}/x86_64/
-fi
-done <"$Ou"
-popd
-
-# DEBUG
-Oa=$HOME/output-result-debugs.txt
-pushd ${motherpath}/x86_64/debug/
-while IFS= read -r resultb; do
-if [ $(ls $resultb | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_debug ] && [ $(cat /tmp/megalist${task}_debug | grep -c $resultb ) -lt 1 ]; then
-megaput "$resultb" --path /Root/unitedrpms/${task}/x86_64/debug/
-fi
-done <"$Oa"
-popd
-
-
-# SRPM
-Oe=$HOME/output-result-srpms.txt
-pushd ${motherpath}/srpm/
-while IFS= read -r resultc; do
-if [ $(ls $resultc | grep -c fc${task}) -gt 0 ] && [ -f /tmp/megalist${task}_SR ] && [ $( cat /tmp/megalist${task}_SR | grep -c $resultc ) -lt 1 ]; then
-megaput "$resultc" --path /Root/unitedrpms/${task}/srpm/
-fi
-done <"$Oe"
-popd
-
-# SYNC REPODATA AND REPOVIEW
-megamkdir /Root/unitedrpms/${task}/x86_64/debug/repodata
-megamkdir /Root/unitedrpms/${task}/x86_64/debug/repoview
-megamkdir /Root/unitedrpms/${task}/x86_64/repodata
-megamkdir /Root/unitedrpms/${task}/x86_64/repoview
-megamkdir /Root/unitedrpms/${task}/srpm/repodata
-megamkdir /Root/unitedrpms/${task}/srpm/repoview
-
-#megacopy --local ${motherpath}/x86_64/debug/repodata --remote /Root/unitedrpms/${task}/x86_64/debug/repodata
-#megacopy --local ${motherpath}/x86_64/debug/repoview --remote /Root/unitedrpms/${task}/x86_64/debug/repoview 
-#megacopy --local ${motherpath}/x86_64/repodata --remote /Root/unitedrpms/${task}/x86_64/repodata
-#megacopy --local ${motherpath}/x86_64/repoview --remote /Root/unitedrpms/${task}/x86_64/repoview
-#megacopy --local ${motherpath}/srpm/repodata --remote /Root/unitedrpms/${task}/srpm/repodata
-#megacopy --local ${motherpath}/srpm/repoview --remote /Root/unitedrpms/${task}/srpm/repoview
-rm -f /tmp/megalist*
-echo 'Completed sync with Mega'
-}
-
 hosts_k() {
-megaput $HOME/.ssh/known_hosts --path /Root/unitedrpms/conocidos_host/
+onedrive -v --synchronize 
 }
 
 checkfiles() {
@@ -412,21 +320,18 @@ fi
 
 run_ping
 work_directory
-upd_hosts
 ssh-agent
 eval `ssh-agent`
 ssh-add ~/.ssh/id_ecdsa
-dnf -y update rsync
 mdow
+upd_hosts
 sf_back
 #Cardow
-#mdow
 checkfiles
 m_mv
 job
 sfsync
 osdnsync
-#mupl
 hosts_k
 metadata_sync
 metadata_tag_git
