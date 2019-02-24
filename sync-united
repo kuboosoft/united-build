@@ -26,7 +26,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 # The script is a shit because it doesn't has 60 lines ;)
-# Requires: dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients unitedrpms
+# Requires: dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients xz unitedrpms
 
 usage() {
   echo ""
@@ -64,7 +64,7 @@ readargs() {
 
 
 upd_hosts() {
-cat /root/OneDrive/unitedrpms/conocidos_host > $HOME/.ssh/known_hosts
+cat /root/OneDrive/unitedrpms/conocidos_host >> $HOME/.ssh/known_hosts
 }
 
 sf_back() {
