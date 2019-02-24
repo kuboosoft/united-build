@@ -139,7 +139,7 @@ popd
 }
 
 auth_mg() {
-rm -f mppass.tar.xz
+rm -f /root/mppass.tar.xz
 wget -c -P /root/ https://github.com/UnitedRPMs/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
 mkdir -p /root/.config/onedrive/
