@@ -1162,7 +1162,6 @@ fi
 }
 
 auth_mg() {
-dnf -y install wget onedrive
 rm -f mppass.tar.xz
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
