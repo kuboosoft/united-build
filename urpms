@@ -1125,16 +1125,14 @@ popd
 
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
-dnf -y clean all && rm -rf /var/lib/dnf/history
+dnf -y clean all && rm -rf /var/lib/dnf/history && rm -f /var/cache/dnf/
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
-dnf -y update "$security_updates"
-else
-dnf -y update 
+dnf -y update "$security_updates" 
 fi
 
-dnf -y install @buildsys-build python2-rpm-macros
+dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
 }
 
 local_install_packages() {
