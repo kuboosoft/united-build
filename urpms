@@ -25,6 +25,7 @@
 # | should be addressed to:                                                           |
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
+# (50 MB) Requires: fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms mock mock-unitedrpms onedrive
 
 #directory=/root/build
 #repodirectory=/root/OneDrive/unitedrpms/updates/$(rpm -E %fedora)
@@ -506,7 +507,7 @@ cp -f *.rpm ${repodirectory}/
 pushd "${repodirectory}"
 rm -rf repodata/
  rm -f $( dnf -y repomanage --keep=1 --old $PWD )
-sign_rpm
+# sign_rpm
 createrepo_c --database ./
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
@@ -576,7 +577,7 @@ fi
 upload_rpm() {
 echo -e "\e[32mUploading results...\e[0m"
 pushd "${repodirectory}"
-sign_rpm
+# sign_rpm
 
 if [ -n "${TARGET}" ]; then
 pushd ${MOCK_DEF_PATH}
@@ -1016,7 +1017,7 @@ echo "failed download ${name} src.rpm source"
  fi
 
 re_enabling_repos
-sign_rpm
+# sign_rpm
 
 rpack=$(rpm -qip ${name}*src.rpm | grep : | grep 'Version' | awk '{print $3}')
 curver=$(rpm -q --qf "%{version}\n" --specfile "${specfile}" | head -1)
@@ -1133,6 +1134,9 @@ dnf -y update "$security_updates"
 fi
 
 dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
+
+# Our buildsys (future group)
+dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms mock mock-unitedrpms onedrive
 }
 
 local_install_packages() {
@@ -1159,6 +1163,7 @@ fi
 }
 
 auth_mg() {
+dnf -y install onedrive
 rm -f mppass.tar.xz
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
@@ -1260,7 +1265,7 @@ exit 0
 elif [ -n "${TARGET}" ] || [ "${NO_MOCK}" = true ]; then
 echo -e "\e[32mStarting complete task...\e[0m"
 git_task
-if [ "${CLOUD}" = true ]; then
+if [ "${CLOUD}" = true ] || [ "${REPOCLOUD}" = true ]; then
 auth_mg
 fi
 buildrpm
