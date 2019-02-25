@@ -295,6 +295,7 @@ echo -e "\e[32mCreating job directories...\e[0m"
 }
 
 git_task() {
+dnf -y install git
 echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
 rm -rf ${directory}/rpmbuild/GIT/*
@@ -1136,7 +1137,7 @@ fi
 dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
 
 # Our buildsys (future group)
-dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms mock mock-unitedrpms onedrive
+dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms mock mock-unitedrpms onedrive python3-dnf-plugins-extras-repomanage
 }
 
 local_install_packages() {
@@ -1163,7 +1164,7 @@ fi
 }
 
 auth_mg() {
-dnf -y install onedrive
+dnf -y install wget onedrive
 rm -f mppass.tar.xz
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
