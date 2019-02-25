@@ -295,7 +295,6 @@ echo -e "\e[32mCreating job directories...\e[0m"
 }
 
 git_task() {
-dnf -y install git
 echo -e "\e[32mCloning repository ${url_git}...\e[0m"
 name_build
 rm -rf ${directory}/rpmbuild/GIT/*
@@ -438,7 +437,6 @@ else
   dnf -y update 
 fi
   dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
-  chroot_dependency
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
 if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
@@ -1210,8 +1208,8 @@ fi
 MOCK_DEF_PATH=${directory}/mock
 date=$(date +%Y%m%d_%H:%M:%S)
 
-# We need some programs
-# check_depends
+# We need some basic dependencies
+chroot_dependency
 
 # Here we will make our local repository
 enjoy_repo
@@ -1242,7 +1240,6 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 #  dnf -y update
-  chroot_dependency
   dnf -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
