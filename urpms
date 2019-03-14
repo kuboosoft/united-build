@@ -240,7 +240,7 @@ checkargs() {
  elif [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
     echo 'Using mock mode'
  elif [ -z "${TARGET}" ] && [ -z "${NO_MOCK}" ] ; then
-    echo -e '\e[31mMissing target, example your need add "-t fedora-30-x86_64"\e[0m'
+    echo -e '\e[31mMissing target, example your need add "-t fedora-31-x86_64"\e[0m'
     usage
 exit
   fi
@@ -1147,7 +1147,7 @@ re_enabling_repos() {
 # In massive task, we compare our git version vrs repo version; and urpms makes automatic changes with incremental in release. It downloads the source and disable our repositories; we need enable again our repos...
 fedora_release=$(rpm -E %fedora) 
 
-if [ "${fedora_release}" -ge 30 ]; then
+if [ "${fedora_release}" -ge 31 ]; then
 dnf -y config-manager --set-disabled rawhide-source
 dnf -y config-manager --set-enabled unitedrpms
 dnf -y config-manager --set-enabled rawhide
