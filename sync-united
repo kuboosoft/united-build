@@ -70,7 +70,7 @@ cat /root/OneDrive/unitedrpms/conocidos_host >> $HOME/.ssh/known_hosts
 sf_back() {
 pushd ${motherpath}
 #rsync -avP -e "ssh -o StrictHostKeyChecking=no" --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
-rsync -avP -e "ssh -o StrictHostKeyChecking=no" -P --delete --stats --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/
+rsync -avP -e "ssh -o StrictHostKeyChecking=no" -P --delete --stats --backup "${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/" ${motherpath}/x86_64/
 # rsync -avP --backup "${user}@frs.sourceforge.net:/home/frs/project/muchpack/${task}/" ${motherpath}/
 popd
 }
@@ -308,7 +308,7 @@ readargs "$@"
 
 user=kuboosoft
 userB=davidva
-raiz=/root/OneDrive/unitedrpms/updates/${task}
+raiz=/root/OneDrive/unitedrpms/updates/${task} 
 motherpath=/root/${task}
 
 if [ ${task} = 28 ] || [ ${task} = 29 ] || [ ${task} = 30 ] || [ ${task} = 31 ]; then
