@@ -1125,7 +1125,7 @@ popd
 
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
-dnf -y clean all && rm -rf /var/lib/dnf/history && rm -f /var/cache/dnf/
+dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
