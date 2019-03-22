@@ -436,6 +436,7 @@ if [ -n "$security_updates" ]; then
 else
   dnf -y update 
 fi
+  export LD_LIBRARY_PATH=/usr/lib64
   dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
   dnf -y builddep "${specfile}" 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
