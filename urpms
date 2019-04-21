@@ -1133,7 +1133,7 @@ if [ -n "$security_updates" ]; then
 dnf -y update "$security_updates" 
 fi
 
-dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
+dnf -y install @buildsys-build python2-rpm-macros make --exclude=fedora-release
 
 # Our buildsys (future group)
 dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage python2
