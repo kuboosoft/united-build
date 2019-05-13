@@ -1164,7 +1164,8 @@ fi
 }
 
 auth_mg() {
-rm -f mppass.tar.xz
+rm -f /root/mppass.tar.xz
+rm -rf /root/.config/onedrive/
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
 mkdir -p /root/.config/onedrive/
@@ -1172,7 +1173,7 @@ tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
-openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
+#openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
 if [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 mock_conf=$( echo ${TARGET} | awk -F '-' '{print $2}' | awk -F '-' '{print $1}')
 sed -i "s|RELEASE|${mock_conf}|g" /root/.config/onedrive/sync_list
@@ -1181,7 +1182,7 @@ sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 fi
 
 if [ "${REPOCLOUD}" = true ]; then
-onedrive -v --synchronize 
+onedrive -v --monitor || onedrive -v --synchronize 
 fi
 
 rm -f *.enc
