@@ -1172,8 +1172,8 @@ mkdir -p /root/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
-openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -out refresh_token
-#openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -out items.sqlite3
+openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -pbkdf2 -out refresh_token
+#openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -pbkdf2 -out items.sqlite3
 if [ -n "${TARGET}" ] && [ -z "${NO_MOCK}" ]; then
 mock_conf=$( echo ${TARGET} | awk -F '-' '{print $2}' | awk -F '-' '{print $1}')
 sed -i "s|RELEASE|${mock_conf}|g" /root/.config/onedrive/sync_list
