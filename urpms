@@ -1182,6 +1182,7 @@ sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 fi
 
 if [ "${REPOCLOUD}" = true ]; then
+onedrive -v --resync
 onedrive -v --synchronize 
 fi
 
