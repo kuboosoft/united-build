@@ -1182,7 +1182,7 @@ sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 fi
 
 if [ "${REPOCLOUD}" = true ]; then
-onedrive -v --monitor || onedrive -v --synchronize 
+onedrive -v --synchronize 
 fi
 
 rm -f *.enc
