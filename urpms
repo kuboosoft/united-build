@@ -1130,16 +1130,12 @@ popd
 chroot_dependency() {
 # We can emulate a mock task with the next dependencies... https://github.com/rpm-software-management/mock/wiki/Plugin-PackageState
 dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/ 
-# Why isn't part?...
-#dnf -y install dnf-plugins-core 
-dnf -y install 'dnf-command(config-manager)'
 
 # https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/FNWYOOAUV73JUT3NKCZNW6TW66NGKJAK/
 # https://pagure.io/fesco/issue/2003#comment-557358
-dnf config-manager --set-disabled rawhide-modular
-#dnf config-manager --set-disabled fedora-modular
-#dnf config-manager --set-disabled updates-modular
-dnf config-manager --set-disabled updates-testing-modular
+rm -f /etc/yum.repos.d/fedora-updates-testing-modular.repo
+rm -f /etc/yum.repos.d/fedora-updates-modular.repo
+rm -f /etc/yum.repos.d/fedora-modular.repo
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
