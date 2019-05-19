@@ -1136,8 +1136,8 @@ dnf -y install dnf-plugins-core
 # https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/FNWYOOAUV73JUT3NKCZNW6TW66NGKJAK/
 # https://pagure.io/fesco/issue/2003#comment-557358
 dnf config-manager --set-disabled rawhide-modular
-dnf config-manager --set-disabled fedora-modular
-dnf config-manager --set-disabled updates-modular
+#dnf config-manager --set-disabled fedora-modular
+#dnf config-manager --set-disabled updates-modular
 dnf config-manager --set-disabled updates-testing-modular
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
