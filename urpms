@@ -1138,6 +1138,7 @@ dnf -y install dnf-plugins-core
 dnf config-manager --set-disabled rawhide-modular
 dnf config-manager --set-disabled fedora-modular
 dnf config-manager --set-disabled updates-modular
+dnf config-manager --set-disabled updates-testing-modular
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
