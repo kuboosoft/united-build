@@ -95,8 +95,8 @@ echo -e "\e[31mSign repodata...\e[0m"
 }
 
 sign_rpm() {
+rpm --delsign *rpm
 rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
-rpm --define "_gpg_name The UnitedRPMs Project" --resign *.rpm
 repoview .
 }
 
