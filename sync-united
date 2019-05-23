@@ -26,7 +26,7 @@
 # | davidva@tutanota.com                                                              |
 # +-----------------------------------------------------------------------------------+
 # The script is a shit because it doesn't has 60 lines ;)
-# Requires: dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients xz unitedrpms rpm-sign findutils
+# Requires: pinentry dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients xz unitedrpms rpm-sign findutils
 
 usage() {
   echo ""
@@ -96,7 +96,8 @@ echo -e "\e[31mSign repodata...\e[0m"
 
 sign_rpm() {
 rpm --delsign *rpm
-rpm --define "_gpg_name The UnitedRPMs Project" --addsign *.rpm
+#rpm --define "_gpg_name unitedrpms" --addsign *.rpm
+rpm --addsign *.rpm
 repoview .
 }
 
