@@ -1179,6 +1179,7 @@ pushd /root
 mkdir -p /root/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
+rm -f $PWD/config
 
 Frelease=$(cat /etc/fedora-release | grep release | awk '{print $3}')
 if [ "${Frelease}" = 28 ]; then
@@ -1222,7 +1223,6 @@ sed -i "s|RELEASE|$(rpm -E %fedora)|g" /root/.config/onedrive/sync_list
 fi
 
 if [ "${REPOCLOUD}" = true ]; then
-rm -f config
 onedrive -v --resync
 onedrive -v --synchronize 
 fi
