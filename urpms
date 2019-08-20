@@ -1187,6 +1187,7 @@ mkdir -p /root/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
 rm -f $PWD/config
+rm -f $PWD/skip_file
 
 Frelease=$(cat /etc/fedora-release | grep release | awk '{print $3}')
 if [ "${Frelease}" = 28 ]; then
