@@ -144,45 +144,18 @@ popd
 
 auth_mg() {
 rm -f /root/mppass.tar.xz
-wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz 
+rm -rf /root/.config/onedrive/
+wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
 mkdir -p /root/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
+rm -f $PWD/config
+rm -f $PWD/skip_file
 
-Frelease=$(cat /etc/fedora-release | grep release | awk '{print $3}')
-if [ "${Frelease}" = 28 ]; then
-echo 'Using openssl updated for F28'
-
-echo '[home_unibuild]
-name=home:unibuild (Fedora_28)
-type=rpm-md
-baseurl=http://download.opensuse.org/repositories/home:/unibuild/Fedora_28/
-gpgcheck=1
-gpgkey=http://download.opensuse.org/repositories/home:/unibuild/Fedora_28/repodata/repomd.xml.key
-enabled=1' > /etc/yum.repos.d/unibuild-upstream.repo
-
-dnf -y clean all
-dnf -y install openssl_111 && dnf -y update crypto-policies
-
-if [ `getconf LONG_BIT` = "64" ]; then
-libdir=lib64
-else
-libdir=lib
-fi
-#
-export LD_LIBRARY_PATH=/opt/openssl-1.1.1b/$libdir/openssl-1.1.1b/:/opt/openssl-1.1.1b/$libdir/openssl-1.1.1b/engines-1.1/:/usr/$libdir/ 
-/opt/openssl-1.1.1b/bin/openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
-/opt/openssl-1.1.1b/bin/openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -pbkdf2 -out refresh_token
-#/opt/openssl-1.1.1b/bin/openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -pbkdf2 -out items.sqlite3
-export -n LD_LIBRARY_PATH
-#
-else
-# Fedora major to F28
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -pbkdf2 -out refresh_token
 #openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -pbkdf2 -out items.sqlite3
-fi
 
 sed -i "s|RELEASE|${task}|g" /root/.config/onedrive/sync_list
 rm -f *.enc
