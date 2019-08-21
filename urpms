@@ -434,12 +434,11 @@ fi
   dnf -y clean all && rm -rf /var/lib/dnf/history 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
-  dnf -y update "$security_updates"
+  dnf --exclude=*.fc32.* -y update "$security_updates"
 else
-  dnf -y update 
+  dnf --exclude=*.fc32.* -y update 
 fi
-  dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
-  dnf -y builddep "${specfile}" 
+  dnf --exclude=*.fc32.* -y builddep "${specfile}" 
   libQt5Core=$(ls -l /usr/lib64 | grep -v ^l | grep libQt5Core.so. | head -1 | awk '{print $NF}')
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
@@ -463,7 +462,6 @@ popd
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
 SRPMcheck
   /long-living-command &
-dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
 # Conditional to accelerate the build
 if [ -f importantbump ]; then
   /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
@@ -1140,13 +1138,13 @@ dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
-dnf -y update "$security_updates" 
+dnf --exclude=*.fc32.* -y update "$security_updates" 
 fi
 
-dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
+dnf --exclude=*.fc32.* -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
 
 # Our buildsys (future group)
-dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage python2 make mock-unitedrpms binutils
+dnf --exclude=*.fc32.* -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage python2 make mock mock-unitedrpms binutils 
 # dnf -y install mock mock-unitedrpms 
 }
 
@@ -1267,14 +1265,13 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 #  dnf -y update
-  dnf -y builddep *.spec 
+  dnf --exclude=*.fc32.* -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 cp -n SRPMS/* ${MOCK_DEF_PATH}/
 else
-  dnf -y install mock-unitedrpms && dnf -y update mock && dnf -y update mock-unitedrpms && dnf -y update mock-core-configs
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
