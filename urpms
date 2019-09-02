@@ -460,14 +460,14 @@ fi
 popd
 # If the build is with mock 
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
+name_build
 SRPMcheck
 #  /long-living-command &
 # Conditional to accelerate the build
 if [ -f importantbump ]; then
   /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 else
-#  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
-  /usr/bin/mock -r ${TARGET} --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
 # End conditional accelerate the build
 if [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
