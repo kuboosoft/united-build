@@ -470,6 +470,9 @@ if [ -f importantbump ]; then
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
+ls $PWD/SRPMS/
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm  
+
 # End conditional accelerate the build
 if [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
