@@ -460,8 +460,9 @@ fi
 popd
 # If the build is with mock 
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
-name_build
 SRPMcheck
+pushd ${directory}/rpmbuild/GIT/${name}/
+echo "Hey, don't forget You are in $PWD"
 #  /long-living-command &
 # Conditional to accelerate the build
 if [ -f importantbump ]; then
