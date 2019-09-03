@@ -434,11 +434,11 @@ fi
   dnf -y clean all && rm -rf /var/lib/dnf/history 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
-  dnf --exclude=*.fc32.* -y update "$security_updates"
+  dnf -y update "$security_updates"
 else
-  dnf --exclude=*.fc32.* -y update 
+  dnf -y update 
 fi
-  dnf --exclude=*.fc32.* -y builddep "${specfile}" 
+  dnf -y builddep "${specfile}" 
   libQt5Core=$(ls -l /usr/lib64 | grep -v ^l | grep libQt5Core.so. | head -1 | awk '{print $NF}')
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
@@ -1140,13 +1140,13 @@ dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/
 
 security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
 if [ -n "$security_updates" ]; then
-dnf --exclude=*.fc32.* -y update "$security_updates" 
+dnf -y update "$security_updates" 
 fi
 
-dnf --exclude=*.fc32.* -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
+dnf -y install @buildsys-build python2-rpm-macros --exclude=fedora-release
 
 # Our buildsys (future group)
-dnf --exclude=*.fc32.* -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage python2 make mock mock-unitedrpms binutils 
+dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage python2 make mock mock-unitedrpms binutils 
 # dnf -y install mock mock-unitedrpms 
 }
 
@@ -1267,7 +1267,7 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 # if [ -n ${NO_MOCK} ] && [ ${NO_MOCK} = true ]; then
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 #  dnf -y update
-  dnf --exclude=*.fc32.* -y builddep *.spec 
+  dnf -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
 cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
