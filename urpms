@@ -873,7 +873,6 @@ opencore-amr
 faac
 libmms
 rtmpdump
-libmpeg2
 nvenc
 libdvdcss
 vo-aacenc
@@ -900,7 +899,12 @@ libquicktime
 mlt
 broadcom-bt-firmware
 python3-soco
-python-keyrings-alt' > importantbump
+python-keyrings-alt
+fdk-aac-free
+xavs2
+davs2
+cwiid
+gendesk' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
