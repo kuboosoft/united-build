@@ -134,11 +134,11 @@ popd
 osdnsync() {
 echo -e "\e[31mSync with OSDN...\e[0m"
 pushd ${motherpath}
-rm -rf srpm/repoview/
-rm -rf x86_64/repoview/
-rm -rf x86_64/debug/repoview/
-rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/repodata/
+#rm -rf srpm/repoview/
+#rm -rf x86_64/repoview/
+#rm -rf x86_64/debug/repoview/
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/repodata/
 popd
 }
 
