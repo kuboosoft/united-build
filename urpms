@@ -449,7 +449,7 @@ else
   dnf -y update 
 fi
   dnf -y builddep "${specfile}" 
-  dnf -y install $(rpmbuild -ba | fgrep 'is needed by' | awk '{print $1}') "${specfile}"
+  dnf -y install $(rpmspec -P ${SPEC_FILE} | grep BuildRequires | cut -d' ' -f2 | xargs)
   libQt5Core=$(ls -l /usr/lib64 | grep -v ^l | grep libQt5Core.so. | head -1 | awk '{print $NF}')
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
