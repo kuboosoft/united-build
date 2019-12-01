@@ -449,7 +449,8 @@ else
   dnf -y update 
 fi
   dnf -y builddep "${specfile}" 
-  dnf -y install $( grep BuildRequires "${specfile}" | grep BuildRequires | cut -d' ' -f2 | xargs)
+# builddep fails some times
+  dnf -y install $( grep -i "BuildRequires" "${specfile}" | grep -i "BuildRequires" | cut -d' ' -f2 | sed -e 's|[Bb]uild[Rr]equires:||g' | xargs)
   libQt5Core=$(ls -l /usr/lib64 | grep -v ^l | grep libQt5Core.so. | head -1 | awk '{print $NF}')
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
