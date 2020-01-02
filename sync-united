@@ -341,7 +341,7 @@ m_mv
 job
 sfsync
 osdnsync
-hosts_k
+#hosts_k
 metadata_sync
 metadata_tag_git
 
