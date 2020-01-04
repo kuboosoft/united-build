@@ -201,10 +201,10 @@ mkdir -p ${motherpath}/x86_64/repodata/
 
 m_mv() {
 pushd "${raiz}"
-cp -f *src.rpm ${motherpath}/srpm/
-cp -f *debuginfo*.rpm ${motherpath}/x86_64/debug/
-cp -f *debugsource*.rpm ${motherpath}/x86_64/debug/
-cp -f *.rpm ${motherpath}/x86_64/
+mv -f *.src.rpm ${motherpath}/srpm/
+mv -f *debuginfo*.rpm ${motherpath}/x86_64/debug/
+mv -f *debugsource*.rpm ${motherpath}/x86_64/debug/
+mv -f *.rpm ${motherpath}/x86_64/
 popd
 }
 
