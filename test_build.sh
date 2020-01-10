@@ -31,8 +31,9 @@ exit
 readargs "$@"
 
 # Absolute paths
-directory=/root
-mkdir -p ${directory}/rpmbuild/{RPMS,BUILD,SOURCES,SRPMS} && pushd ${directory}
+directory=/root/rpmbuild
+mkdir -p ${directory}/{RPMS,BUILD,SOURCES,SRPMS} 
+pushd ${directory}
 # install rpm devtools
 swupd update  1>/dev/null
 swupd bundle-add package-utils curl 1>/dev/null
@@ -54,7 +55,7 @@ rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec
 rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
 
 # Test install
-pushd ${directory}/rpmbuild/RPMS
+pushd ${directory}/RPMS
 dnf -y install *.rpm
 popd
  popd
