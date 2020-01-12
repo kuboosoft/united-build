@@ -33,6 +33,8 @@ readargs "$@"
 # Absolute paths
 directory=/root/rpmbuild
 mkdir -p ${directory}/{RPMS,BUILD,SOURCES,SRPMS} && pushd ${directory}
+# Unique .spec file (I hate various spec files in the same repository)
+specfile="${namegit}.spec"
 # install rpm devtools
 swupd update  1>/dev/null
 swupd bundle-add package-utils 1>/dev/null
@@ -46,7 +48,7 @@ dnf -q -y groupinstall build srpm-build
 # Cloning repository
 rm -rf ${namegit} && git clone https://github.com/kuboosoft/${namegit}.git && pushd ${namegit}  
 # Downloading sources
-spectool -g *.spec
+spectool -g "${specfile}"
 # Installing build dependencies
 #dnf -q -y builddep *.spec
 # builddep fails some times (needs a hand)
