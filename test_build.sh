@@ -35,7 +35,7 @@ directory=/root/rpmbuild
 mkdir -p ${directory}/{RPMS,BUILD,SOURCES,SRPMS} && pushd ${directory}
 # install rpm devtools
 swupd update  1>/dev/null
-swupd bundle-add package-utils curl 1>/dev/null
+swupd bundle-add package-utils 1>/dev/null
 swupd bundle-add clr-devops 1>/dev/null
 curl -L https://gist.github.com/paulcarroty/ec7133a6d41762e23cdacc75dab69423/raw/9869938ddb4471b177d27de8bffdea7fd4673099/spectool -o /usr/bin/spectool
 chmod +x /usr/bin/spectool
@@ -48,7 +48,9 @@ rm -rf ${namegit} && git clone https://github.com/kuboosoft/${namegit}.git && pu
 # Downloading sources
 spectool -g *.spec
 # Installing build dependencies
-dnf -q -y builddep *.spec
+#dnf -q -y builddep *.spec
+# builddep fails some times (needs a hand)
+dnf -y install $( rpmspec --parse "${specfile}" | grep -i "BuildRequires:" | cut -d' ' -f2 | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' | xargs)
 # build the package
 # rpmbuild --quiet  - super useful to cut the logs
 rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec && rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
