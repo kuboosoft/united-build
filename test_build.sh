@@ -44,7 +44,7 @@ chmod +x /usr/bin/spectool
 # manage dependencies
 dnf config-manager --add-repo https://download.clearlinux.org/current/x86_64/os/
 dnf config-manager --add-repo https://gitlab.com/clearfraction/repository/raw/repos/
-dnf -q -y groupinstall build srpm-build
+dnf -y groupinstall build srpm-build
 # Cloning repository
 rm -rf ${namegit} && git clone https://github.com/kuboosoft/${namegit}.git && pushd ${namegit}  
 # Downloading sources
