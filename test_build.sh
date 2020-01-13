@@ -60,7 +60,8 @@ spectool -g "${specfile}"
 dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse "${specfile}" | grep -i "BuildRequires:" | cut -d' ' -f2 | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' | xargs)
 # build the package
 # rpmbuild --quiet  - super useful to cut the logs
-rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec && rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
+# spectool fails some times (needs a hand) --undefine=_disable_source_fetch
+rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" --undefine=_disable_source_fetch -bs *.spec && rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
 # Test install
 if [ -n ${directory}/${namegit}/RPMS/x86_64 ]; then
 RESULTS="${directory}/${namegit}/RPMS/x86_64/"
