@@ -27,9 +27,16 @@ exit
 }
 
 
+clear_proxy() {
+unset http_proxy
+unset no_proxy 
+unset https_proxy
+}
+
 #  BEGIN THE PROGRAM
 readargs "$@"
 
+clear_proxy
 # Absolute paths
 directory=/root/rpmbuild
 mkdir -p ${directory}/{RPMS,BUILD,SOURCES,SRPMS} && pushd ${directory}
@@ -55,7 +62,12 @@ dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse "${specfile}" | g
 # rpmbuild --quiet  - super useful to cut the logs
 rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" -bs *.spec && rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
 # Test install
-pushd ${directory}/${namegit}/RPMS/x86_64/
+if [ -n ${directory}/${namegit}/RPMS/x86_64 ]; then
+RESULTS="${directory}/${namegit}/RPMS/x86_64/"
+elif [ -n ${directory}/${namegit}/RPMS/noarch ]; then
+RESULTS="${directory}/${namegit}/RPMS/noarch/"
+fi
+pushd "${RESULTS}"
 dnf -y install *.rpm
 popd
  popd
