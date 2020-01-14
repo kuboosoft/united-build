@@ -61,7 +61,7 @@ dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse "${specfile}" | g
 # build the package
 # rpmbuild --quiet  - super useful to cut the logs
 # spectool fails some times (needs a hand) --undefine=_disable_source_fetch
-rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" --undefine=_disable_source_fetch -bs *.spec && rpmbuild --define "_topdir $PWD" --rebuild $PWD/SRPMS/*.src.rpm
+rpmbuild -v --define "_topdir $PWD" --define "_sourcedir $PWD" --undefine=_disable_source_fetch -bs *.spec && rpmbuild --define "_topdir $PWD" --define "debug_package %{nil}" --define "abi_package %{nil}" --rebuild $PWD/SRPMS/*.src.rpm
 # Test install
 if [ -n ${directory}/${namegit}/RPMS/x86_64 ]; then
 RESULTS="${directory}/${namegit}/RPMS/x86_64/"
