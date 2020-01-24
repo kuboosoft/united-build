@@ -33,6 +33,22 @@ unset no_proxy
 unset https_proxy
 }
 
+
+# MACROS
+# lto macro
+defult_flags=('export LANG=C.UTF-8\
+export GCC_IGNORE_WERROR=1\
+export CFLAGS="$CFLAGS -fno-lto"\
+export FCFLAGS="$CFLAGS -fno-lto"\
+export FFLAGS="$CFLAGS -fno-lto "\
+export CXXFLAGS="$CXXFLAGS -fno-lto"\
+export MAKEFLAGS=%{?_smp_mflags}') 
+
+# unset proxy
+clean_proxy=('unset http_proxy\ 
+unset no_proxy\ 
+unset https_proxy')
+
 #  BEGIN THE PROGRAM
 readargs "$@"
 
@@ -61,7 +77,7 @@ dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse "${specfile}" | g
 # build the package
 # rpmbuild --quiet  - super useful to cut the logs
 # spectool fails some times (needs a hand) --undefine=_disable_source_fetch
-rpmbuild -v --define "_topdir $PWD" --define "_sourcedir $PWD" --undefine=_disable_source_fetch -bs *.spec && rpmbuild --define "_topdir $PWD" --define "debug_package %{nil}" --define "abi_package %{nil}" --rebuild $PWD/SRPMS/*.src.rpm
+rpmbuild -v --define "_topdir $PWD" --define "_sourcedir $PWD" --undefine=_disable_source_fetch -bs *.spec && rpmbuild --define "_topdir $PWD" --define "debug_package %{nil}" --define "abi_package %{nil}" --define "lto_flags $defult_flags" --define "unset_proxy $clean_proxy" --rebuild $PWD/SRPMS/*.src.rpm
 # Test install
 if [ -n ${directory}/${namegit}/RPMS/x86_64 ]; then
 RESULTS="${directory}/${namegit}/RPMS/x86_64/"
