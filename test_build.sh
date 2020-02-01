@@ -73,7 +73,7 @@ rm -rf ${namegit} && git clone https://github.com/kuboosoft/${namegit}.git && pu
 spectool -g "${specfile}"
 # Installing build dependencies
 # builddep fails some times (needs a hand)
-dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse "${specfile}" | grep -i "BuildRequires:" | cut -d' ' -f2 | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' | xargs)
+dnf -q -y builddep *.spec || dnf -y install $( rpmspec --parse *.spec | grep -i "BuildRequires:" | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' |  tr -d '\t' | sed -e 's/^ *//' | LC_ALL=C sort | xargs)
 # build the package
 # rpmbuild --quiet  - super useful to cut the logs
 # spectool fails some times (needs a hand) --undefine=_disable_source_fetch
