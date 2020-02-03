@@ -44,6 +44,9 @@ export FFLAGS="$CFLAGS -fno-lto "\
 export CXXFLAGS="$CXXFLAGS -fno-lto"\
 export MAKEFLAGS=%{?_smp_mflags}') 
 
+# disable /usr/lib/rpm/macros
+sed -i 's|%_use_internal_dependency_generator	1|%_use_internal_dependency_generator	0|g' /usr/lib/rpm/macros
+
 # unset proxy
 clean_proxy=('unset http_proxy\ 
 unset no_proxy\ 
