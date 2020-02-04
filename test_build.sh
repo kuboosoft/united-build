@@ -45,8 +45,8 @@ export CXXFLAGS="$CXXFLAGS -fno-lto"\
 export MAKEFLAGS=%{?_smp_mflags}') 
 
 # disable /usr/lib/rpm/macros
-sed -i 's|%__find_provides	%{_rpmconfigdir}/find-provides|%__find_provides	%{nil}|g' /usr/lib/rpm/macros
-sed -i 's|%__find_requires	%{_rpmconfigdir}/find-requires|%__find_requires	%{nil}|g' /usr/lib/rpm/macros
+sed -i 's|%_use_internal_dependency_generator	1|%_use_internal_dependency_generator	0|g' /usr/lib/rpm/macros
+
 
 # unset proxy
 clean_proxy=('unset http_proxy\ 
