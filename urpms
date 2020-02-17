@@ -1152,8 +1152,6 @@ chroot_dependency() {
 # https://pagure.io/fesco/issue/2003#comment-557358
 rm -f /etc/yum.repos.d/*-modular.repo
 
-# circle fix
-rm -f /sbin/init
 
 fedora_release=$(rpm -E %fedora) 
 
@@ -1170,10 +1168,10 @@ curl https://getfedora.org/static/fedora.gpg | gpg --import
 # Python2 end support since 2020
 if [ "${fedora_release}" -ge 33 ]; then
 echo "disabled python2-rpm-macros"
-dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release
-dnf -y install @buildsys-build dnf-plugins-core python3 python3-rpm-macros --exclude=fedora-release
+dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release 1>/dev/null
+dnf -y install @buildsys-build dnf-plugins-core python3 python3-rpm-macros --exclude=fedora-release 1>/dev/null
 else
-dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release
+dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release 1>/dev/null
 fi
 
 # Our buildsys (future group)
