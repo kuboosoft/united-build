@@ -1152,6 +1152,9 @@ chroot_dependency() {
 # https://pagure.io/fesco/issue/2003#comment-557358
 rm -f /etc/yum.repos.d/*-modular.repo
 
+# circle fix
+rm -f /sbin/init
+
 fedora_release=$(rpm -E %fedora) 
 
 dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/ 
