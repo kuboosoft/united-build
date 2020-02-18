@@ -1175,7 +1175,7 @@ dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exc
 fi
 
 # Our buildsys (future group)
-dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage make mock mock-unitedrpms binutils 
+dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage make mock mock-unitedrpms binutils 
 }
 
 local_install_packages() {
