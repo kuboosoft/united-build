@@ -450,7 +450,7 @@ else
 fi
   dnf -y builddep "${specfile}" 
 # builddep fails some times
-  dnf -y install $( rpmspec --parse "${specfile}" | grep -i "BuildRequires:" | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' |  tr -d '\t' | sed -e 's/^ *//' | LC_ALL=C sort | xargs)
+#  dnf -y install $( rpmspec --parse "${specfile}" | grep -i "BuildRequires:" | sed -e 's|[Bb]uild[Rr]equires:||g' | sed -e 's|>=||g' | sed -e 's|<=||g' |  tr -d '\t' | sed -e 's/^ *//' | LC_ALL=C sort | xargs)
   libQt5Core=$(ls -l /usr/lib64 | grep -v ^l | grep libQt5Core.so. | head -1 | awk '{print $NF}')
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
