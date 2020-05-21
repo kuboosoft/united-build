@@ -23,7 +23,7 @@
 # | This code is designed, written and maintained by David Vasquez    		      |
 # | Any questions, comments or advice on this code                                    |
 # | should be addressed to:                                                           |
-# | davidva@tutanota.com                                                              |
+# | davidva@tuta.io                                                             |
 # +-----------------------------------------------------------------------------------+
 # (50 MB) Requires: fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 xz unitedrpms mock mock-unitedrpms onedrive
 

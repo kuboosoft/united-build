@@ -23,7 +23,7 @@
 # | This code is designed, written and maintained by David Vasquez    		      |
 # | Any questions, comments or advice on this code                                    |
 # | should be addressed to:                                                           |
-# | davidva@tutanota.com                                                              |
+# | davidva@tuta.io                                                              |
 # +-----------------------------------------------------------------------------------+
 # The script is a shit because it doesn't has 60 lines ;)
 # Requires: pinentry dnf-plugins-core createrepo_c repoview gnupg2 rsync wget openssl onedrive libappstream-glib-builder github-release openssh-clients xz unitedrpms rpm-sign findutils
