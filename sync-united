@@ -77,7 +77,7 @@ popd
 
 clean_old() {
 echo -e "\e[31mDelete old versions...\e[0m"
-rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/)
+[ -d ${motherpath}/x86_64/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/)
 [ -d ${motherpath}/x86_64/debug/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/debug/)
 [ -d ${motherpath}/srpm/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/srpm/)
 }
@@ -95,6 +95,7 @@ echo -e "\e[31mSign repodata...\e[0m"
 }
 
 sign_rpm() {
+echo -e "\e[31mSign rpms...\e[0m"
 #rpm --delsign *rpm
 #rpm --define "_gpg_name unitedrpms" --addsign *.rpm
 rpm --addsign *.rpm
