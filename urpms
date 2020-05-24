@@ -765,7 +765,7 @@ elif [ "${name}" = ffmpeg ]; then
 up_ornew
 if [ -f importantbump ]; then
 echo 'xine-lib
-gstreamer-ffmpeg
+gstreamer1-libav
 libquicktime
 mlt
 libopenshot
@@ -783,7 +783,7 @@ deadbeef
 audacity-freeworld' >> importantbump
 elif [ ! -f importantbump ]; then
 echo 'xine-lib
-gstreamer-ffmpeg
+gstreamer1-libav
 libquicktime
 mlt
 libopenshot

@@ -213,7 +213,7 @@ find $PWD/ -name "*~" -exec rm -f  {} ${motherpath}/ \;
 }
 
 job() {
-pushd ${motherpath}/x86_64/
+[ -d ${motherpath}/x86_64/ ] && pushd ${motherpath}/x86_64/
 clean_old
 sign_rpm
 clean_trash
@@ -221,7 +221,7 @@ make_repo
 sign_repo
 popd
 
-pushd ${motherpath}/x86_64/debug/ 
+[ -d ${motherpath}/x86_64/debug/ ] && pushd ${motherpath}/x86_64/debug/ 
 clean_old
 sign_rpm
 clean_trash
@@ -229,7 +229,7 @@ make_repo
 sign_repo
 popd
 
-pushd ${motherpath}/srpm/
+[ -d ${motherpath}/srpm/ ] && pushd ${motherpath}/srpm/
 clean_old
 sign_rpm 
 clean_trash
