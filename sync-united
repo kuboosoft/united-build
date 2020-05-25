@@ -78,15 +78,23 @@ popd
 clean_old() {
 echo -e "\e[31mDelete old versions...\e[0m"
 [ -d ${motherpath}/x86_64/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/)
+
 [ -d ${motherpath}/x86_64/debug/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/x86_64/debug/)
+
 [ -d ${motherpath}/srpm/ ] && rm -f $(dnf repomanage --keep=1 --old ${motherpath}/srpm/)
+
 }
 
 make_repo() {
 rm -rf repodata/
 #createrepo .
+
+if    ls -1qA $PWD | grep -q .
+then  ! echo "$PWD" is not empty
 createrepo_c --database --compatibility ./
-repoview . 
+repoview .
+else  echo "$PWD" is empty
+fi 
 }
 
 sign_repo() {
@@ -96,12 +104,30 @@ echo -e "\e[31mSign repodata...\e[0m"
 
 sign_rpm() {
 echo -e "\e[31mSign rpms...\e[0m"
-echo "you are en $PWD"
-ls
-#rpm --delsign *rpm
-#rpm --define "_gpg_name unitedrpms" --addsign *.rpm
+
+if    ls -1qA ${motherpath}/x86_64/ | grep -q .
+then  ! echo "${motherpath}/x86_64/" is not empty
 rpm --addsign *.rpm
 repoview .
+else  echo "${motherpath}/x86_64/" is empty
+fi
+
+if    ls -1qA ${motherpath}/x86_64/debug/ | grep -q .
+then  ! echo "${motherpath}/x86_64/debug/" is not empty
+rpm --addsign *.rpm
+repoview .
+else  echo "${motherpath}/x86_64/debug/" is empty
+fi
+
+if    ls -1qA ${motherpath}/srpm/ | grep -q .
+then  ! echo "${motherpath}/srpm/" is not empty
+rpm --addsign *.rpm
+repoview .
+else  echo "${motherpath}/srpm/" is empty
+fi
+
+#rpm --delsign *rpm
+#rpm --define "_gpg_name unitedrpms" --addsign *.rpm
 }
 
 
