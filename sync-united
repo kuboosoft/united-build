@@ -230,8 +230,8 @@ mkdir -p ${motherpath}/x86_64/repodata/
 
 m_mv() {
 pushd "${raiz}"
-mkdir -p ${motherpath}/x86_64/debug/
-mkdir -p ${motherpath}/srpm/
+[ ! -d ${motherpath}/x86_64/debug/ ] && mkdir -p ${motherpath}/x86_64/debug/
+[ ! -d ${motherpath}/srpm/ ] && mkdir -p ${motherpath}/srpm/
 mv -f *.src.rpm ${motherpath}/srpm/
 mv -f *-debuginfo-*.rpm ${motherpath}/x86_64/debug/
 mv -f *-debugsource-*.rpm ${motherpath}/x86_64/debug/
