@@ -187,10 +187,10 @@ done <"$utra"
 
 work_directory() {
 rm -rf ${motherpath}
-rm -rf $HOME/2{6..9}
 rm -rf $HOME/3{0..9}
-rm -rf $HOME/f2{6..9}
 rm -rf $HOME/f3{0..9}
+rm -rf $HOME/4{0..9}
+rm -rf $HOME/f4{0..9}
 mkdir -p ${motherpath}
 mkdir -p "${raiz}"
 mkdir -p ${motherpath}/srpm/repoview/
