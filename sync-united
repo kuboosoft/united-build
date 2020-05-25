@@ -91,11 +91,13 @@ repoview .
 
 sign_repo() {
 echo -e "\e[31mSign repodata...\e[0m"
-[ -f $PWD/repodata/repomd.xml ] && /usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor repodata/repomd.xml
+[ -f $PWD/repodata/repomd.xml ] && /usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor $PWD/repodata/repomd.xml
 }
 
 sign_rpm() {
 echo -e "\e[31mSign rpms...\e[0m"
+echo "you are en $PWD"
+ls
 #rpm --delsign *rpm
 #rpm --define "_gpg_name unitedrpms" --addsign *.rpm
 rpm --addsign *.rpm
@@ -215,6 +217,7 @@ find $PWD/ -name "*~" -exec rm -f  {} ${motherpath}/ \;
 
 job() {
 [ -d ${motherpath}/x86_64/ ] && pushd ${motherpath}/x86_64/
+echo "x86_64 task"
 clean_old
 sign_rpm
 clean_trash
@@ -223,6 +226,7 @@ sign_repo
 popd
 
 [ -d ${motherpath}/x86_64/debug/ ] && pushd ${motherpath}/x86_64/debug/ 
+echo "debug task"
 clean_old
 sign_rpm
 clean_trash
@@ -231,6 +235,7 @@ sign_repo
 popd
 
 [ -d ${motherpath}/srpm/ ] && pushd ${motherpath}/srpm/
+echo "srpm task"
 clean_old
 sign_rpm 
 clean_trash
