@@ -442,7 +442,7 @@ if [ "${name}" = unibuild-basic ]; then
 dnf -y config-manager --set-disabled unitedrpms
 fi
   dnf -y clean all && rm -rf /var/lib/dnf/history 
-security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
+security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' | xargs )
 if [ -n "$security_updates" ]; then
   dnf -y update "$security_updates"
 else
@@ -461,11 +461,11 @@ echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
 fi
-cp -n RPMS/x86_64/* ${repodirectory}/
-cp -n RPMS/i686/* ${repodirectory}/
-cp -n RPMS/noarch/* ${repodirectory}/
-cp -n SRPMS/* ${repodirectory}/
-pushd "${repodirectory}"
+[ -d $PWD/RPMS/x86_64/ ] && cp -n RPMS/x86_64/* ${repodirectory}/
+[ -d $PWD/RPMS/i686/ ] && cp -n RPMS/i686/* ${repodirectory}/
+[ -d $PWD/RPMS/noarch/ ] && cp -n RPMS/noarch/* ${repodirectory}/
+[ -d $PWD/SRPMS/ ] && cp -n SRPMS/* ${repodirectory}/
+[ -d "${repodirectory}" ] && pushd "${repodirectory}"
 if [ $(ls *.rpm | grep -c .rpm) -gt 0 ]; then
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
 fi
@@ -483,7 +483,7 @@ else
 fi
 
 # End conditional accelerate the build
-if [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).x86_64.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
+if [ -f ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).x86_64.rpm ] || [ -f ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -f ${MOCK_DEF_PATH}/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
 echo "Failed build ${name}, check your '%prep, %build, %install' others Sections; src.rpm made"
@@ -531,12 +531,12 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
 if [ "$(ls -A $PWD)" ]; then
      echo "Great $PWD is not Empty"
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | xargs )
 fi
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
 if [ "$(ls -A $PWD)" ]; then
      echo "Great $PWD is not Empty"
-mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
+mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | xargs )
 fi
 fi
 #
@@ -597,7 +597,7 @@ pushd "${repodirectory}"
 # sign_rpm
 
 if [ -n "${TARGET}" ]; then
-pushd ${MOCK_DEF_PATH}
+[ -d ${MOCK_DEF_PATH} ] && pushd ${MOCK_DEF_PATH}
 mkdir -p /root/OneDrive/unitedrpms/mock_logs/
 cp -f build.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_build.log
 mv -f root.log /root/OneDrive/unitedrpms/mock_logs/${name}_${date}_root.log
@@ -1157,7 +1157,7 @@ fedora_release=$(rpm -E %fedora)
 
 dnf -y clean all && rm -rf /var/lib/dnf/history && rm -rf /var/cache/dnf/ 
 
-security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' )
+security_updates=$( dnf -y -q updateinfo list --security | awk '{print $3}' | xargs )
 if [ -n "$security_updates" ]; then
 dnf -y update "$security_updates" 
 fi
@@ -1175,12 +1175,12 @@ dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exc
 fi
 
 # Our buildsys (future group)
-dnf -y install fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc xz unitedrpms onedrive python3-dnf-plugins-extras-repomanage make mock mock-unitedrpms binutils 
+dnf -y install xz fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc unitedrpms onedrive python3-dnf-plugins-extras-repomanage make mock mock-unitedrpms binutils --setopt=strict=0
 }
 
 local_install_packages() {
 # Some times we need a massive rebuild, if we install directly built rpms; we save time
-dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms )
+[ -d ${repodirectory} ] && dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms | xargs )
 }
 
 re_enabling_repos() {
@@ -1217,7 +1217,7 @@ mkdir -p /root/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
 pushd /root/.config/onedrive/
 rm -f $PWD/config
-rm -f $PWD/skip_file
+[ -f $PWD/skip_file ] && rm -f $PWD/skip_file
 
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -pbkdf2 -out refresh_token
@@ -1297,10 +1297,10 @@ if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 #  dnf -y update
   dnf -y builddep *.spec 
   rpmbuild --define "_topdir $PWD" --define "${DIST}" --rebuild $PWD/SRPMS/*.src.rpm
-cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
-cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
-cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
-cp -n SRPMS/* ${MOCK_DEF_PATH}/
+[ -d $PWD/RPMS/x86_64/ ] && cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
+[ -d $PWD/RPMS/i686/ ] && cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
+[ -d $PWD/RPMS/noarch/ ] && cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
+[ -d $PWD/SRPMS/ ] && cp -n SRPMS/* ${MOCK_DEF_PATH}/
 else
   /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
