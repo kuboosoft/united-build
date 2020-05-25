@@ -1211,10 +1211,20 @@ fi
 auth_mg() {
 rm -f /root/mppass.tar.xz
 rm -rf /root/.config/onedrive/
+
+if [ $(rpm -q --queryformat '%{VERSION}' onedrive) = 2.4.1 ]; then 
+wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass_ci_new.tar.xz
+else
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
+fi
+
 pushd /root
 mkdir -p /root/.config/onedrive/
+if [ $(rpm -q --queryformat '%{VERSION}' onedrive) = 2.4.1 ]; then 
+tar xJf mppass_ci_new.tar.xz -C /root/.config/onedrive/
+else
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
+fi
 pushd /root/.config/onedrive/
 [ -f $PWD/config ] && rm -f $PWD/config
 [ -f $PWD/skip_file ] && rm -f $PWD/skip_file
