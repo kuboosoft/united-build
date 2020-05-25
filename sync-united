@@ -107,21 +107,21 @@ echo -e "\e[31mSign rpms...\e[0m"
 
 if    ls -1qA ${motherpath}/x86_64/ | grep -q .
 then  ! echo "${motherpath}/x86_64/" is not empty
-rpm --addsign *.rpm
+pushd ${motherpath}/x86_64/  && rpm --addsign *.rpm
 repoview .
 else  echo "${motherpath}/x86_64/" is empty
 fi
 
 if    ls -1qA ${motherpath}/x86_64/debug/ | grep -q .
 then  ! echo "${motherpath}/x86_64/debug/" is not empty
-rpm --addsign *.rpm
+pushd ${motherpath}/x86_64/debug/  && rpm --addsign *.rpm
 repoview .
 else  echo "${motherpath}/x86_64/debug/" is empty
 fi
 
 if    ls -1qA ${motherpath}/srpm/ | grep -q .
 then  ! echo "${motherpath}/srpm/" is not empty
-rpm --addsign *.rpm
+pushd ${motherpath}/srpm/  && rpm --addsign *.rpm
 repoview .
 else  echo "${motherpath}/srpm/" is empty
 fi
