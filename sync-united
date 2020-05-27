@@ -148,10 +148,12 @@ rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/repoview/ ${user}@
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/srpm/
 
 # rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
-#rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repodata/
-#rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repoview/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repodata/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/debug/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/repodata/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repoview/
 
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/debug/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/
 #rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
