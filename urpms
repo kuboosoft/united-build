@@ -262,7 +262,7 @@ exit 0
 fi
 
 bsource=$(ls ${directory}/rpmbuild/GIT/${name}/SRPMS/${name_spec}-[0-9]*.src.rpm 2> /dev/null | wc -l)
-if [ "${bsource}" != "0" ]; then
+if [ "${bsource}" != "0" ] || [ -f ${directory}/rpmbuild/GIT/${name}/SRPMS/${name_spec}-[0-9]*.src.rpm  ]; then
    echo -e "\e[36mExists src.rpm of ${name}, great\e[0m"
 else
 echo "Hey the src.rpm of ${name} does not exist; check your urls in sources; date in changelog and patches"
