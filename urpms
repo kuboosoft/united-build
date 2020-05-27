@@ -477,9 +477,9 @@ echo "Hey packager, you are in mode mock, don't forget You are in $PWD"
 #  /long-living-command &
 # Conditional to accelerate the build
 if [ -f importantbump ]; then
-  /usr/bin/mock -r ${TARGET} --no-clean --capability=cap_ipc_lock --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+  /usr/bin/mock -r ${TARGET} --no-clean --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 else
-  /usr/bin/mock -r ${TARGET} --no-cleanup-after --capability=cap_ipc_lock --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/${name}-*.src.rpm  
 fi
 
 # End conditional accelerate the build
@@ -1312,7 +1312,7 @@ if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 [ -d $PWD/RPMS/noarch/ ] && cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
 [ -d $PWD/SRPMS/ ] && cp -n SRPMS/* ${MOCK_DEF_PATH}/
 else
-  /usr/bin/mock -r ${TARGET} --no-cleanup-after --capability=cap_ipc_lock --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
+  /usr/bin/mock -r ${TARGET} --no-cleanup-after --resultdir=${MOCK_DEF_PATH} $PWD/SRPMS/*.src.rpm 
 fi
   local_repo
 if [ "${CLOUD}" = true ]; then
