@@ -104,6 +104,7 @@ if    ls -1qA ${motherpath}/x86_64/ | grep -q .
 then  ! echo "x86_64 directory is not empty"
 pushd ${motherpath}/x86_64/  
 rpm --addsign *.rpm
+make_repo
 repoview .
 else  echo "x86_64 directory is empty"
 fi
@@ -112,6 +113,7 @@ if    ls -1qA ${motherpath}/x86_64/debug/ | grep -q .
 then  ! echo "x86_64 debug directory is not empty"
 pushd ${motherpath}/x86_64/debug/  
 rpm --addsign *.rpm
+make_repo
 repoview .
 else  echo "x86_64 debug directory is empty"
 fi
@@ -120,6 +122,7 @@ if    ls -1qA ${motherpath}/srpm/ | grep -q .
 then  ! echo "srpm directory is not empty"
 pushd ${motherpath}/srpm/  
 rpm --addsign *.rpm
+make_repo
 repoview .
 else  "echo srpm directory is empty"
 fi
