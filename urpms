@@ -524,7 +524,10 @@ path_chroot
 name_build
 echo -e "\e[32mMaking local repository...\e[0m"
 [ -d ${MOCK_DEF_PATH} ] && pushd ${MOCK_DEF_PATH}/
+if    ls -1qA $PWD | grep -q .
+then  ! echo copying results to update directory please wait
 cp -f *.rpm ${repodirectory}/ 
+fi
  popd
 [ -d ${repodirectory} ] && pushd "${repodirectory}"
 rm -rf repodata/
