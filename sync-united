@@ -88,13 +88,8 @@ echo -e "\e[31mDelete old versions...\e[0m"
 make_repo() {
 rm -rf repodata/
 #createrepo .
-
-if    ls -1qA $PWD | grep -q .
-then  ! echo repository is not empty
 createrepo_c --database --compatibility ./
 repoview .
-else  echo repository is empty
-fi 
 }
 
 sign_repo() {
@@ -106,27 +101,27 @@ sign_rpm() {
 echo -e "\e[31mSign rpms...\e[0m"
 
 if    ls -1qA ${motherpath}/x86_64/ | grep -q .
-then  ! echo x86_64 directory is not empty
+then  ! echo "x86_64 directory is not empty"
 pushd ${motherpath}/x86_64/  
 rpm --addsign *.rpm
 repoview .
-else  echo x86_64 directory is empty
+else  echo "x86_64 directory is empty"
 fi
 
 if    ls -1qA ${motherpath}/x86_64/debug/ | grep -q .
-then  ! echo x86_64 debug directory is not empty
+then  ! echo "x86_64 debug directory is not empty"
 pushd ${motherpath}/x86_64/debug/  
 rpm --addsign *.rpm
 repoview .
-else  echo x86_64 debug directory is empty
+else  echo "x86_64 debug directory is empty"
 fi
 
 if    ls -1qA ${motherpath}/srpm/ | grep -q .
-then  ! echo srpm directory is not empty
+then  ! echo "srpm directory is not empty"
 pushd ${motherpath}/srpm/  
 rpm --addsign *.rpm
 repoview .
-else  echo srpm directory is empty
+else  "echo srpm directory is empty"
 fi
 
 #rpm --delsign *rpm
@@ -155,7 +150,8 @@ rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/debug/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/debug/
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/srpm/
-#rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
+
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
 if [[ $? -gt 0 ]]; then
 echo 'ERROR rsymc failed'

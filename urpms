@@ -470,7 +470,7 @@ fi
 pushd "${repodirectory}"
 
 if    ls -1qA $PWD | grep -q .
-then  ! echo "$PWD" is not empty installing results please wait
+then  ! echo "$PWD is not empty installing results please wait"
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 popd
@@ -525,7 +525,7 @@ name_build
 echo -e "\e[32mMaking local repository...\e[0m"
 [ -d ${MOCK_DEF_PATH} ] && pushd ${MOCK_DEF_PATH}/
 if    ls -1qA $PWD | grep -q .
-then  ! echo copying results to update directory please wait
+then  ! echo "copying results to update directory please wait"
 cp -f *.rpm ${repodirectory}/ 
 fi
  popd
@@ -538,12 +538,12 @@ createrepo_c --database ./
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
 if    ls -1qA $PWD | grep -q .
-then  ! echo "$PWD" is not empty installing results please wait
+then  ! echo "$PWD is not empty installing results please wait"
 dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
 if    ls -1qA $PWD | grep -q .
-then  ! echo "$PWD" is not empty installing results please wait
+then  ! echo "$PWD is not empty installing results please wait"
 mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 fi
