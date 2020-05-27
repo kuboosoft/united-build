@@ -90,10 +90,10 @@ rm -rf repodata/
 #createrepo .
 
 if    ls -1qA $PWD | grep -q .
-then  ! echo "$PWD" is not empty
+then  ! echo repository is not empty
 createrepo_c --database --compatibility ./
 repoview .
-else  echo "$PWD" is empty
+else  echo repository is empty
 fi 
 }
 
@@ -106,24 +106,27 @@ sign_rpm() {
 echo -e "\e[31mSign rpms...\e[0m"
 
 if    ls -1qA ${motherpath}/x86_64/ | grep -q .
-then  ! echo "${motherpath}/x86_64/" is not empty
-pushd ${motherpath}/x86_64/  && rpm --addsign *.rpm
+then  ! echo x86_64 directory is not empty
+pushd ${motherpath}/x86_64/  
+rpm --addsign *.rpm
 repoview .
-else  echo "${motherpath}/x86_64/" is empty
+else  echo x86_64 directory is empty
 fi
 
 if    ls -1qA ${motherpath}/x86_64/debug/ | grep -q .
-then  ! echo "${motherpath}/x86_64/debug/" is not empty
-pushd ${motherpath}/x86_64/debug/  && rpm --addsign *.rpm
+then  ! echo x86_64 debug directory is not empty
+pushd ${motherpath}/x86_64/debug/  
+rpm --addsign *.rpm
 repoview .
-else  echo "${motherpath}/x86_64/debug/" is empty
+else  echo x86_64 debug directory is empty
 fi
 
 if    ls -1qA ${motherpath}/srpm/ | grep -q .
-then  ! echo "${motherpath}/srpm/" is not empty
-pushd ${motherpath}/srpm/  && rpm --addsign *.rpm
+then  ! echo srpm directory is not empty
+pushd ${motherpath}/srpm/  
+rpm --addsign *.rpm
 repoview .
-else  echo "${motherpath}/srpm/" is empty
+else  echo srpm directory is empty
 fi
 
 #rpm --delsign *rpm
@@ -147,7 +150,7 @@ rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete srpm/repoview/ ${user}@
 # rsync -av --ignore-existing x86_64/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/
 rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repodata/
 rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/x86_64/repoview/
-rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete-before . ${user}@frs.sourceforge.net:/home/frs/project/unitedrpms/${task}/
 
 if [[ $? -gt 0 ]]; then
 echo 'ERROR rsymc failed'
