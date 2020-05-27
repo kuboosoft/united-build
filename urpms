@@ -465,11 +465,16 @@ fi
 [ -d $PWD/RPMS/i686/ ] && cp -n RPMS/i686/* ${repodirectory}/
 [ -d $PWD/RPMS/noarch/ ] && cp -n RPMS/noarch/* ${repodirectory}/
 [ -d $PWD/SRPMS/ ] && cp -n SRPMS/* ${repodirectory}/
-[ -d "${repodirectory}" ] && pushd "${repodirectory}"
-if [ $(ls *.rpm | grep -c .rpm) -gt 0 ]; then
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump )
+
+### Here we have all the results
+pushd "${repodirectory}"
+
+if    ls -1qA $PWD | grep -q .
+then  ! echo "$PWD" is not empty installing results please wait
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 popd
+####
 # If the build is with mock 
 elif [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
 SRPMcheck
@@ -529,14 +534,14 @@ createrepo_c --database ./
 #
 if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
-if [ "$(ls -A $PWD)" ]; then
-     echo "Great $PWD is not Empty"
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | xargs )
+if    ls -1qA $PWD | grep -q .
+then  ! echo "$PWD" is not empty installing results please wait
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
-if [ "$(ls -A $PWD)" ]; then
-     echo "Great $PWD is not Empty"
-mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | xargs )
+if    ls -1qA $PWD | grep -q .
+then  ! echo "$PWD" is not empty installing results please wait
+mock -r "${TARGET}" --install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " )
 fi
 fi
 #
@@ -1184,7 +1189,7 @@ fi
 
 local_install_packages() {
 # Some times we need a massive rebuild, if we install directly built rpms; we save time
-[ -d ${repodirectory} ] && dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms | xargs )
+[ -d ${repodirectory} ] && dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms | tr "\n" " " )
 }
 
 re_enabling_repos() {
