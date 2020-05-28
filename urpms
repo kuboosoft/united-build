@@ -1224,7 +1224,7 @@ auth_mg() {
 rm -f /root/mppass.tar.xz
 rm -rf /root/.config/onedrive/
 
-if [ $(rpm -q --queryformat '%{VERSION}' onedrive) = 2.4.1 ]; then 
+if [ $(rpm -q --queryformat '%{VERSION}' onedrive) = 2.4.1 ] || [ $(rpm -q --queryformat '%{VERSION}' onedrive) = 2.4.0 ]; then 
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass_ci_new.tar.xz
 else
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
