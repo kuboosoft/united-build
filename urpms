@@ -1177,7 +1177,7 @@ curl https://getfedora.org/static/fedora.gpg | gpg --import 1>/dev/null
 if [ "${fedora_release}" -ge 33 ]; then
 echo "disabled python2-rpm-macros"
 dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release 1>/dev/null
-dnf -y install @buildsys-build dnf-plugins-core python3 python3-rpm-macros --exclude=fedora-release 1>/dev/null
+dnf -y install @buildsys-build dnf-plugins-core python3-rpm-macros --exclude=fedora-release 1>/dev/null
 else
 dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release 1>/dev/null
 fi
