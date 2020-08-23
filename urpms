@@ -1174,7 +1174,7 @@ fi
 curl https://getfedora.org/static/fedora.gpg | gpg --import 1>/dev/null
 
 # Python2 end support since 2020
-if [ "${fedora_release}" -ge 33 ]; then
+if [ "${fedora_release}" -ge 34 ]; then
 echo "disabled python2-rpm-macros"
 dnf -y install @buildsys-build dnf-plugins-core python2 python2-rpm-macros --exclude=fedora-release 1>/dev/null
 dnf -y install @buildsys-build dnf-plugins-core python3-rpm-macros --exclude=fedora-release 1>/dev/null
@@ -1199,7 +1199,7 @@ re_enabling_repos() {
 # In massive task, we compare our git version vrs repo version; and urpms makes automatic changes with incremental in release. It downloads the source and disable our repositories; we need enable again our repos...
 fedora_release=$(rpm -E %fedora) 
 
-if [ "${fedora_release}" -ge 33 ]; then
+if [ "${fedora_release}" -ge 34 ]; then
 dnf -y config-manager --set-disabled rawhide-source
 dnf -y config-manager --set-disabled rawhide-modular
 dnf -y config-manager --set-enabled unitedrpms
