@@ -138,7 +138,7 @@ fi
 sfsync() {
 echo -e "\e[31mSync with Sf...\e[0m"
 pushd ${motherpath}
-
+rm -rf x86_64/debug/*
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/x86_64/repoview/
 rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repoview/ ${user}@frs.sourceforge.net:/home/project-web/unitedrpms/htdocs/${task}/x86_64/repoview/
  
