@@ -429,7 +429,7 @@ if [ "${massive_spec}" = true ]; then
 fi
   svnsources
   spectool -g "${specfile}" && spectool -g "${specfile}"
-  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" --define "_debugsource_template %{nil}" -bs "${specfile}"
+  rpmbuild --define "_topdir $PWD" --define "_sourcedir $PWD" --define "debug_package %{nil}" -bs "${specfile}"
 echo -e "\e[32mMaking rpm for ${name}...\e[0m"
 run_ping
 cloudbuilt
@@ -455,7 +455,7 @@ fi
 if [ -f /usr/lib64/${libQt5Core} ]; then
   strip -R .note.ABI-tag /usr/lib64/${libQt5Core}
 fi
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --define "_debugsource_template %{nil}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --define "debug_package %{nil}" --rebuild $PWD/SRPMS/${name}-*.src.rpm | tee ${repodirectory}/build.log
 if [ -n $PWD/RPMS/x86_64/${name}-[0-9]*.fc$(rpm -E %fedora).$(uname -m).rpm ] || [ -n $PWD/RPMS/i686/${name}-[0-9]*.fc$(rpm -E %fedora).i686.rpm ] || [ -n $PWD/RPMS/noarch/${name}-[0-9]*.fc$(rpm -E %fedora).noarch.rpm ]; then
 echo "Successful build for ${name}"
 else
@@ -1319,7 +1319,7 @@ echo -e "\e[32mDownloading and Rebuilding src.rpm ...\e[0m"
 if [ "${NO_MOCK}" = true ] && [ -n "${SRPM}" ]; then
 #  dnf -y update
   dnf -y builddep *.spec 
-  rpmbuild --define "_topdir $PWD" --define "${DIST}" --define "_debugsource_template %{nil}" --rebuild $PWD/SRPMS/*.src.rpm
+  rpmbuild --define "_topdir $PWD" --define "${DIST}" --define "debug_package %{nil}" --rebuild $PWD/SRPMS/*.src.rpm
 [ -d $PWD/RPMS/x86_64/ ] && cp -n RPMS/x86_64/* ${MOCK_DEF_PATH}/
 [ -d $PWD/RPMS/i686/ ] && cp -n RPMS/i686/* ${MOCK_DEF_PATH}/
 [ -d $PWD/RPMS/noarch/ ] && cp -n RPMS/noarch/* ${MOCK_DEF_PATH}/
