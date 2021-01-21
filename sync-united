@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #
 # +-----------------------------------------------------------------------------------+
-# | Copyright (C) 2020 David Vasquez    					      |
+# | Copyright (C) 2021 David Vasquez    					      |
 # | MIT license                                                                       |                                              
 # | Permission is hereby granted, free of charge, to any person obtaining a copy of   |	
 # | this software and associated documentation files (the "Software"), to deal in the | 
@@ -386,9 +386,9 @@ checkfiles
 m_mv
 job
 sfsync
-if [ ${task} = 33 ] || [ ${task} = 34 ]; then
-osdnsync
-fi
+#if [ ${task} = 33 ] || [ ${task} = 34 ]; then
+#osdnsync
+#fi
 #hosts_k
 metadata_sync
 metadata_tag_git
