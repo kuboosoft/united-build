@@ -365,7 +365,7 @@ userB=davidva
 raiz=/root/OneDrive/unitedrpms/updates/${task} 
 motherpath=/root/${task}
 
-if [ ${task} = 31 ] || [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ]; then
+if [ ${task} = 31 ] || [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ]; then
 echo -e "\e[32msync limited to F31-F34...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
