@@ -342,6 +342,7 @@ popd
 }
 
 metadata_tag_git() {
+cp -f /root/.bashrc /github/home/.bashrc
 pushd ${motherpath}/x86_64/ 
 source ~/.bashrc
 date_data=$(date "+%Y.%m.%d")
