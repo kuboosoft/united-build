@@ -187,16 +187,21 @@ rm -rf /root/.config/onedrive/
 wget -c -P /root/ https://github.com/UnitedRPMS-devel/unibuild/releases/download/auth/mppass.tar.xz
 pushd /root
 mkdir -p /root/.config/onedrive/
+mkdir -p /github/.config/onedrive/
 tar xJf mppass.tar.xz -C /root/.config/onedrive/
+tar xJf mppass.tar.xz -C /github/.config/onedrive/
 pushd /root/.config/onedrive/
 rm -f $PWD/config
 rm -f $PWD/skip_file
+rm -f /github/.config/onedrive/config
+rm -f /github/.config/onedrive/skip_file
 
 openssl rsautl -decrypt -inkey ./clave.pem -in key.enc -out key.txt
 openssl enc -aes-256-cbc -d -pass file:key.txt -in auth.enc -pbkdf2 -out refresh_token
 #openssl enc -aes-256-cbc -d -pass file:key.txt -in item.enc -pbkdf2 -out items.sqlite3
 
 sed -i "s|RELEASE|${task}|g" /root/.config/onedrive/sync_list
+sed -i "s|RELEASE|${task}|g" /github/.config/onedrive/sync_list
 rm -f *.enc
 rm -f *.pem
 rm -f *.txt
@@ -362,8 +367,8 @@ readargs "$@"
 
 user=kuboosoft
 userB=davidva
-raiz=/root/OneDrive/unitedrpms/updates/${task} 
-motherpath=/root/${task}
+raiz="${/root/OneDrive/unitedrpms/updates/$task:-/github/OneDrive/unitedrpms/updates/$task}" 
+motherpath="${/root/$task:-/github/$task}"
 
 if [ ${task} = 31 ] || [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ]; then
 echo -e "\e[32msync limited to F31-F34...\e[0m"
