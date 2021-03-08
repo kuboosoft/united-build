@@ -412,6 +412,7 @@ run_ping
 work_directory
 ssh-agent
 eval `ssh-agent`
+cp -f /root/.ssh/id_ecdsa /github/home/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_ecdsa
 mdow
 upd_hosts
