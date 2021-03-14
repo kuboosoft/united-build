@@ -176,8 +176,9 @@ rm -rf srpm/*
 rm -rf x86_64/repoview/*
 rm -rf x86_64/debug/*
 #rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
+#davidva@storage.osdn.net:/storage/groups/u/un/unitedrpms/
 rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/repodata/
-rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/
+rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/
 popd
 }
 
