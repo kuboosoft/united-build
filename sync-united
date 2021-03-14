@@ -94,7 +94,7 @@ repoview .
 
 sign_repo() {
 echo -e "\e[31mSign repodata...\e[0m"
-[ -f $PWD/repodata/repomd.xml ] && /usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor $PWD/repodata/repomd.xml
+[ -f ${motherpath}/repodata/repomd.xml ] && /usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor ${motherpath}/repodata/repomd.xml
 }
 
 sign_rpm() {
