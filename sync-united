@@ -176,8 +176,8 @@ rm -rf srpm/*
 rm -rf x86_64/repoview/*
 rm -rf x86_64/debug/*
 #rsync -rav -e "ssh -o StrictHostKeyChecking=no" --delete . ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/
-rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/repodata/
-rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${userB}@storage-in.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/repodata/ ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/repodata/
+rsync -av -e "ssh -o StrictHostKeyChecking=no" --delete x86_64/ ${userB}@storage.osdn.net:/storage/groups/u/un/unitedrpms/${task}/x86_64/
 popd
 }
 
@@ -423,9 +423,9 @@ checkfiles
 m_mv
 job
 sfsync
-#if [ ${task} = 33 ] || [ ${task} = 34 ]; then
-#osdnsync
-#fi
+if [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ]; then
+osdnsync
+fi
 #hosts_k
 metadata_sync
 metadata_tag_git
