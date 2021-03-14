@@ -424,9 +424,7 @@ checkfiles
 m_mv
 job
 sfsync
-if [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ]; then
-osdnsync
-fi
+#osdnsync
 #hosts_k
 metadata_sync
 metadata_tag_git
