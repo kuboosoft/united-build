@@ -95,16 +95,16 @@ repoview .
 
 prepare_sign() {
 cp -f /root/.rpmmacros /github/home/.rpmmacros 
-gpg --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-secret-keys unitedrpms > private_git.key 
-gpg --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-public-keys unitedrpms > public_git.key 
+/usr/bin/gpg2 --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-secret-keys unitedrpms > private_git.key 
+/usr/bin/gpg2 --pinentry-mode=loopback --passphrase-file=/root/.outsign --export unitedrpms > public_git.key 
 
-gpg --import --pinentry-mode=loopback --passphrase-file=/root/.outsign private_git.key
-gpg --import --pinentry-mode=loopback --passphrase-file=/root/.outsign public_git.key
+/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign private_git.key
+/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign public_git.key
 }
 
 sign_repo() {
 echo -e "\e[31mSign repodata...\e[0m"
-/usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor $PWD/repodata/repomd.xml
+/usr/bin/gpg2 --pinentry-mode=loopback --passphrase-file=/root/.outsign --local-user 'unitedrpms' --yes --detach-sign --armor $PWD/repodata/repomd.xml
 }
 
 sign_rpm() {
