@@ -95,11 +95,9 @@ repoview .
 
 prepare_sign() {
 cp -f /root/.rpmmacros /github/home/.rpmmacros 
-/usr/bin/gpg2 --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-secret-keys unitedrpms > private_git.key 
-/usr/bin/gpg2 --pinentry-mode=loopback --passphrase-file=/root/.outsign --export unitedrpms > public_git.key 
 
-/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign private_git.key
-/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign public_git.key
+/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign /root/.vitamin/my-public-key.asc
+/usr/bin/gpg2 --import --pinentry-mode=loopback --passphrase-file=/root/.outsign /root/.vitamin/my-private-key.asc
 }
 
 sign_repo() {
