@@ -64,7 +64,7 @@ readargs() {
 
 
 upd_hosts() {
-cat /root/OneDrive/unitedrpms/conocidos_host >> $HOME/.ssh/known_hosts
+cat /root/OneDrive/unitedrpms/conocidos_host >> /github/home/.ssh/known_hosts
 }
 
 sf_back() {
