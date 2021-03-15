@@ -113,6 +113,7 @@ echo -e "\e[31mSign rpms...\e[0m"
 if    ls -1qA ${motherpath}/x86_64/ | grep -q .
 then  ! echo "x86_64 directory is not empty"
 pushd ${motherpath}/x86_64/ 
+prepare_sign 
 rpm --addsign *.rpm
 make_repo
 sign_repo
@@ -426,7 +427,6 @@ ssh-agent
 eval `ssh-agent`
 cp -f /root/.ssh/id_ecdsa /github/home/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_ecdsa
-prepare_sign 
 mdow
 upd_hosts
 sf_back
