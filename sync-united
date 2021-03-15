@@ -92,6 +92,16 @@ createrepo_c --database --compatibility ./
 repoview .
 }
 
+
+prepare_sign() {
+cp -f /root/.rpmmacros /github/home/.rpmmacros 
+gpg --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-secret-keys unitedrpms > private_git.key 
+gpg --pinentry-mode=loopback --passphrase-file=/root/.outsign --export-public-keys unitedrpms > public_git.key 
+
+gpg --import --pinentry-mode=loopback --passphrase-file=/root/.outsign private_git.key
+gpg --import --pinentry-mode=loopback --passphrase-file=/root/.outsign public_git.key
+}
+
 sign_repo() {
 echo -e "\e[31mSign repodata...\e[0m"
 /usr/bin/gpg2 --local-user 'The UnitedRPMs Project' --yes --detach-sign --armor $PWD/repodata/repomd.xml
@@ -102,7 +112,7 @@ echo -e "\e[31mSign rpms...\e[0m"
 
 if    ls -1qA ${motherpath}/x86_64/ | grep -q .
 then  ! echo "x86_64 directory is not empty"
-pushd ${motherpath}/x86_64/  
+pushd ${motherpath}/x86_64/ 
 rpm --addsign *.rpm
 make_repo
 sign_repo
@@ -416,6 +426,7 @@ ssh-agent
 eval `ssh-agent`
 cp -f /root/.ssh/id_ecdsa /github/home/.ssh/id_ecdsa
 ssh-add ~/.ssh/id_ecdsa
+prepare_sign 
 mdow
 upd_hosts
 sf_back
