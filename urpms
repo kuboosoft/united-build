@@ -1174,8 +1174,8 @@ curl https://getfedora.org/static/fedora.gpg | gpg --import 1>/dev/null
 
 # Urpms repository
 rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPMS-GPG-PUBLICKEY-Fedora
-if [ "${fedora_release}" -ge 35 ] && [ ! -f /etc/yum.repos.d/unitedrpms-rawhide.repo ]; then
-dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/18/unitedrpms-$(rpm -E %fedora)-18.fc$(rpm -E %fedora).noarch.rpm
+if [ "${fedora_release}" = 35 ] || if [ "${fedora_release}" = Rawhide ]; then
+echo 'Rawhide detected'
 else
 dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/17/unitedrpms-$(rpm -E %fedora)-17.fc$(rpm -E %fedora).noarch.rpm
 fi
