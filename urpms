@@ -1190,7 +1190,8 @@ fi
 #fi
 
 # Our buildsys (future group)
-dnf -y install @buildsys-build dnf-plugins-core --exclude=fedora-release
+#dnf -y install @buildsys-build --exclude=fedora-release
+dnf -y install dnf-plugins-core python3-rpm-macros python2-rpm-macros 
 dnf -y install xz fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc unitedrpms onedrive python3-dnf-plugins-extras-repomanage make binutils --setopt=strict=0
 
 if [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
