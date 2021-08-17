@@ -1177,7 +1177,7 @@ rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPM
 if [ "${fedora_release}" = 36 ] || [ "${fedora_release}" = Rawhide ]; then
 echo 'Rawhide detected'
 else
-dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/17/unitedrpms-$(rpm -E %fedora)-17.fc$(rpm -E %fedora).noarch.rpm
+dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/19/unitedrpms-$(rpm -E %fedora)-19.fc$(rpm -E %fedora).noarch.rpm
 fi
 
 # Python2 end support since 2020
