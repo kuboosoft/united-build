@@ -1191,6 +1191,7 @@ fi
 
 # Our buildsys (future group)
 #dnf -y install @buildsys-build --exclude=fedora-release
+systemctl disable firewalld
 dnf -y install dnf-plugins-core python3-rpm-macros python2-rpm-macros zlib expat fedora-release
 dnf -y install xz fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc unitedrpms onedrive python3-dnf-plugins-extras-repomanage make binutils --setopt=strict=0
 
