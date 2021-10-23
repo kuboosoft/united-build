@@ -341,7 +341,7 @@ fi
 svnsources() {
 if [ $( cat *.spec | grep -c svn_url ) -gt 0 ]; then
 if [ ! -f /usr/bin/svn ]; then
-dnf -y install subversion --exclude=glibc,openssl-pkcs11
+dnf -y install subversion 
 fi
 svn_name=$( cat *.spec | grep -e 'Name:' -e 'name:' | awk '{print $2}' )
 REV=$( cat ${svn_name}.spec | grep -e '%global svn_rev' | awk '{print $3}' )
@@ -471,7 +471,7 @@ pushd "${repodirectory}"
 
 if    ls -1qA $PWD | grep -q .
 then  ! echo "$PWD is not empty installing results please wait"
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " ) --exclude=glibc,openssl-pkcs11
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " ) 
 fi
 popd
 ####
@@ -539,7 +539,7 @@ if [ "${NO_MOCK}" = true ] && [ -z "${TARGET}" ]; then
 dnf -y clean expire-cache
 if    ls -1qA $PWD | grep -q .
 then  ! echo "$PWD is not empty installing results please wait"
-dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " ) --exclude=glibc,openssl-pkcs11
+dnf -y install $( ls *.rpm | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e importantbump | tr "\n" " " ) 
 fi
 elif [ -z "${NO_MOCK}" ] && [ -n "${TARGET}" ]; then
 if    ls -1qA $PWD | grep -q .
@@ -660,7 +660,7 @@ mv -f /tmp/new_perf.cfg ${TARGET}.cfg
 check_depends() {
 # only necessary in Performance mock task
 if [ ! -f /usr/lib64/nosync/nosync.so ]; then
-dnf -y install nosync --exclude=glibc,openssl-pkcs11
+dnf -y install nosync 
 fi
 }
 
@@ -1192,17 +1192,17 @@ fi
 
 # Our buildsys (future group)
 #dnf -y install @buildsys-build --exclude=fedora-release
-dnf -y install dnf-plugins-core python3-rpm-macros python2-rpm-macros zlib expat fedora-release --exclude=glibc,openssl-pkcs11
-dnf -y install xz fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc unitedrpms onedrive python3-dnf-plugins-extras-repomanage make binutils --setopt=strict=0 --exclude=glibc,openssl-pkcs11
+dnf -y install dnf-plugins-core python3-rpm-macros python2-rpm-macros zlib expat fedora-release 
+dnf -y install xz fedora-packager dnf-plugins-core git subversion curl wget rpm-sign createrepo_c rpmdevtools rpm-build coreutils calc openssl gnupg2 bc unitedrpms onedrive python3-dnf-plugins-extras-repomanage make binutils --setopt=strict=0 
 
 if [ -n "${TARGET}" ] && [ "${NO_MOCK}" != true ] || [ -z "${NO_MOCK}" ]; then
-dnf -y install mock mock-unitedrpms --exclude=glibc,openssl-pkcs11
+dnf -y install mock mock-unitedrpms 
 fi
 }
 
 local_install_packages() {
 # Some times we need a massive rebuild, if we install directly built rpms; we save time
-[ -d ${repodirectory} ] && dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms | tr "\n" " " --exclude=glibc,openssl-pkcs11 )
+[ -d ${repodirectory} ] && dnf -y install $( ls "${repodirectory}" | grep .rpm | grep -ve .src.rpm -e debuginfo -e debugsource -e repodata -e enjoy -e urpms | tr "\n" " "  )
 }
 
 re_enabling_repos() {
