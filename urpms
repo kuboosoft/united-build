@@ -924,7 +924,11 @@ fdk-aac-free
 xavs2
 davs2
 cwiid
-gendesk' > importantbump
+gendesk
+vulkan-loader-compat-devel
+kvazaar
+mpp
+uavs3d' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
@@ -1175,10 +1179,11 @@ curl https://getfedora.org/static/fedora.gpg | gpg --import 1>/dev/null
 
 # Urpms repository
 rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPMS-GPG-PUBLICKEY-Fedora
-if [ "${fedora_release}" = 36 ] || [ "${fedora_release}" = Rawhide ]; then
+if [ "${fedora_release}" = 37 ] || [ "${fedora_release}" = Rawhide ]; then
 echo 'Rawhide detected'
+dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/20/unitedrpms-$(rpm -E %fedora)-20.fc$(rpm -E %fedora).noarch.rpm
 else
-dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/19/unitedrpms-$(rpm -E %fedora)-19.fc$(rpm -E %fedora).noarch.rpm
+dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/20/unitedrpms-$(rpm -E %fedora)-20.fc$(rpm -E %fedora).noarch.rpm
 fi
 
 # Python2 end support since 2020
@@ -1209,7 +1214,7 @@ re_enabling_repos() {
 # In massive task, we compare our git version vrs repo version; and urpms makes automatic changes with incremental in release. It downloads the source and disable our repositories; we need enable again our repos...
 fedora_release=$(rpm -E %fedora) 
 
-if [ "${fedora_release}" -ge 36 ]; then
+if [ "${fedora_release}" -ge 37 ]; then
 dnf -y config-manager --set-disabled rawhide-source
 dnf -y config-manager --set-disabled rawhide-modular
 dnf -y config-manager --set-enabled unitedrpms
