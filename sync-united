@@ -410,8 +410,8 @@ raiz="/github/home/OneDrive/unitedrpms/updates/${task}"
 motherpath="/github/home/${task}"
 #motherpath="${/root/$task:-/github/$task}"
 
-if [ ${task} = 31 ] || [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ]; then
-echo -e "\e[32msync limited to F31-F34...\e[0m"
+if [ ${task} = 31 ] || [ ${task} = 32 ] || [ ${task} = 33 ] || [ ${task} = 34 ] || [ ${task} = 35 ] || [ ${task} = 36 ]; then
+echo -e "\e[32msync limited to F31-F36...\e[0m"
 echo -e "\e[32mCurrent sync with F${task} ...\e[0m"
 else
 echo 'ERROR'
