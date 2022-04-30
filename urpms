@@ -929,7 +929,9 @@ vulkan-loader-compat-devel
 kvazaar
 mpp
 uavs3d
-cef-minimal' > importantbump
+cef-minimal
+libftl
+libajantv2' > importantbump
 massrebuild
 elif [ "${name}" = openh264 ]; then
 # dnf repoquery --whatrequires openh264 --source | grep -v openh264 | perl -pe 's/-\d.*?-\d+(\..*)?\.fc\d+(\..*)?.src.rpm//' | sort -u > importantbump
