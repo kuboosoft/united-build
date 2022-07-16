@@ -358,7 +358,7 @@ fi
 }
 
 run_ping() {
-status=$(curl -I "https://sourceforge.net/" 2> /dev/null | head -n 1 | cut -d ' ' -f 2) && 
+status=$(curl -I "https://sourceforge.net/projects/unitedrpms/" 2> /dev/null | head -n 1 | cut -d ' ' -f 2) && 
  
 if [ ${status} -eq 200 ]; then
 	echo 'PING OK'
